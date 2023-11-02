@@ -4,7 +4,7 @@ require_relative "concerns/move_modifiers"
 class TeraBlastMove < Move
   include BasicSpecialAtk
   include TypeChange
-  # Changes type and category when Terastallized
+  # Changes category when Terastallized
 
   def self.learn
     new(  attack_name: :tera_blast,

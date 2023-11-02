@@ -1,6 +1,7 @@
 require_relative "../types/type_factory"
 require_relative "../pokemon/stats"
 require_relative "../pokemon/pokemon"
+# require_relative "../battleground"
 require_relative "concerns/move_modifiers"
 
 class Move
@@ -19,7 +20,7 @@ class Move
 
   def perform(*pokemons)
     @pokemon, @pokemon_target = pokemons
-    puts
+    puts "turn: #{$turn}"
     puts "#{pokemon.name} used #{attack_name}"
     if hit_chance
       effectiveness_message

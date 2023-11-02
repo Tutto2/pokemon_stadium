@@ -4,7 +4,7 @@ class PokemonBattleField
   SWITCH_ACTION = 0.freeze
   ATK_ACTION = 5.freeze
 
-  attr_reader :all_pokes, :pokemons_p1, :pokemons_p2
+  attr_reader :all_pokes, :pokemons_p1, :pokemons_p2, :turn
 
   def initialize(all_pokes: [], pokemons_p1: [], pokemons_p2: [])
     @all_pokes = all_pokes
@@ -20,14 +20,14 @@ class PokemonBattleField
   end
 
   def start_battle
+    $turn = 1
     @current_pokemon_p1 = pokemons_p1[selection_index(:one, pokemons_p1.length)]
     @current_pokemon_p2 = pokemons_p2[selection_index(:two, pokemons_p2.length)]
 
     loop do
       break if pokemons_p1.all?(&:fainted?) || pokemons_p2.all?(&:fainted?)
       puts
-      puts "############ next turn ############"
-
+      puts "############ turn #{$turn} ############"
       @current_pokemon_p1 = pokemons_p1[selection_index(:one, pokemons_p1.length)] if @current_pokemon_p1.fainted?
       @current_pokemon_p2 = pokemons_p2[selection_index(:two, pokemons_p2.length)] if @current_pokemon_p2.fainted?
 
@@ -42,6 +42,7 @@ class PokemonBattleField
 
       switch_actions.each(&perform)
       actions.each(&perform)
+      $turn += 1
     end
 
     return 'Player two wins!' if pokemons_p1.all?(&:fainted?)
