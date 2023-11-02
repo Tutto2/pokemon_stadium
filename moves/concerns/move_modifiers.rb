@@ -45,7 +45,7 @@ module HasCustomTable
       return power if range.include?(calculation_stat)
     end
   end
-  
+
   private
   def calculation_stat; end
 
