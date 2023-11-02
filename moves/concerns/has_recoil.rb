@@ -1,0 +1,2 @@
+module HasRecoil
+end
