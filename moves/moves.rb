@@ -116,7 +116,7 @@ class Move
 
   def effect
     attack_types = [self.type, self.secondary_type].compact
-    PokemonType.calc_multiplier( attack_types, pokemon_target.types )
+    Types.calc_multiplier( attack_types, pokemon_target.types )
   end
 
   def crit_chance

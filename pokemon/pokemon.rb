@@ -276,7 +276,7 @@ class PokeFactory < Pokemon
                           ]
                   )            
     when "Ogerpon"
-      Pokemon.new( name: "Ogerpon - Heartflame",
+      Pokemon.new( name: "Ogerpon",
                   types: [Types::GRASS, Types::FIRE],
                   stats: [Stats.new(name: :hp, base_value: 80 ),
                           Stats.new(name: :atk, base_value: 120 ),

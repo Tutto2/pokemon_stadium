@@ -100,10 +100,6 @@ module MultiStrikeAtk
 end
 
 module TypeChange
-  def type_change
-    type = new_type
-  end
-
   private
-  def new_type; end
+  def type; end
 end

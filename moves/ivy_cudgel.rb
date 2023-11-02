@@ -8,27 +8,25 @@ class IvyCudgelMove < Move
 
   def self.learn
     new(  attack_name: :evy_cudgel,
-          type: Types::GRASS,
           category: :physical,
+          type: Types::GRASS,
           power: 100
         )
   end
 
-  self.type_change    
-
   private
 
-  def new_type
+  def type
     if pokemon.name == "Ogerpon"
       if pokemon.types.include?(Types::WATER)
-        return Types::WATER
+        type = Types::WATER
       elsif pokemon.types.include?(Types::FIRE)
-        return Types::FIRE
+        type = Types::FIRE
       elsif pokemon.types.include?(Types::ROCK)
-        return Types::ROCK
+        type = Types::ROCK
       end
     else
-      return Types::GRASS
+      type = Types::GRASS
     end
   end
 end

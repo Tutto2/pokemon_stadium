@@ -14,14 +14,13 @@ class TeraBlastMove < Move
         )
   end
 
-  self.type_change    
-
   private
+
   def atk
     pokemon.atk_value > pokemon.sp_atk_value ? pokemon.atk : pokemon.sp_atk
   end
 
-  def new_type
-    return pokemon.types[0]
+  def type
+    pokemon.types[0]
   end
 end
