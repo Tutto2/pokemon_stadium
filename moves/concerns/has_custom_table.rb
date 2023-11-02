@@ -1,0 +1,2 @@
+module HasCustomTable
+end
