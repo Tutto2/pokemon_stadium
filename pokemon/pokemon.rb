@@ -1,7 +1,13 @@
-require_relative "type_factory"
+curr_dir = File.dirname(__FILE__)
+moves_path = File.join(curr_dir, '..', 'moves')
+file_paths = Dir.glob(File.join(moves_path, '*.rb'))
+
+require_relative "../types/type_factory"
 require_relative "stats"
 require_relative "conditions"
-require_relative "moves"
+file_paths.each do |file_path|
+  require_relative file_path
+end
 require "pry"
 
 class Pokemon
@@ -44,6 +50,10 @@ class Pokemon
       puts "#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}"
     end
     nil
+  end
+
+  def terastallized
+    false
   end
 
   def atk_priority(attk_num)
@@ -97,33 +107,33 @@ class PokeFactory < Pokemon
     case name
     when "Pikachu"
       Pokemon.new( name: "Pikachu",
-                  types: [PokemonType::ELECTRIC],
+                  types: [Types::ELECTRIC],
                   stats: [Stats.new(name: :hp, base_value: 35 ),
                           Stats.new(name: :atk, base_value: 55 ),
                           Stats.new(name: :def, base_value: 40 ),
                           Stats.new(name: :sp_atk, base_value: 50 ),
                           Stats.new(name: :sp_def, base_value: 50 ),
-                          Stats.new(name: :spd, base_value: 90 ),                          
+                          Stats.new(name: :spd, base_value: 90 )
                         ],
-                  weight: 
+                  weight: 6,
                   attacks: [  ElectroBallMove.learn,
                               DischargeMove.learn,
-                              ExtremeSpeedMove.learn,
+                              HeavySlamMove.learn,
                               AgilityMove.learn
                           ]
                   )
     when "Squirtle"
       Pokemon.new( name: "Squirtle",
-                  types: [PokemonType::WATER],
+                  types: [Types::WATER],
                   stats: [Stats.new(name: :hp, base_value: 44 ),
                           Stats.new(name: :atk, base_value: 48 ),
                           Stats.new(name: :def, base_value: 65 ),
                           Stats.new(name: :sp_atk, base_value: 50 ),
                           Stats.new(name: :sp_def, base_value: 64 ),
-                          Stats.new(name: :spd, base_value: 43 ),                          
+                          Stats.new(name: :spd, base_value: 43 )
                         ],
-                  weight:
-                  attacks: [  FoulPlayMove.learn,
+                  weight: 9,
+                  attacks: [  TeraBlastMove.learn,
                               ShellSmashMove.learn,
                               HydroPumpMove.learn,
                               DracoMeteorMove.learn
@@ -131,15 +141,15 @@ class PokeFactory < Pokemon
                   )
     when "Snorlax"
       Pokemon.new( name: "Snorlax",
-                  types: [PokemonType::NORMAL],
+                  types: [Types::NORMAL],
                   stats: [Stats.new(name: :hp, base_value: 160 ),
                           Stats.new(name: :atk, base_value: 110 ),
                           Stats.new(name: :def, base_value: 65 ),
                           Stats.new(name: :sp_atk, base_value: 65 ),
                           Stats.new(name: :sp_def, base_value: 110 ),
-                          Stats.new(name: :spd, base_value: 30 ),                          
+                          Stats.new(name: :spd, base_value: 30 )
                         ],
-                  weight:
+                  weight: 460,
                   attacks: [  RecoverMove.learn,
                               DoubleEdgeMove.learn,
                               CurseMove.learn,
@@ -148,15 +158,15 @@ class PokeFactory < Pokemon
                   )
     when "Milotic"
       Pokemon.new( name: "Milotic",
-                  types: [PokemonType::WATER],
+                  types: [Types::WATER],
                   stats: [Stats.new(name: :hp, base_value: 95 ),
                           Stats.new(name: :atk, base_value: 60 ),
                           Stats.new(name: :def, base_value: 79 ),
                           Stats.new(name: :sp_atk, base_value: 100 ),
                           Stats.new(name: :sp_def, base_value: 125 ),
-                          Stats.new(name: :spd, base_value: 81 ),                          
+                          Stats.new(name: :spd, base_value: 81 )
                         ],
-                  weight:
+                  weight: 162,
                   attacks: [  HydroPumpMove.learn,
                               CurseMove.learn,
                               ShadowBallMove.learn,
@@ -165,15 +175,15 @@ class PokeFactory < Pokemon
                   )
     when "Golem"
       Pokemon.new( name: "Golem",
-                  types: [PokemonType::ROCK, PokemonType::GROUND],
+                  types: [Types::ROCK, Types::GROUND],
                   stats: [Stats.new(name: :hp, base_value: 80 ),
                           Stats.new(name: :atk, base_value: 120 ),
                           Stats.new(name: :def, base_value: 130 ),
                           Stats.new(name: :sp_atk, base_value: 55 ),
                           Stats.new(name: :sp_def, base_value: 65 ),
-                          Stats.new(name: :spd, base_value: 45 ),                          
+                          Stats.new(name: :spd, base_value: 45 )
                         ],
-                  weight:
+                  weight: 300,
                   attacks: [  BodyPressMove.learn,
                               FoulPlayMove.learn,
                               EarthquakeMove.learn,
@@ -182,32 +192,32 @@ class PokeFactory < Pokemon
                   )              
     when "Sceptile"
       Pokemon.new( name: "Sceptile",
-                  types: [PokemonType::GRASS],
+                  types: [Types::GRASS],
                   stats: [Stats.new(name: :hp, base_value: 70 ),
                           Stats.new(name: :atk, base_value: 85 ),
                           Stats.new(name: :def, base_value: 65 ),
                           Stats.new(name: :sp_atk, base_value: 105 ),
                           Stats.new(name: :sp_def, base_value: 85 ),
-                          Stats.new(name: :spd, base_value: 120 ),                          
+                          Stats.new(name: :spd, base_value: 120 )
                         ],
-                  weight:
+                  weight: 52.2,
                   attacks: [  DracoMeteorMove.learn,
-                              PowerGemMove.learn,
+                              GrassKnotMove.learn,
                               LeafStormMove.learn,
                               DoubleTeamMove.learn
                           ]
                   )
     when "Mew"
       Pokemon.new( name: "Mew",
-                  types: [PokemonType::PSYCHIC],
+                  types: [Types::PSYCHIC],
                   stats: [Stats.new(name: :hp, base_value: 100 ),
                           Stats.new(name: :atk, base_value: 100 ),
                           Stats.new(name: :def, base_value: 100 ),
                           Stats.new(name: :sp_atk, base_value: 100 ),
                           Stats.new(name: :sp_def, base_value: 100 ),
-                          Stats.new(name: :spd, base_value: 100 ),                          
+                          Stats.new(name: :spd, base_value: 100 )
                         ],
-                  weight:
+                  weight: 4,
                   attacks: [  PsychicMove.learn,
                               FlamethrowerMove.learn,
                               ShadowBallMove.learn,
@@ -216,15 +226,15 @@ class PokeFactory < Pokemon
                   )             
     when "Dragapult"
       Pokemon.new( name: "Dragapult",
-                  types: [PokemonType::DRAGON, PokemonType::GHOST],
+                  types: [Types::DRAGON, Types::GHOST],
                   stats: [Stats.new(name: :hp, base_value: 88 ),
                           Stats.new(name: :atk, base_value: 120 ),
                           Stats.new(name: :def, base_value: 75 ),
                           Stats.new(name: :sp_atk, base_value: 100 ),
                           Stats.new(name: :sp_def, base_value: 75 ),
-                          Stats.new(name: :spd, base_value: 142 ),                          
+                          Stats.new(name: :spd, base_value: 142 )
                         ],
-                  weight:
+                  weight: 50,
                   attacks: [  ShadowClawMove.learn,
                               DragonDartsMove.learn,
                               IceShardMove.learn,
@@ -233,15 +243,15 @@ class PokeFactory < Pokemon
                   )
     when "Kommo-o"
       Pokemon.new( name: "Kommo-o",
-                  types: [PokemonType::DRAGON, PokemonType::FIGHTING],
+                  types: [Types::DRAGON, Types::FIGHTING],
                   stats: [Stats.new(name: :hp, base_value: 75 ),
                           Stats.new(name: :atk, base_value: 110 ),
                           Stats.new(name: :def, base_value: 125 ),
                           Stats.new(name: :sp_atk, base_value: 100 ),
                           Stats.new(name: :sp_def, base_value: 105 ),
-                          Stats.new(name: :spd, base_value: 85 ),                          
+                          Stats.new(name: :spd, base_value: 85 )
                         ],
-                  weight:
+                  weight: 78.2,
                   attacks: [  CloseCombatMove.learn,
                               ClangingScalesMove.learn,
                               ClangorusSoulMove.learn,
@@ -250,15 +260,15 @@ class PokeFactory < Pokemon
                   )            
     when "Baxcalibur"
       Pokemon.new( name: "Baxcalibur",
-                  types: [PokemonType::DRAGON, PokemonType::ICE],
+                  types: [Types::DRAGON, Types::ICE],
                   stats: [Stats.new(name: :hp, base_value: 115 ),
                           Stats.new(name: :atk, base_value: 145 ),
                           Stats.new(name: :def, base_value: 92 ),
                           Stats.new(name: :sp_atk, base_value: 75 ),
                           Stats.new(name: :sp_def, base_value: 86 ),
-                          Stats.new(name: :spd, base_value: 87 ),                          
+                          Stats.new(name: :spd, base_value: 87 )
                         ],
-                  weight:
+                  weight: 210,
                   attacks: [  IcicleSpearMove.learn,
                               GlaiveRushMove.learn,
                               FlashMove.learn,
@@ -267,15 +277,15 @@ class PokeFactory < Pokemon
                   )            
     when "Ogerpon"
       Pokemon.new( name: "Ogerpon - Heartflame",
-                  types: [PokemonType::GRASS, PokemonType::FIRE],
+                  types: [Types::GRASS, Types::FIRE],
                   stats: [Stats.new(name: :hp, base_value: 80 ),
                           Stats.new(name: :atk, base_value: 120 ),
                           Stats.new(name: :def, base_value: 84 ),
                           Stats.new(name: :sp_atk, base_value: 60 ),
                           Stats.new(name: :sp_def, base_value: 96 ),
-                          Stats.new(name: :spd, base_value: 110 ),                          
+                          Stats.new(name: :spd, base_value: 110 )
                         ],
-                  weight:
+                  weight: 39.8,
                   attacks: [  SeedBombMove.learn,
                               IvyCudgelMove.learn,
                               BulletSeedMove.learn,
@@ -284,15 +294,15 @@ class PokeFactory < Pokemon
                   ) 
     when "Tinkaton"
       Pokemon.new( name: "Tinkaton",
-                  types: [PokemonType::FAIRY, PokemonType::STEEL],
+                  types: [Types::FAIRY, Types::STEEL],
                   stats: [Stats.new(name: :hp, base_value: 85 ),
                           Stats.new(name: :atk, base_value: 75 ),
                           Stats.new(name: :def, base_value: 77 ),
                           Stats.new(name: :sp_atk, base_value: 70),
                           Stats.new(name: :sp_def, base_value: 105),
-                          Stats.new(name: :spd, base_value: 94),                          
+                          Stats.new(name: :spd, base_value: 94)
                         ],
-                  weight:
+                  weight: 112.8,
                   attacks: [  GigatonHammerMove.learn,
                               PlayRoughMove.learn,
                               GyroBallMove.learn,
@@ -301,15 +311,15 @@ class PokeFactory < Pokemon
                   )
     when "Gengar"
       Pokemon.new( name: "Gengar",
-                  types: [PokemonType::GHOST, PokemonType::POISON],
+                  types: [Types::GHOST, Types::POISON],
                   stats: [Stats.new(name: :hp, base_value: 60 ),
                           Stats.new(name: :atk, base_value: 65 ),
                           Stats.new(name: :def, base_value: 60 ),
                           Stats.new(name: :sp_atk, base_value: 130),
                           Stats.new(name: :sp_def, base_value: 75),
-                          Stats.new(name: :spd, base_value: 110),                          
+                          Stats.new(name: :spd, base_value: 110)
                         ],
-                  weight:
+                  weight: 40.5,
                   attacks: [  ShadowBallMove.learn,
                               PsychicMove.learn,
                               FlamethrowerMove.learn,
@@ -318,15 +328,15 @@ class PokeFactory < Pokemon
                   )
     when "Ceruledge"
       Pokemon.new( name: "Ceruledge",
-                  types: [PokemonType::GHOST, PokemonType::FIRE],
+                  types: [Types::GHOST, Types::FIRE],
                   stats: [Stats.new(name: :hp, base_value: 75 ),
                           Stats.new(name: :atk, base_value: 125 ),
                           Stats.new(name: :def, base_value: 80 ),
                           Stats.new(name: :sp_atk, base_value: 60 ),
                           Stats.new(name: :sp_def, base_value: 100),
-                          Stats.new(name: :spd, base_value: 85),                          
+                          Stats.new(name: :spd, base_value: 85)
                         ],
-                  weight:
+                  weight: 62,
                   attacks: [  FlareBlitzMove.learn,
                               ShadowClawMove.learn,
                               SolarBladeMove.learn,
@@ -335,15 +345,15 @@ class PokeFactory < Pokemon
                   )
     when "Poltchageist"
       Pokemon.new( name: "Poltchageist",
-                  types: [PokemonType::GHOST, PokemonType::GRASS],
+                  types: [Types::GHOST, Types::GRASS],
                   stats: [Stats.new(name: :hp, base_value: 40 ),
                           Stats.new(name: :atk, base_value: 45 ),
                           Stats.new(name: :def, base_value: 45 ),
                           Stats.new(name: :sp_atk, base_value: 74 ),
                           Stats.new(name: :sp_def, base_value: 54),
-                          Stats.new(name: :spd, base_value: 50),                          
+                          Stats.new(name: :spd, base_value: 50)
                         ],
-                  weight:
+                  weight: 1.1,
                   attacks: [  LeafStormMove.learn,
                               ShadowBallMove.learn,
                               FoulPlayMove.learn,
@@ -352,15 +362,15 @@ class PokeFactory < Pokemon
                   )
     when "Gholdengo"
       Pokemon.new( name: "Gholdengo",
-                  types: [PokemonType::GHOST, PokemonType::STEEL],
+                  types: [Types::GHOST, Types::STEEL],
                   stats: [Stats.new(name: :hp, base_value: 87 ),
                           Stats.new(name: :atk, base_value: 60 ),
                           Stats.new(name: :def, base_value: 95 ),
                           Stats.new(name: :sp_atk, base_value: 133 ),
                           Stats.new(name: :sp_def, base_value: 91),
-                          Stats.new(name: :spd, base_value: 84),                          
+                          Stats.new(name: :spd, base_value: 84)
                         ],
-                  weight:
+                  weight: 30,
                   attacks: [  MakeItRainMove.learn,
                               GyroBallMove.learn,
                               ShadowBallMove.learn,
@@ -369,15 +379,15 @@ class PokeFactory < Pokemon
                   )
     when "Zoroark-hisui"
       Pokemon.new( name: "Zoroark-hisui",
-                  types: [PokemonType::GHOST, PokemonType::NORMAL],
+                  types: [Types::GHOST, Types::NORMAL],
                   stats: [Stats.new(name: :hp, base_value: 55 ),
                           Stats.new(name: :atk, base_value: 100 ),
                           Stats.new(name: :def, base_value: 60 ),
                           Stats.new(name: :sp_atk, base_value: 125 ),
                           Stats.new(name: :sp_def, base_value: 60),
-                          Stats.new(name: :spd, base_value: 110),                          
+                          Stats.new(name: :spd, base_value: 110)
                         ],
-                  weight: 
+                  weight: 73,
                   attacks: [  FoulPlayMove.learn,
                               ShadowClawMove.learn,
                               ShadowBallMove.learn,
@@ -386,15 +396,15 @@ class PokeFactory < Pokemon
                   )
     when "Dracanfly"
       Pokemon.new( name: "Dracanfly",
-                  types: [PokemonType::DRAGON, PokemonType::BUG],
+                  types: [Types::DRAGON, Types::BUG],
                   stats: [Stats.new(name: :hp, base_value: 75 ),
                           Stats.new(name: :atk, base_value: 105 ),
                           Stats.new(name: :def, base_value: 45 ),
                           Stats.new(name: :sp_atk, base_value: 142 ),
                           Stats.new(name: :sp_def, base_value: 90),
-                          Stats.new(name: :spd, base_value: 143),                          
+                          Stats.new(name: :spd, base_value: 143)
                         ],
-                  weight:
+                  weight: 47,
                   attacks: [  ScalePulseMove.learn,
                               DracoMeteorMove.learn,
                               HydroPumpMove.learn,
@@ -406,7 +416,4 @@ class PokeFactory < Pokemon
 end
 
 # ESTUDIAR METODOS ACCESORES
-# Status effects always hits (chqueo de ocurrencia can_perfom)
-# APLICAR TABLA GENERICA PARA LOS MOVIMIENTOS (GYROBALL PONERLO DENTRO DEL MIMSO ATAQUE)
-# ESTRUCTURAR ARCHIVOS
 # AGREGAR ESTADOS DE SALUD DEL POKE (CONFUSION, CONGELADO, QUEMADO, ETC)

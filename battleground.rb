@@ -1,4 +1,4 @@
-require_relative "pokemon"
+require_relative "pokemon/pokemon"
 
 class PokemonBattleField
   SWITCH_ACTION = 0.freeze

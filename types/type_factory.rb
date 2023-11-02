@@ -1,4 +1,4 @@
-class PokemonType
+class Types
   EFFECTIVE = 1.freeze
   SUPER_EFFECTIVE = 2.freeze
   NOT_EFFECTIVE = 0.5.freeze

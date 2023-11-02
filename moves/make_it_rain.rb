@@ -1,0 +1,27 @@
+require_relative "moves"
+require_relative "concerns/move_modifiers"
+
+class MakeItRainMove < Move
+  include BasicSpecialAtk
+  include HasSecondaryEffect
+  include StatChanges
+
+  def self.learn
+    new(  attack_name: :make_it_rain,
+          type: Types::STEEL,
+          category: :special,
+          power: 120
+        )
+  end
+
+  private
+  def secondary_effect
+    stat_changes
+  end
+
+  def stat
+    [
+      [:sp_atk, -1]
+    ]
+  end
+end

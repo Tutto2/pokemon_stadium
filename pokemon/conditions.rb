@@ -9,7 +9,7 @@
 #   def apply_effect
 #     case @name
 #     when :burn
-#       # return if PokemonType::FIRE
+#       # return if Types::FIRE
       
 #   end
 # end
