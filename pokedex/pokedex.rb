@@ -90,7 +90,7 @@ class Pokedex < Pokemon
                         ],
                   weight: 300,
                   attacks: [  BodyPressMove.learn,
-                              FoulPlayMove.learn,
+                              RolloutMove.learn,
                               EarthquakeMove.learn,
                               SwordDanceMove.learn
                           ]
@@ -142,7 +142,7 @@ class Pokedex < Pokemon
                   weight: 50,
                   attacks: [  ShadowClawMove.learn,
                               DragonDartsMove.learn,
-                              IceShardMove.learn,
+                              OutrageMove.learn,
                               DragonDanceMove.learn
                           ]
                   )
@@ -176,7 +176,7 @@ class Pokedex < Pokemon
                   weight: 210,
                   attacks: [  IcicleSpearMove.learn,
                               GlaiveRushMove.learn,
-                              FlashMove.learn,
+                              IceBallMove.learn,
                               DragonDanceMove.learn
                           ]
                   )            

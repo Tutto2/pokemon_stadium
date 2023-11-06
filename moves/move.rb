@@ -61,6 +61,10 @@ class Move
       second_turn_action
     when 3
       third_turn_action
+    when 4
+      fourth_turn_action
+    when 5
+      fifth_turn_action
     end
     pokemon.count_attack_turns if !pokemon.metadata.nil?
   end
@@ -68,6 +72,8 @@ class Move
   def first_turn_action; end
   def second_turn_action; end
   def third_turn_action; end
+  def fourth_turn_action; end
+  def fifth_turn_action; end
 
   def end_turn_action
     pokemon.ending_several_turn_attack
@@ -79,8 +85,10 @@ class Move
     chance = rand(0..100)
     if @category == :status && precision < chance
       failed_attack_message
+      pokemon.ending_several_turn_attack if !pokemon.metadata.nil?
     elsif @category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance
       failed_attack_message
+      pokemon.ending_several_turn_attack if !pokemon.metadata.nil?
     else
       return true
     end
