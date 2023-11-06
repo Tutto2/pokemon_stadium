@@ -1,8 +1,14 @@
+curr_dir = File.dirname(__FILE__)
+concerns_path = File.join(curr_dir, '.', 'concerns')
+file_paths = Dir.glob(File.join(concerns_path, '*.rb'))
+
 require_relative "../types/type_factory"
 require_relative "../pokemon/stats"
 require_relative "../pokemon/pokemon"
-# require_relative "../battleground"
-require_relative "concerns/move_modifiers"
+
+file_paths.each do |file_path|
+  require_relative file_path
+end
 
 class Move
   attr_reader :attack_name, :precision, :power, :priority
@@ -18,21 +24,18 @@ class Move
     @priority = priority
   end
 
-  def perform(*pokemons)
+  def make_action(*pokemons)
     @pokemon, @pokemon_target = pokemons
-    puts "turn: #{$turn}"
     puts "#{pokemon.name} used #{attack_name}"
+    has_several_turns? ? action_per_turn : perform    
+  end
+
+  def perform
     if hit_chance
       effectiveness_message
       if effect != 0 || category == :status
         if strikes_count
-          hits = 0
-          strikes_count.times do 
-            action
-            hits += 1
-            break if pokemon_target.fainted?
-          end
-          multihit_message(hits)
+          perform_multistrike
         else
           action
         end
@@ -43,6 +46,32 @@ class Move
 
   private
   attr_reader :pokemon, :pokemon_target
+
+  def has_several_turns?
+    false
+  end
+
+  def action_per_turn
+    pokemon.init_several_turn_attack if pokemon.metadata.nil?
+
+    case pokemon.metadata[:turn]
+    when 1
+      first_turn_action
+    when 2
+      second_turn_action
+    when 3
+      third_turn_action
+    end
+    pokemon.count_attack_turns if !pokemon.metadata.nil?
+  end
+
+  def first_turn_action; end
+  def second_turn_action; end
+  def third_turn_action; end
+
+  def end_turn_action
+    pokemon.ending_several_turn_attack
+  end
 
   def hit_chance
     return true if precision.nil?
@@ -61,6 +90,7 @@ class Move
   def action
     main_effect
     cast_additional_effect
+    puts
   end
 
   def cast_additional_effect; end
@@ -77,6 +107,16 @@ class Move
   
   def strikes_count
     false
+  end
+
+  def perform_multistrike
+    hits = 0
+    strikes_count.times do 
+      action
+      hits += 1
+      break if pokemon_target.fainted?
+    end
+    multihit_message(hits)
   end
 
   def status?

@@ -1,4 +1,4 @@
-require_relative "moves"
+require_relative "move"
 
 class HydroPumpMove < Move
   include BasicSpecialAtk

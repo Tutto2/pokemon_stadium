@@ -1,5 +1,5 @@
-require_relative "moves"
-require_relative "concerns/move_modifiers"
+require_relative "move"
+
 
 class TeraBlastMove < Move
   include BasicSpecialAtk

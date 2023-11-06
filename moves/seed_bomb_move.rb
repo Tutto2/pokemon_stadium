@@ -1,4 +1,4 @@
-require_relative "moves"
+require_relative "move"
 
 class SeedBombMove < Move
   include BasicPhysicalAtk

@@ -1,15 +1,17 @@
-require_relative "pokemon/pokemon"
+require_relative "pokedex/pokedex"
 
 class PokemonBattleField
   SWITCH_ACTION = 0.freeze
   ATK_ACTION = 5.freeze
 
-  attr_reader :all_pokes, :pokemons_p1, :pokemons_p2, :turn
+  attr_reader :all_pokes, :pokemons_p1, :pokemons_p2, :action_p1, :action_p2
 
-  def initialize(all_pokes: [], pokemons_p1: [], pokemons_p2: [])
+  def initialize(all_pokes: [], pokemons_p1: [], pokemons_p2: [], action_p1: nil, action_p2: nil)
     @all_pokes = all_pokes
     @pokemons_p1 = pokemons_p1
-    @pokemons_p2 = pokemons_p2 
+    @pokemons_p2 = pokemons_p2
+    @action_p1 = action_p1
+    @action_p2 = action_p2
   end
 
   def choose_pokemons
@@ -34,10 +36,10 @@ class PokemonBattleField
       display_pokemon(@current_pokemon_p1, :one)
       display_pokemon(@current_pokemon_p2, :two)
 
-      action_p1 = select_action(:one, @current_pokemon_p1, pokemons_p1)
-      action_p2 = select_action(:two, @current_pokemon_p2, pokemons_p2)
+      @action_p1 = select_action(:one, @current_pokemon_p1, pokemons_p1)
+      @action_p2 = select_action(:two, @current_pokemon_p2, pokemons_p2)
 
-      switch_actions, attack_actions = [action_p1, action_p2].partition { |action| action[:action] == SWITCH_ACTION }
+      switch_actions, attack_actions = [@action_p1, @action_p2].partition { |action| action[:action] == SWITCH_ACTION }
       actions = attack_actions.sort(&priority_queue)
 
       switch_actions.each(&perform)
@@ -106,18 +108,22 @@ class PokemonBattleField
     
     case action_num
     when 1
-      current_pokemon.view_attacks
-      go_back(current_pokemon.attacks)
-      attk_num = select_attack
-
-      if (1..4).include?(attk_num)
-        {
-          action: ATK_ACTION,
-          attk_num: attk_num,
-          player: player
-        }
+      if current_pokemon.is_attacking?
+        player == :one ? action_p1 : action_p2
       else
-        return select_action(player, current_pokemon, pokemons)
+        current_pokemon.view_attacks
+        go_back(current_pokemon.attacks)
+        attk_num = select_attack
+
+        if (1..4).include?(attk_num)
+          {
+            action: ATK_ACTION,
+            attk_num: attk_num,
+            player: player
+          }
+        else
+          return select_action(player, current_pokemon, pokemons)
+        end
       end
     when 2
       next_pokemon = switch_pokemon(player, current_pokemon, pokemons)
@@ -169,6 +175,7 @@ class PokemonBattleField
     current_pokemon.stats.each do |stat|
       stat.reset_stat
     end
+    current_pokemon.ending_several_turn_attack
     next_pokemon
   end
 
@@ -230,24 +237,24 @@ class PokemonBattleField
 end
 
 pokemons = [
-  PokeFactory.catch("Kommo-o"),
-  PokeFactory.catch("Mew"),
-  PokeFactory.catch("Snorlax"),
-  PokeFactory.catch("Dragapult"),
-  PokeFactory.catch("Sceptile"),
-  PokeFactory.catch("Milotic"),
-  PokeFactory.catch("Golem"),
-  PokeFactory.catch("Pikachu"),
-  PokeFactory.catch("Squirtle"),
-  PokeFactory.catch("Baxcalibur"),
-  PokeFactory.catch("Ogerpon"),
-  PokeFactory.catch("Tinkaton"),
-  PokeFactory.catch("Gengar"),
-  PokeFactory.catch("Ceruledge"),
-  PokeFactory.catch("Poltchageist"),
-  PokeFactory.catch("Gholdengo"),
-  PokeFactory.catch("Dracanfly"),
-  PokeFactory.catch("Zoroark-hisui")
+  Pokedex.catch("Kommo-o"),
+  Pokedex.catch("Mew"),
+  Pokedex.catch("Snorlax"),
+  Pokedex.catch("Dragapult"),
+  Pokedex.catch("Sceptile"),
+  Pokedex.catch("Milotic"),
+  Pokedex.catch("Golem"),
+  Pokedex.catch("Pikachu"),
+  Pokedex.catch("Squirtle"),
+  Pokedex.catch("Baxcalibur"),
+  Pokedex.catch("Ogerpon"),
+  Pokedex.catch("Tinkaton"),
+  Pokedex.catch("Gengar"),
+  Pokedex.catch("Ceruledge"),
+  Pokedex.catch("Poltchageist"),
+  Pokedex.catch("Gholdengo"),
+  Pokedex.catch("Dracanfly"),
+  Pokedex.catch("Zoroark-hisui")
       ]
 battlefield = PokemonBattleField.new(all_pokes: pokemons)
 puts battlefield.choose_pokemons

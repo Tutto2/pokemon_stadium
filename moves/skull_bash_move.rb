@@ -1,24 +1,30 @@
 require_relative "move"
 
-
-class SolarBladeMove < Move
+class SkullBashMove < Move
   include BasicPhysicalAtk
   include HasSeveralTurns
-  # Agregar tipo fuego?
+  include StatChanges
 
   def self.learn
-    new(  attack_name: :solar_blade,
-          type: Types::GRASS,
+    new(  attack_name: :skul_bash,
+          type: Types::NORMAL,
           category: :physical,
-          power: 125
+          power: 130
         )
   end
 
   private
 
   def first_turn_action
-    puts "The attack is charging"
+    puts "#{pokemon.name} lowered his head"
+    stat_changes
     puts
+  end
+
+  def stat
+    [
+      [:def, 1]
+    ]
   end
 
   def second_turn_action
