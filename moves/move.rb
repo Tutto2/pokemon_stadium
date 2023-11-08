@@ -12,9 +12,9 @@ end
 
 class Move
   attr_reader :attack_name, :precision, :power, :priority
-  attr_accessor :category, :type, :secondary_type
+  attr_accessor :category, :type, :secondary_type, :metadata
 
-  def initialize(attack_name:, type:, secondary_type: nil, category:, precision: 100, power: 0, priority: 0)
+  def initialize(attack_name:, type:, secondary_type: nil, category:, precision: 100, power: 0, priority: 0, metadata: nil)
     @attack_name = attack_name
     @type = type
     @secondary_type = secondary_type
@@ -22,12 +22,25 @@ class Move
     @precision = precision
     @power = power
     @priority = priority
+    @metadata = metadata
+  end
+
+  def has_priority_effect?
+    false
+  end
+  
+  def perfom_prior_effect(pokemon)
+    prior_effect(pokemon)
   end
 
   def make_action(*pokemons)
     @pokemon, @pokemon_target = pokemons
     puts "#{pokemon.name} used #{attack_name}"
-    has_several_turns? ? action_per_turn : perform    
+    if has_trigger?
+      trigger_perfom(pokemon)
+    else
+      has_several_turns? ? action_per_turn : perform
+    end
   end
 
   def perform
@@ -66,17 +79,25 @@ class Move
     when 5
       fifth_turn_action
     end
+
     pokemon.count_attack_turns if !pokemon.metadata.nil?
   end
 
-  def first_turn_action; end
-  def second_turn_action; end
-  def third_turn_action; end
-  def fourth_turn_action; end
-  def fifth_turn_action; end
-
   def end_turn_action
-    pokemon.ending_several_turn_attack
+    pokemon.reinit_metadata
+  end
+
+  def has_trigger?
+    false
+  end
+
+  def trigger_perfom(pokemon)
+    if trigger(pokemon) 
+      perform
+    else
+      puts "But it failed."
+    end
+    pokemon.reinit_metadata
   end
 
   def hit_chance
@@ -85,10 +106,10 @@ class Move
     chance = rand(0..100)
     if @category == :status && precision < chance
       failed_attack_message
-      pokemon.ending_several_turn_attack if !pokemon.metadata.nil?
+      pokemon.reinit_metadata if !pokemon.metadata.nil?
     elsif @category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance
       failed_attack_message
-      pokemon.ending_several_turn_attack if !pokemon.metadata.nil?
+      pokemon.reinit_metadata if !pokemon.metadata.nil?
     else
       return true
     end
@@ -146,6 +167,7 @@ class Move
     if dmg > 0
       puts "#{pokemon_target.name} has recieved #{dmg} damage"
       pokemon_target.hp.decrease(dmg)
+      pokemon_target.harm_recieved
       if recoil
         recoil_dmg = calc_recoil(dmg, pokemon.hp_total).to_i
         puts "#{pokemon.name} has recieved #{recoil_dmg} of recoil damage"
@@ -221,29 +243,5 @@ class Move
     elsif category != :status
       puts "#{pokemon_target.name} now has #{pokemon_target.hp_value} hp"
     end
-  end
-end
-
-module BasicPhysicalAtk
-  private
-
-  def atk
-    pokemon.atk
-  end
-
-  def dfn
-    pokemon_target.def
-  end
-end
-
-module BasicSpecialAtk
-  private
-
-  def atk
-    pokemon.sp_atk
-  end
-
-  def dfn
-    pokemon_target.sp_def
   end
 end

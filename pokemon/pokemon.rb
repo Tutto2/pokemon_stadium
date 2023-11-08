@@ -23,6 +23,10 @@ class Pokemon
     # @condition = condition
   end
 
+  def init_whole_turn_action
+    @metadata = {harm: 0}
+  end
+
   def init_several_turn_attack
     @metadata = {turn: 1}
   end
@@ -31,14 +35,27 @@ class Pokemon
     metadata[:turn] += 1
   end
 
-  def ending_several_turn_attack
+  def reinit_metadata
     @metadata = nil
+  end
+
+  def got_harm?
+    if metadata[:harm] == 1
+      true 
+    else
+      false
+    end
+  end
+
+  def harm_recieved
+    return if metadata.nil?
+    metadata[:harm] = 1
   end
 
   def is_attacking?
     true if !metadata.nil?
   end
-
+  
   def fainted?
     hp_value <= 0
   end

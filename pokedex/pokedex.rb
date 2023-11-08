@@ -38,7 +38,7 @@ class Pokedex < Pokemon
                           Stats.new(name: :spd, base_value: 43 )
                         ],
                   weight: 9,
-                  attacks: [  TeraBlastMove.learn,
+                  attacks: [  ShellTrapMove.learn,
                               ShellSmashMove.learn,
                               HydroPumpMove.learn,
                               SkullBashMove.learn
@@ -160,7 +160,7 @@ class Pokedex < Pokemon
                   attacks: [  CloseCombatMove.learn,
                               ClangingScalesMove.learn,
                               ClangorusSoulMove.learn,
-                              BodyPressMove.learn
+                              FocusPunchMove.learn
                           ]
                   )            
     when "Baxcalibur"
@@ -313,7 +313,7 @@ class Pokedex < Pokemon
                   attacks: [  ScalePulseMove.learn,
                               DracoMeteorMove.learn,
                               HydroPumpMove.learn,
-                              FlamethrowerMove.learn
+                              ShellTrapMove.learn
                           ]
                   )              
     end

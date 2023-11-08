@@ -6,7 +6,7 @@ class SkullBashMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :skul_bash,
+    new(  attack_name: :skull_bash,
           type: Types::NORMAL,
           category: :physical,
           power: 130

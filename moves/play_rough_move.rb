@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class PlayRoughMove < Move
   include BasicPhysicalAtk
   include HasSecondaryEffect

@@ -1,4 +1,5 @@
 require_relative "pokedex/pokedex"
+require_relative "moves/move"
 
 class PokemonBattleField
   SWITCH_ACTION = 0.freeze
@@ -43,6 +44,8 @@ class PokemonBattleField
       actions = attack_actions.sort(&priority_queue)
 
       switch_actions.each(&perform)
+      priority_perfom(action_p1)
+      priority_perfom(action_p2)
       actions.each(&perform)
       $turn += 1
     end
@@ -175,7 +178,7 @@ class PokemonBattleField
     current_pokemon.stats.each do |stat|
       stat.reset_stat
     end
-    current_pokemon.ending_several_turn_attack
+    current_pokemon.reinit_metadata
     next_pokemon
   end
 
@@ -186,6 +189,21 @@ class PokemonBattleField
 
       current_pokemon.atk_priority(action_a[:attk_num]) <=> target_pokemon.atk_priority(action_b[:attk_num])
     end
+  end
+
+  def priority_perfom(action_message)
+    i = action_message[:attk_num] - 1
+    player = action_message[:player]
+
+    if player == :one
+      attack = @current_pokemon_p1.attacks[i]
+      pokemon = @current_pokemon_p1
+    else
+      attack = @current_pokemon_p2.attacks[i]
+      pokemon = @current_pokemon_p2
+    end
+
+    attack.perfom_prior_effect(pokemon) if attack.has_priority_effect?
   end
 
   def perform
