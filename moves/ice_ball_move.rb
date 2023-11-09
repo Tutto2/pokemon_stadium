@@ -42,6 +42,6 @@ class IceBallMove < Move
   end
 
   def power
-    30 * (2 ** chain)
+    30 * (2 ** @chain)
   end
 end

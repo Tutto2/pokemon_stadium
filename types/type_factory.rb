@@ -54,8 +54,9 @@ class Types
         DARK =>  NOT_EFFECTIVE
       },
       FIRE => {
-        BUG =>   SUPER_EFFECTIVE,
-        FIRE =>  NOT_EFFECTIVE,
+        ICE => SUPER_EFFECTIVE,
+        BUG => SUPER_EFFECTIVE,
+        FIRE => NOT_EFFECTIVE,
         STEEL => SUPER_EFFECTIVE,
         ROCK =>  NOT_EFFECTIVE,
         GRASS => SUPER_EFFECTIVE,

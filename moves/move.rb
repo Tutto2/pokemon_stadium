@@ -53,8 +53,16 @@ class Move
           action
         end
         end_of_action_message
+        if !pokemon.metadata.nil?
+          end_turn_action if pokemon.metadata[:turn] == nil
+        end
+        post_effect(pokemon) if has_post_effect?
       end
     end
+  end
+
+  def has_post_effect?
+    false
   end
 
   private
@@ -65,7 +73,9 @@ class Move
   end
 
   def action_per_turn
-    pokemon.init_several_turn_attack if pokemon.metadata.nil?
+    if pokemon.metadata.nil? || pokemon.metadata[:turn].nil?
+      pokemon.init_several_turn_attack 
+    end
 
     case pokemon.metadata[:turn]
     when 1
@@ -102,6 +112,9 @@ class Move
 
   def hit_chance
     return true if precision.nil?
+    if !pokemon_target.metadata.nil?
+      return true if pokemon_target.metadata[:post_effect] == "vulnerable"
+    end
 
     chance = rand(0..100)
     if @category == :status && precision < chance
@@ -158,9 +171,13 @@ class Move
     attk = crit && atk.stage < 0 ? atk.initial_value : atk.curr_value
     defn = crit && dfn.stage > 0 ? dfn.initial_value : dfn.curr_value
     crit_value = crit || 1
+    vulnerability = 1
+    if !pokemon_target.metadata.nil? 
+      vulnerability = 2 if pokemon_target.metadata[:post_effect] == "vulnerable"
+    end
 
     puts "power #{power}, type: #{type}"
-    (0.01*bonus*effect*variation*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*power*attk/defn)/50.0 )).to_i
+    (0.01*bonus*effect*variation*vulnerability*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*power*attk/defn)/50.0 )).to_i
   end
 
   def perform_dmg(dmg)

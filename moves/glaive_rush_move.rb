@@ -1,9 +1,8 @@
 require_relative "move"
 
-
 class GlaiveRushMove < Move
   include BasicPhysicalAtk
-  # Makes vulnerable the user for 1 turn (200% dmg && always hit)
+  include PostEffect
 
   def self.learn
     new(  attack_name: :glaive_rush,
@@ -11,5 +10,11 @@ class GlaiveRushMove < Move
           category: :physical,
           power: 120
         )
+  end
+
+  private
+  def post_effect(pokemon)
+    pokemon.metadata = {post_effect: "vulnerable"}
+    puts "#{pokemon.name} is vulnerable"
   end
 end

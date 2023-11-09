@@ -1,9 +1,8 @@
 require_relative "move"
 
-
 class GigatonHammerMove < Move
   include BasicPhysicalAtk
-  # Cannot hit in succession
+  include PostEffect
 
   def self.learn
     new(  attack_name: :gigaton_hammer,
@@ -11,5 +10,11 @@ class GigatonHammerMove < Move
           category: :physical,
           power: 160
         )
+  end
+
+  private
+
+  def post_effect(pokemon)
+    pokemon.metadata = {banned: "last attack"}
   end
 end

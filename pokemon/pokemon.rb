@@ -24,7 +24,8 @@ class Pokemon
   end
 
   def init_whole_turn_action
-    @metadata = {harm: 0}
+    return @metadata = {harm: 0} if metadata.nil?
+    @metadata[:harm] = 0
   end
 
   def init_several_turn_attack
@@ -53,7 +54,13 @@ class Pokemon
   end
 
   def is_attacking?
-    true if !metadata.nil?
+    return false if metadata.nil?
+    !metadata[:turn].nil?
+  end
+
+  def has_banned_attack?
+    return false if metadata.nil?
+    !metadata[:banned].nil?
   end
   
   def fainted?

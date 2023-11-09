@@ -108,7 +108,13 @@ class PokemonBattleField
 
   def select_action(player, current_pokemon, pokemons)
     action_num = action_index(player)
-    
+    case player
+    when :one 
+      previous_atk = action_p1.nil? ? 0 : action_p1[:attk_num]
+    when :two
+      previous_atk = action_p2.nil? ? 0 : action_p2[:attk_num]
+    end
+
     case action_num
     when 1
       if current_pokemon.is_attacking?
@@ -116,7 +122,7 @@ class PokemonBattleField
       else
         current_pokemon.view_attacks
         go_back(current_pokemon.attacks)
-        attk_num = select_attack
+        attk_num = select_attack(current_pokemon, previous_atk)
 
         if (1..4).include?(attk_num)
           {
@@ -152,14 +158,19 @@ class PokemonBattleField
     action_index(player)
   end
 
-  def select_attack
+  def select_attack(current_pokemon, previous_atk)
     print 'Enter the attack number: '
     attk_num = gets.chomp.to_i
+
+    if current_pokemon.has_banned_attack? && attk_num == previous_atk
+      puts "This move can't be used twice in a row"
+      return select_attack(current_pokemon, previous_atk)
+    end
 
     return attk_num if (1..5).include?(attk_num)
 
     puts "Not a valid option, try again."
-    select_attack
+    select_attack(current_pokemon, previous_atk)
   end
 
   def switch_pokemon(player, current_pokemon, pokemons)
