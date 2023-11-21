@@ -25,12 +25,8 @@ class Move
     @metadata = metadata
   end
 
-  def has_priority_effect?
+  def has_additional_action?
     false
-  end
-  
-  def perfom_prior_effect(pokemon)
-    prior_effect(pokemon)
   end
 
   def make_action(*pokemons)
@@ -255,6 +251,10 @@ class Move
   end
 
   def end_of_action_message
+    if pokemon.fainted?
+      puts "#{pokemon.name} has fainted"
+    end
+
     if pokemon_target.fainted?
       puts "#{pokemon_target.name} has fainted"
     elsif category != :status

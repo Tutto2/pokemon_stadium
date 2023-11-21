@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class AgilityMove < Move
   include StatChanges
 

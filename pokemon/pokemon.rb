@@ -6,7 +6,7 @@ require "pry"
 class Pokemon
   attr_reader :name, :types, :attacks, :lvl, :weight
   attr_accessor :stats, :condition, :metadata
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, metadata: nil)
+  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, metadata: nil, teratype: nil)
     @name = name
     @types = types
     @stats = stats
@@ -19,7 +19,7 @@ class Pokemon
       Stats.new(name: :acc, base_value: 1)
     )
     @stats.each {|stat| stat.calc_value(lvl) }
-
+    @teratype = teratype || types.sample
     # @condition = condition
   end
 

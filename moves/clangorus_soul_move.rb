@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class ClangorusSoulMove < Move
   include StatChanges
   include HasSecondaryEffect

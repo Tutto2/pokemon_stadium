@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class ClangingScalesMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect

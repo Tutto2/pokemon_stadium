@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class ElectroBallMove < Move
   include BasicSpecialAtk
   include HasCustomTable

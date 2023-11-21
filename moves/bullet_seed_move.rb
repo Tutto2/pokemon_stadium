@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class BulletSeedMove < Move
   include BasicPhysicalAtk
   include MultiStrikeAtk

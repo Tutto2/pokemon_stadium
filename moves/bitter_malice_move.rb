@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class BitterMaliceMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
