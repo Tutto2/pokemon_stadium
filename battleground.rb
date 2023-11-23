@@ -1,27 +1,28 @@
 require_relative "trainer"
+require_relative "actions/menu"
+require_relative "actions/action_queue"
 require_relative "pokedex/pokedex"
-require_relative "moves/move"
-require_relative "action"
-require_relative "menu"
 require "pry"
 # binding.pry
 
 class PokemonBattleField
   attr_reader :players, :all_pokes, :current_pokemon_p1, :current_pokemon_p2
 
-  def self.init_game(pokemons)
-    print "Player one, select your name: "
-    player_one = Trainer.new(name: gets.chomp)
-
-    print "Player two, select your name: "
-    player_two = Trainer.new(name: gets.chomp)
+  def self.init_game(players_num, pokemons)
+    players = select_players_names(players_num)
 
     battlefield = PokemonBattleField.new(
-      players: [player_one, player_two],
+      players: players,
       all_pokes: pokemons
     )
 
     battlefield.choose_pokemons
+  end
+
+  def self.select_players_names(players_num)
+    (1..players_num).map do |index|
+      Trainer.select_name(index.to_s)
+    end
   end
 
   def initialize(players: [], all_pokes: [])
@@ -52,11 +53,11 @@ class PokemonBattleField
       end
 
       display_pokemons
-      players.each { |player| player.action = player.select_action }
+      players.each { |player| player.action = player.select_action(players) }
 
       queue = ActionQueue.new
-      players.each { |player| queue.priority_queue << player.action }
-      perform_actions(queue)
+      players.each { |player| queue << player.action }
+      queue.perform_actions
       $turn += 1
     end
 
@@ -100,37 +101,6 @@ class PokemonBattleField
       puts player.current_pokemon.status
     end
   end
-
-  def perform_actions(queue)
-    queue.priority_table.each do |index, action|
-      if action.size == 1
-        action.perform_action
-      elsif action != empty?
-        actions = []
-        action.each do |action|
-          if actions.empty?
-            actions << action 
-          else
-            action.speed > actions[0].speed ? actions.unshift(action) : actions << action
-          end
-        end
-        actions.each(&perform)
-      end
-    end
-  end
-
-  def perform
-    ->(action) { action.perform_action }
-  end
-  
-  def go_back(list)
-    puts "#{ (list.length) + 1 }- Go back"
-    puts
-  end
-
-  def alive?
-    ->(pokemon) { !pokemon.fainted?}
-  end
 end
 
 pokemons = [
@@ -154,4 +124,4 @@ pokemons = [
   Pokedex.catch("Zoroark-hisui")
       ]
 
-puts PokemonBattleField.init_game(pokemons)
+puts PokemonBattleField.init_game(2, pokemons)

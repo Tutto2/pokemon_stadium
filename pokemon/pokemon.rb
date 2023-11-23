@@ -1,3 +1,4 @@
+require_relative "../actions/action"
 require_relative "../types/type_factory"
 require_relative "stats"
 require_relative "conditions"
@@ -23,9 +24,15 @@ class Pokemon
     # @condition = condition
   end
 
-  def init_whole_turn_action
-    return @metadata = {harm: 0} if metadata.nil?
-    @metadata[:harm] = 0
+  def view_attacks
+    attacks.each.with_index(1) do |atk, index|
+      puts "#{index}- #{atk.attack_name}"
+    end
+  end
+
+  def attack!(action)
+    pokemons = [self, action.target]
+    action.action.make_action(pokemons)
   end
 
   def init_several_turn_attack
@@ -34,6 +41,11 @@ class Pokemon
 
   def count_attack_turns
     metadata[:turn] += 1
+  end
+
+  def init_whole_turn_action
+    return @metadata = {harm: 0} if metadata.nil?
+    @metadata[:harm] = 0
   end
 
   def reinit_metadata
@@ -65,17 +77,6 @@ class Pokemon
   
   def fainted?
     hp_value <= 0
-  end
-
-  def view_attacks
-    @attacks.each.with_index(1) do |atk, index|
-      puts "#{index}- #{atk.attack_name}"
-    end
-  end
-
-  def attack!(atk_index, target)
-    @curr_attk = @attacks[atk_index-1]
-    @curr_attk.make_action(self, target)
   end
 
   def status

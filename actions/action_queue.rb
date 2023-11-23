@@ -1,4 +1,5 @@
-require_relative "moves/move"
+require_relative "action"
+require_relative "../moves/move"
 
 class ActionQueue < Action
   attr_reader :priority_table
@@ -25,14 +26,24 @@ class ActionQueue < Action
   end
 
   def <<(action)
-    return @priority_table[action.priority] << action if action.action_type != :atk_action
-    
-    move = action.action
-    if move.has_additional_action?
-      actions = [action, move.additional_action]
-      actions.each do |action|
-        @priority_table[action.priority] << action
-      end
-    end
+    @priority_table[action.priority] << action
+  end
+
+  def perform_actions
+    priority_table.each { |_, actions| actions.sort(&sort).each(&:perform) }
+  end
+
+  private
+
+  def sort
+    sort_asc 
+  end
+
+  def sort_asc
+    ->(a, b) { a <=> b }
+  end
+
+  def sort_desc
+    ->(a, b) { b <=> a }
   end
 end

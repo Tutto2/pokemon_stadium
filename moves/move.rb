@@ -25,17 +25,15 @@ class Move
     @metadata = metadata
   end
 
-  def has_additional_action?
-    false
-  end
-
-  def make_action(*pokemons)
+  def make_action(pokemons)
     @pokemon, @pokemon_target = pokemons
     puts "#{pokemon.name} used #{attack_name}"
     if has_trigger?
       trigger_perfom(pokemon)
+    elsif has_several_turns? 
+      action_per_turn 
     else
-      has_several_turns? ? action_per_turn : perform
+      perform
     end
   end
 
@@ -43,12 +41,9 @@ class Move
     if hit_chance
       effectiveness_message
       if effect != 0 || category == :status
-        if strikes_count
-          perform_multistrike
-        else
-          action
-        end
+        strikes_count ? perform_multistrike : action
         end_of_action_message
+
         if !pokemon.metadata.nil?
           end_turn_action if pokemon.metadata[:turn] == nil
         end
@@ -61,8 +56,23 @@ class Move
     false
   end
 
+  def has_additional_action?
+    false
+  end
+
   private
   attr_reader :pokemon, :pokemon_target
+
+  def has_trigger?
+    false
+  end
+
+  def trigger_perfom(pokemon)
+    return perform if trigger(pokemon) 
+
+    puts "But it failed."
+    pokemon.reinit_metadata
+  end
 
   def has_several_turns?
     false
@@ -74,36 +84,14 @@ class Move
     end
 
     case pokemon.metadata[:turn]
-    when 1
-      first_turn_action
-    when 2
-      second_turn_action
-    when 3
-      third_turn_action
-    when 4
-      fourth_turn_action
-    when 5
-      fifth_turn_action
+    when 1 then first_turn_action
+    when 2 then second_turn_action
+    when 3 then third_turn_action
+    when 4 then fourth_turn_action
+    when 5 then fifth_turn_action
     end
 
     pokemon.count_attack_turns if !pokemon.metadata.nil?
-  end
-
-  def end_turn_action
-    pokemon.reinit_metadata
-  end
-
-  def has_trigger?
-    false
-  end
-
-  def trigger_perfom(pokemon)
-    if trigger(pokemon) 
-      perform
-    else
-      puts "But it failed."
-    end
-    pokemon.reinit_metadata
   end
 
   def hit_chance
@@ -113,16 +101,27 @@ class Move
     end
 
     chance = rand(0..100)
-    if @category == :status && precision < chance
-      failed_attack_message
-      pokemon.reinit_metadata if !pokemon.metadata.nil?
-    elsif @category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance
+    if (@category == :status && precision < chance) || (@category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance)
       failed_attack_message
       pokemon.reinit_metadata if !pokemon.metadata.nil?
     else
       return true
     end
     puts
+  end
+
+  def strikes_count
+    false
+  end
+
+  def perform_multistrike
+    hits = 0
+    strikes_count.times do 
+      action
+      hits += 1
+      break if pokemon_target.fainted?
+    end
+    multihit_message(hits)
   end
 
   def action
@@ -143,20 +142,6 @@ class Move
     perform_dmg(damage_formula(crit_chance))
   end
   
-  def strikes_count
-    false
-  end
-
-  def perform_multistrike
-    hits = 0
-    strikes_count.times do 
-      action
-      hits += 1
-      break if pokemon_target.fainted?
-    end
-    multihit_message(hits)
-  end
-
   def status?
     category == :status
   end
@@ -222,6 +207,10 @@ class Move
 
   def recoil
     false
+  end
+
+  def end_turn_action
+    pokemon.reinit_metadata
   end
 
   def effectiveness_message
