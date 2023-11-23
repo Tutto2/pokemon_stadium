@@ -3,11 +3,11 @@ require_relative "actions/menu"
 class Trainer
   attr_accessor :name, :team, :current_pokemon, :action
 
-  def initialize(name: nil, team: [], current_pokemon: nil, action: nil)
+  def initialize(name:)
     @name = name
-    @team = team
-    @current_pokemon = current_pokemon
-    @action = action
+    @team = []
+    @current_pokemon = nil
+    @action = nil
   end
 
   def self.select_name(index)

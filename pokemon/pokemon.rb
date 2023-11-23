@@ -91,11 +91,6 @@ class Pokemon
     false
   end
 
-  def atk_priority(attk_num)
-    atk = @attacks[attk_num-1]
-    AtkPriority.new(atk.priority, spd_value)
-  end
- 
   def to_s
     @name
   end
@@ -115,24 +110,6 @@ class Pokemon
 
     define_method(stat) do
       stats.find(&:"#{stat}?")
-    end
-  end
-end
-
-class AtkPriority
-  attr_reader :priority, :speed
-  def initialize(priority, speed)
-    @priority = priority
-    @speed = speed
-  end
-
-  def <=>(other)
-    if self.priority > other.priority
-      -1
-    elsif self.priority < other.priority
-      1
-    else
-      other.speed <=> self.speed
     end
   end
 end

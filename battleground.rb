@@ -53,7 +53,9 @@ class PokemonBattleField
       end
 
       display_pokemons
-      players.each { |player| player.action = player.select_action(players) }
+      players.each { |player| player.select_action(players) }
+
+      # Posibilidad de mejora (mandar solo oponentes y no todos los jugadores)
 
       queue = ActionQueue.new
       players.each { |player| queue << player.action }
