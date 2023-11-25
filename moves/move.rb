@@ -25,43 +25,41 @@ class Move
     @metadata = metadata
   end
 
-  def make_action(pokemons)
+  def perform_attack(pokemons)
     @pokemon, @pokemon_target = pokemons
+
     puts "#{pokemon.name} used #{attack_name}"
-    if has_trigger?
-      trigger_perfom(pokemon)
-    elsif has_several_turns? 
+    # if whole_turn_action?
+    #   return init_act if metadata[:harm].nil?
+    #   execute
+    if has_several_turns? 
       action_per_turn 
-    else
-      perform
+    elsif hit_chance
+      execute
     end
   end
 
-  def perform
-    if hit_chance
-      effectiveness_message
-      if effect != 0 || category == :status
-        strikes_count ? perform_multistrike : action
-        end_of_action_message
+  def execute
+    effectiveness_message
+    if effect != 0 || category == :status
+      strikes_count ? perform_multistrike : action
+      end_of_action_message
 
-        if !pokemon.metadata.nil?
-          end_turn_action if pokemon.metadata[:turn] == nil
-        end
-        post_effect(pokemon) if has_post_effect?
+      if !pokemon.metadata.nil?
+        end_turn_action if pokemon.metadata[:turn] == nil
       end
+      post_effect(pokemon) if has_post_effect?
     end
   end
 
-  def has_post_effect?
-    false
-  end
-
-  def has_additional_action?
-    false
-  end
+  def additional_move; end
 
   private
   attr_reader :pokemon, :pokemon_target
+
+  def whole_turn_action?
+    false
+  end
 
   def has_trigger?
     false
@@ -122,6 +120,10 @@ class Move
       break if pokemon_target.fainted?
     end
     multihit_message(hits)
+  end
+
+  def has_post_effect?
+    false
   end
 
   def action

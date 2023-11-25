@@ -6,7 +6,7 @@ require "pry"
 # binding.pry
 
 class PokemonBattleField
-  attr_reader :players, :all_pokes, :current_pokemon_p1, :current_pokemon_p2
+  attr_reader :players, :all_pokes
 
   def self.init_game(players_num, pokemons)
     players = select_players_names(players_num)
@@ -39,13 +39,13 @@ class PokemonBattleField
   end
 
   def start_battle
-    $turn = 1
+    @turn = 1
     select_initial_pok(players)
 
     loop do
       break if players.any? { |player| team_fainted?(player) }
       puts
-      puts "############ turn #{$turn} ############"
+      puts "############ turn #{@turn} ############"
       players.each do |player| 
         if player.current_pokemon.fainted?
           player.current_pokemon = player.team[selection_index(player)]
@@ -55,12 +55,10 @@ class PokemonBattleField
       display_pokemons
       players.each { |player| player.select_action(players) }
 
-      # Posibilidad de mejora (mandar solo oponentes y no todos los jugadores)
-
       queue = ActionQueue.new
       players.each { |player| queue << player.action }
       queue.perform_actions
-      $turn += 1
+      @turn += 1
     end
 
     return 'Player two wins!' if pokemons_p1.all?(&:fainted?)

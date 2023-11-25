@@ -4,43 +4,45 @@ require_relative "switch_action"
 
 class Menu
   def self.select_action(trainer, previous_atk, current_pokemon, opponents)
-    action_num = action_index(trainer)
+    if current_pokemon.is_attacking?
+      previous_atk
+    else
+      action_num = action_index(trainer)
 
-    case action_num
-    when 1 then attack_act(trainer, previous_atk, current_pokemon, opponents)
-    when 2 then switch_act(trainer, previous_atk, current_pokemon, opponents)
+      case action_num
+      when 1 then attack_act(trainer, previous_atk, current_pokemon, opponents)
+      when 2 then switch_act(trainer, previous_atk, current_pokemon, opponents)
+      end
     end
   end
 
   def self.attack_act(trainer, previous_atk, current_pokemon, opponents)
-    if current_pokemon.is_attacking?
-      previous_atk
-    else
-      current_pokemon.view_attacks
-      go_back(current_pokemon.attacks)
-      attk_num = select_attack(current_pokemon, previous_atk)
-      target = opponents[0].current_pokemon
+    current_pokemon.view_attacks
+    go_back(current_pokemon.attacks)
+    attk_num = select_attack(current_pokemon, previous_atk)
+    target = select_target(opponents)
+    
+    if (1..4).include?(attk_num)
+      next_attack = current_pokemon.attacks[attk_num - 1]
       
-      if (1..4).include?(attk_num)
-        next_attack = current_pokemon.attacks[attk_num - 1]
-        AttackAction.new(
-          speed: current_pokemon.spd_value,
-          action: next_attack,
-          trainer: trainer,
-          target: target
-        )
-      else
-        return select_action(trainer, previous_atk, current_pokemon, opponents)
-      end
+      AttackAction.new(
+        speed: current_pokemon.spd_value,
+        behaviour: next_attack,
+        trainer: trainer,
+        target: target
+      )
+    else
+      return select_action(trainer, previous_atk, current_pokemon, opponents)
     end
   end
 
   def self.switch_act(trainer, previous_atk, current_pokemon, opponents)
     next_pokemon = switch_pokemon(trainer, previous_atk, current_pokemon, opponents)
-    
+    return select_action(trainer, previous_atk, current_pokemon, opponents) if next_pokemon.nil?
+
     SwitchAction.new(
       speed: current_pokemon.spd_value,
-      action: next_pokemon,
+      behaviour: next_pokemon,
       trainer: trainer
     )
   end
@@ -71,11 +73,15 @@ class Menu
     puts "Not a valid option, try again."
     return select_attack(current_pokemon, previous_atk)
   end
+
+  def self.select_target(opponents)
+    opponents.each { |trainer| puts trainer.name }
+  end
   
   def self.switch_pokemon(trainer, previous_atk, current_pokemon, opponents)
     new_pokemon = trainer.team[select_pokemon(trainer)]
 
-    return select_action(trainer, previous_atk, current_pokemon, opponents) if new_pokemon.nil?
+    return new_pokemon if new_pokemon.nil?
 
     if current_pokemon == new_pokemon
       puts "That's your current pokemon, pick another one."

@@ -26,7 +26,9 @@ class ActionQueue < Action
   end
 
   def <<(action)
-    @priority_table[action.priority] << action
+    action.enqueueable.each do |a|
+      @priority_table[a.priority] << a
+    end
   end
 
   def perform_actions
@@ -36,7 +38,7 @@ class ActionQueue < Action
   private
 
   def sort
-    sort_asc 
+    sort_desc 
   end
 
   def sort_asc

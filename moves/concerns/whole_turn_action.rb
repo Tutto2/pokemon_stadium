@@ -1,8 +1,8 @@
 require_relative "../move"
 
-module HasAdditionalAction
+module WholeTurnAction
   
-  def has_additional_action?
+  def whole_turn_action?
     true
   end
 

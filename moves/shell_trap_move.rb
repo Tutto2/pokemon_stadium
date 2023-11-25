@@ -2,7 +2,7 @@ require_relative "move"
 
 class ShellTrapMove < Move
   include BasicSpecialAtk
-  include HasAdditionalAction
+  include WholeTurnAction
   include HasTrigger
 
   def self.learn

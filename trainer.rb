@@ -33,9 +33,8 @@ class Trainer
   end
 
   def select_action(players)
-    opponents = []
-    players.each { |player| opponents << player if player != self }
-    previous_atk = action
+    opponents = players.reject { |player| player == self }
+    previous_atk = action&.behaviour
 
     @action = Menu.select_action(self, previous_atk, current_pokemon, opponents)
   end

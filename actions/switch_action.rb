@@ -6,7 +6,7 @@ class SwitchAction < Action
   end
   
   def perform
-    next_pokemon = action
+    next_pokemon = behaviour
     @trainer.current_pokemon = next_pokemon
   end
 end

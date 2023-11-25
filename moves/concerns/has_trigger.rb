@@ -4,7 +4,6 @@ module HasTrigger
   def has_trigger?
     true
   end
-  
 
   private
 

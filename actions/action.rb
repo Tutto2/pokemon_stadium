@@ -1,11 +1,11 @@
 require_relative "../pokemon/pokemon"
 
 class Action
-  attr_reader :speed, :action, :trainer, :target, :priority
+  attr_reader :speed, :behaviour, :trainer, :target, :priority
   
-  def initialize(speed:, action:, trainer:, target:, priority:)
+  def initialize(speed:, behaviour:, trainer:, target:, priority:)
     @speed = speed
-    @action = action
+    @behaviour = behaviour
     @trainer = trainer
     @target = target
     @priority = priority
@@ -15,5 +15,9 @@ class Action
 
   def <=>(other)
     self.speed <=> other.speed
+  end
+
+  def enqueueable
+    [self]
   end
 end

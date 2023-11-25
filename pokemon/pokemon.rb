@@ -7,14 +7,14 @@ require "pry"
 class Pokemon
   attr_reader :name, :types, :attacks, :lvl, :weight
   attr_accessor :stats, :condition, :metadata
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, metadata: nil, teratype: nil)
+  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, teratype: nil)
     @name = name
     @types = types
     @stats = stats
     @weight = weight
     @attacks = attacks
     @lvl = lvl
-    @metadata = metadata
+    @metadata = {}
     @stats.push(
       Stats.new(name: :evs, base_value: 1),
       Stats.new(name: :acc, base_value: 1)
@@ -32,51 +32,7 @@ class Pokemon
 
   def attack!(action)
     pokemons = [self, action.target]
-    action.action.make_action(pokemons)
-  end
-
-  def init_several_turn_attack
-    @metadata = {turn: 1}
-  end
-
-  def count_attack_turns
-    metadata[:turn] += 1
-  end
-
-  def init_whole_turn_action
-    return @metadata = {harm: 0} if metadata.nil?
-    @metadata[:harm] = 0
-  end
-
-  def reinit_metadata
-    @metadata = nil
-  end
-
-  def got_harm?
-    if metadata[:harm] == 1
-      true 
-    else
-      false
-    end
-  end
-
-  def harm_recieved
-    return if metadata.nil?
-    metadata[:harm] = 1
-  end
-
-  def is_attacking?
-    return false if metadata.nil?
-    !metadata[:turn].nil?
-  end
-
-  def has_banned_attack?
-    return false if metadata.nil?
-    !metadata[:banned].nil?
-  end
-  
-  def fainted?
-    hp_value <= 0
+    action.behaviour.perform_attack(pokemons)
   end
 
   def status
@@ -87,6 +43,43 @@ class Pokemon
     nil
   end
 
+  def fainted?
+    hp_value <= 0
+  end
+
+  def init_several_turn_attack
+    @metadata[:turn] = 1
+  end
+
+  def count_attack_turns
+    metadata[:turn] += 1
+  end
+
+  def is_attacking?
+    !metadata[:turn].nil?
+  end
+
+  def init_whole_turn_action
+    @metadata[:harm] = 0
+  end
+
+  def harm_recieved
+    return if metadata[:harm].nil?
+    metadata[:harm] += 1
+  end
+
+  def got_harm?
+    metadata[:harm] == 1
+  end
+
+  def has_banned_attack?
+    !metadata[:banned].nil?
+  end
+
+  def reinit_metadata
+    @metadata = {}
+  end
+ 
   def terastallized
     false
   end
