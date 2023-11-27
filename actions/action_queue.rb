@@ -32,12 +32,12 @@ class ActionQueue < Action
   end
 
   def perform_actions
-    priority_table.each { |_, actions| actions.sort(&sort).each(&:perform) }
+    priority_table.each { |_, actions| actions.sort(&sort_order).each(&:perform) }
   end
 
   private
 
-  def sort
+  def sort_order
     sort_desc 
   end
 

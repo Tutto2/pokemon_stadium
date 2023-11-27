@@ -14,8 +14,6 @@ class IvyCudgelMove < Move
         )
   end
 
-  private
-
   def type
     if pokemon.name == "Ogerpon"
       if pokemon.types.include?(Types::WATER)

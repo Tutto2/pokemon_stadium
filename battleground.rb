@@ -61,8 +61,12 @@ class PokemonBattleField
       @turn += 1
     end
 
-    return 'Player two wins!' if pokemons_p1.all?(&:fainted?)
-    return 'Player one Wins!' if pokemons_p2.all?(&:fainted?)
+    players.each do |player|
+      if team_fainted?(player)
+        winner = players.reject { |i| i == player }
+        puts "#{winner[0].name} has won!"
+      end 
+    end
   end
 
   private
@@ -82,10 +86,10 @@ class PokemonBattleField
   def selection_index(player)
     view_pokemons(player.team)
       
-    print "#{player.name} select your initial pokemon: "
+    print "#{player.name} select your pokemon: "
     index = gets.chomp.to_i
 
-    return (index - 1) if index > 0 && index <= player.team.size
+    return (index - 1) if index > 0 && index <= player.team.size && !player.team[index-1].fainted?
       
     puts "Invalid option. Try again"
     return selection_index(player)

@@ -2,7 +2,6 @@ require_relative "move"
 
 class FocusPunchMove < Move
   include BasicPhysicalAtk
-  include WholeTurnAction
   include HasTrigger
 
   def self.learn
@@ -15,18 +14,24 @@ class FocusPunchMove < Move
   end
 
   def additional_move
-    ExtremeSpeedMove.learn
+    FocusPunchCharge.learn
   end
 
   private
 
-  def init_act(pokemon)
-    puts "#{pokemon.name} is focusing."
-    pokemon.init_whole_turn_action
-    puts
-  end
-
   def trigger(pokemon)
     !pokemon.got_harm?
+  end
+end
+
+class FocusPunchCharge < Move
+  include HasTrigger
+
+  def self.learn
+    new(priority: 6)
+  end
+
+  def additional_action(pokemon)
+    puts "#{pokemon.name} is focusing."
   end
 end

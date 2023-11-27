@@ -34,8 +34,8 @@ class Trainer
 
   def select_action(players)
     opponents = players.reject { |player| player == self }
-    previous_atk = action&.behaviour
+    previous_action = action
 
-    @action = Menu.select_action(self, previous_atk, current_pokemon, opponents)
+    @action = Menu.select_action(self, previous_action, current_pokemon, opponents)
   end
 end

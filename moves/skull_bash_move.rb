@@ -28,7 +28,7 @@ class SkullBashMove < Move
   end
 
   def second_turn_action
-    perform
+    execute
     end_turn_action
   end
 end

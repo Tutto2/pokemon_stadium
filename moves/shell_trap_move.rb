@@ -2,7 +2,6 @@ require_relative "move"
 
 class ShellTrapMove < Move
   include BasicSpecialAtk
-  include WholeTurnAction
   include HasTrigger
 
   def self.learn
@@ -14,24 +13,25 @@ class ShellTrapMove < Move
         )
   end
 
-  def additional_action
-    Action.new(
-      action_type: :additional_action,
-      priority: 6,
-      action: set_trigger(pokemon),
-      speed: self.speed
-    )
+  def additional_move
+    ShellTrapCharge.learn
   end
 
   private
 
-  def set_trigger(pokemon)
-    puts "#{pokemon.name} set a shell trap."
-    pokemon.init_whole_turn_action
-    puts
-  end
-
   def trigger(pokemon)
     pokemon.got_harm?
+  end
+end
+
+class ShellTrapCharge < Move
+  include HasTrigger
+
+  def self.learn
+    new(priority: 6)
+  end
+
+  def additional_action(pokemon)
+    puts "#{pokemon.name} set a shell trap."
   end
 end

@@ -11,8 +11,6 @@ class GyroBallMove < Move
         )
   end
 
-  private
-
   def power
     [150, ( ( 25 * pokemon_target.spd_value ) / pokemon.spd_value ) + 1 ].min.to_i
   end

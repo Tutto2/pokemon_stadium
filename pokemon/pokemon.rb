@@ -31,8 +31,7 @@ class Pokemon
   end
 
   def attack!(action)
-    pokemons = [self, action.target]
-    action.behaviour.perform_attack(pokemons)
+    action.behaviour.perform_attack(self, action.target.current_pokemon)
   end
 
   def status
