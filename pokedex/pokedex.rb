@@ -23,7 +23,7 @@ class Pokedex < Pokemon
                   weight: 6,
                   attacks: [  ElectroBallMove.learn,
                               DischargeMove.learn,
-                              HeavySlamMove.learn,
+                              FlashMove.learn,
                               AgilityMove.learn
                           ]
                   )

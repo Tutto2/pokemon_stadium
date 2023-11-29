@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class DracoMeteorMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect

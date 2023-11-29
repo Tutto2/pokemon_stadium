@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class DischargeMove < Move
   include BasicSpecialAtk
   # 30% parali

@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class CloseCombatMove < Move
   include BasicPhysicalAtk
   include HasSecondaryEffect

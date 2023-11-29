@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class DragonDanceMove < Move
   include StatChanges
 

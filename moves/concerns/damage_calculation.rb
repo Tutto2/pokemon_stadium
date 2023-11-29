@@ -38,7 +38,8 @@ module DamageFormula
     vulnerability = pokemon_target.metadata[:post_effect] == "vulnerable" ? 2 : 1
 
     puts "power #{attack.power}, type: #{attack.type}"
-    (0.01*bonus*effect*variation*vulnerability*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*attack.power*attk/defn)/50.0 )).to_i
+    dmg = (0.01*bonus*effect*variation*vulnerability*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*attack.power*attk/defn)/50.0 )).to_i
+    pokemon.health_condition == :burned ? (dmg / 2) : dmg
   end
 
   def crit_chance

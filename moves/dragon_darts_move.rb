@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class DragonDartsMove < Move
   include BasicPhysicalAtk
   include MultiStrikeAtk

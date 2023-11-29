@@ -2,7 +2,7 @@ require_relative "move"
 
 class FlamethrowerMove < Move
   include BasicSpecialAtk
-  # Can burn 10%
+  include HasSecondaryEffect
 
   def self.learn
     new(  attack_name: :flamethrower,
@@ -10,5 +10,13 @@ class FlamethrowerMove < Move
           category: :special,
           power: 90
         )
+  end
+
+  def secondary_effect
+    health_condition_apply(pokemon_target, BurnCondition.get_burn)
+  end
+
+  def trigger_chance
+    1
   end
 end

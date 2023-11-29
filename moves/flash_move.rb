@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class FlashMove < Move
   include StatChanges
 

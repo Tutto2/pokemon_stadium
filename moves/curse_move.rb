@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class CurseMove < Move
   include StatChanges
   # Different effect depending on the poke type

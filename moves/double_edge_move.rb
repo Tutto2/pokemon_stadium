@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class DoubleEdgeMove < Move
   include BasicPhysicalAtk
   include HasRecoil

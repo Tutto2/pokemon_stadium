@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class DoubleTeamMove < Move
   include StatChanges
 

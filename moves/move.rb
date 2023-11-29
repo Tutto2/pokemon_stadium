@@ -2,11 +2,18 @@ curr_dir = File.dirname(__FILE__)
 concerns_path = File.join(curr_dir, '.', 'concerns')
 file_paths = Dir.glob(File.join(concerns_path, '*.rb'))
 
-require_relative "../pokemon/pokemon"
-require_relative "../types/type_factory"
+health_conditions_path = File.join(curr_dir, '../conditions', 'health_conditions')
+conditions_paths = Dir.glob(File.join(health_conditions_path, '*.rb'))
+
+conditions_paths.each do |condition_paths|
+  require_relative condition_paths
+end
 file_paths.each do |file_path|
   require_relative file_path
 end
+require_relative "../pokemon/pokemon"
+require_relative "../types/type_factory"
+
 
 class Move
   include Messages
@@ -63,9 +70,7 @@ class Move
       strikes_count ? perform_multistrike : action
       end_of_action_message(pokemon, pokemon_target)
 
-      if !pokemon.metadata.nil?
-        end_turn_action if pokemon.metadata[:turn] == nil
-      end
+      end_turn_action if pokemon.metadata[:turn] == nil
       post_effect(pokemon) if has_post_effect?
     end
   end
@@ -161,6 +166,14 @@ class Move
 
   def damage_effect
     damage_calculation(self, pokemon, pokemon_target, effect)
+  end
+
+  def health_condition_apply(target, condition)
+    if target.health_condition.nil?
+      target.health_condition = condition 
+      puts "#{target.name} got #{condition.name}!"
+      puts
+    end
   end
   
   def cast_additional_effect; end

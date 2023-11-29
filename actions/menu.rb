@@ -63,7 +63,7 @@ class Menu
     print 'Enter the attack number: '
     attk_num = gets.chomp.to_i
 
-    if current_pokemon.has_banned_attack? && attk_num == previous_action
+    if current_pokemon.has_banned_attack? && current_pokemon.attacks[attk_num - 1] == previous_action.behaviour
       puts "This move can't be used twice in a row"
       return select_attack(current_pokemon, previous_action)
     end

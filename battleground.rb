@@ -58,6 +58,7 @@ class PokemonBattleField
       queue = ActionQueue.new
       players.each { |player| queue << player.action }
       queue.perform_actions
+      condition_effects if players.any? { |player| player.current_pokemon.health_condition != nil }
       @turn += 1
     end
 
@@ -103,6 +104,13 @@ class PokemonBattleField
     players.each do |player|
       puts "#{player.name}'s pokemon:"
       puts player.current_pokemon.status
+    end
+  end
+
+  def condition_effects
+    players.each do |player|
+      pok = player.current_pokemon
+      pok.health_condition&.dmg_effect(pok)
     end
   end
 end

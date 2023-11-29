@@ -1,13 +1,13 @@
 require_relative "../actions/action"
 require_relative "../types/type_factory"
 require_relative "stats"
-require_relative "conditions"
+require_relative "../conditions/health_conditions/health_conditions"
 require "pry"
 
 class Pokemon
   attr_reader :name, :types, :attacks, :lvl, :weight
-  attr_accessor :stats, :condition, :metadata
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, teratype: nil)
+  attr_accessor :stats, :condition, :metadata, :health_condition
+  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, health_condition: nil, teratype: nil)
     @name = name
     @types = types
     @stats = stats
@@ -20,8 +20,8 @@ class Pokemon
       Stats.new(name: :acc, base_value: 1)
     )
     @stats.each {|stat| stat.calc_value(lvl) }
+    @health_condition = health_condition
     @teratype = teratype || types.sample
-    # @condition = condition
   end
 
   def view_attacks

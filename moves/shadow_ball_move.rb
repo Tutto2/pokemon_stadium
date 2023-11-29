@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class ShadowBallMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect

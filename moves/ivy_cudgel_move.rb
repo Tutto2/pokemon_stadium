@@ -7,7 +7,7 @@ class IvyCudgelMove < Move
   include TypeChange
 
   def self.learn
-    new(  attack_name: :evy_cudgel,
+    new(  attack_name: :ivy_cudgel,
           category: :physical,
           type: Types::GRASS,
           power: 100
