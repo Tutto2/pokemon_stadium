@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class ShellSmashMove < Move
   include StatChanges
 

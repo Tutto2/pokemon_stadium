@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class ShadowClawMove < Move
   include BasicPhysicalAtk
   include HasHighCritRatio

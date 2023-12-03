@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class TeraBlastMove < Move
   include BasicSpecialAtk
   include TypeChange

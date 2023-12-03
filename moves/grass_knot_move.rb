@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class GrassKnotMove < Move
   include BasicSpecialAtk
   include HasCustomTable

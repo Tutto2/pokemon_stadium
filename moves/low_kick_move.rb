@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class LowKickMove < Move
   include BasicPhysicalAtk
   include HasCustomTable

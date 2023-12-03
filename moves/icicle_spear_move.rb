@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class IcicleSpearMove < Move
   include BasicPhysicalAtk
   include MultiStrikeAtk

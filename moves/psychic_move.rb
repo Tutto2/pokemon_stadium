@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class PsychicMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect

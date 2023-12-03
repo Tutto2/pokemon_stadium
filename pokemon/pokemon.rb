@@ -31,11 +31,15 @@ class Pokemon
   end
 
   def attack!(action)
-    action.behaviour.perform_attack(self, action.target.current_pokemon)
+    attack = action.behaviour
+    return attack.perform_attack(self, action.target.current_pokemon) if health_condition.nil?
+    return attack.perform_attack(self, action.target.current_pokemon) unless health_condition.unable_to_move
+    puts "#{name} is #{health_condition.name}, it was unable to move"
+    puts
   end
 
   def status
-    puts "#{@name} - #{hp_value} / #{hp_total} hp (#{types.map(&:to_s).join("/")})"
+    puts "#{@name} - #{hp_value} / #{hp_total} hp (#{types.map(&:to_s).join("/")}) #{health_condition&.name}"
     stats.each do |stat|
       puts "#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}"
     end

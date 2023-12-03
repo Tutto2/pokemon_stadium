@@ -73,9 +73,9 @@ class Pokedex < Pokemon
                         ],
                   weight: 162,
                   attacks: [  HydroPumpMove.learn,
-                              CurseMove.learn,
+                              ScaldMove.learn,
                               ShadowBallMove.learn,
-                              CalmMindMove.learn
+                              RecoverMove.learn
                           ]
                   )
     when "Golem"
@@ -124,9 +124,9 @@ class Pokedex < Pokemon
                         ],
                   weight: 4,
                   attacks: [  PsychicMove.learn,
-                              FlamethrowerMove.learn,
+                              SacredFireMove.learn,
                               ShadowBallMove.learn,
-                              CalmMindMove.learn
+                              TriAttackMove.learn
                           ]
                   )             
     when "Dragapult"
@@ -193,7 +193,7 @@ class Pokedex < Pokemon
                   weight: 39.8,
                   attacks: [  SeedBombMove.learn,
                               IvyCudgelMove.learn,
-                              BulletSeedMove.learn,
+                              FlareBlitzMove.learn,
                               SwordDanceMove.learn
                           ]
                   ) 
@@ -313,7 +313,7 @@ class Pokedex < Pokemon
                   attacks: [  ScalePulseMove.learn,
                               DracoMeteorMove.learn,
                               HydroPumpMove.learn,
-                              ShellTrapMove.learn
+                              TriAttackMove.learn
                           ]
                   )              
     end

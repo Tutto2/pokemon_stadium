@@ -4,7 +4,7 @@ class BurnCondition < HealthConditions
   def self.get_burn
     new(  
       name: :burned, 
-      inmune_type: Types::FIRE
+      immune_type: Types::FIRE
       )
   end
 

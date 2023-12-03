@@ -14,6 +14,7 @@ module DamageFormula
   def damage_calculation(attack, pokemon, pokemon_target, effect)
     @attack, @pokemon, @pokemon_target, @effect = attack, pokemon, pokemon_target, effect
     perform_dmg(damage_formula(crit_chance))
+    defrost_evaluation
   end 
 
   def perform_dmg(dmg)
@@ -36,10 +37,13 @@ module DamageFormula
     defn = crit && dfn.stage > 0 ? dfn.initial_value : dfn.curr_value
     crit_value = crit || 1
     vulnerability = pokemon_target.metadata[:post_effect] == "vulnerable" ? 2 : 1
-
-    puts "power #{attack.power}, type: #{attack.type}"
+    puts "Power: #{attack.power}"
     dmg = (0.01*bonus*effect*variation*vulnerability*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*attack.power*attk/defn)/50.0 )).to_i
-    pokemon.health_condition == :burned ? (dmg / 2) : dmg
+    if pokemon.health_condition == :burned && attack.category == :physical 
+      (dmg / 2)
+    else
+      dmg
+    end
   end
 
   def crit_chance
@@ -70,5 +74,14 @@ module DamageFormula
 
   def recoil
     false
+  end
+
+  def defrost_evaluation
+    if pokemon_target.health_condition == :frozen
+      if attack.type == Types::FIRE || attack.can_defrost?(attack.attack_name)
+        puts "#{pokemon_target.name} got thawed out"
+        pokemon_target.health_condition = nil
+      end
+    end
   end
 end

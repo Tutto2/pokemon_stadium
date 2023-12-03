@@ -18,6 +18,7 @@ require_relative "../types/type_factory"
 class Move
   include Messages
   include DamageFormula
+  include SpecialFeatures
 
   attr_reader :attack_name, :precision, :power, :priority, :pokemon, :pokemon_target
   attr_accessor :category, :type, :secondary_type, :metadata
@@ -55,7 +56,7 @@ class Move
   end
   
   def perform_normal_attack
-    puts "#{pokemon.name} used #{attack_name}"
+    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
     
     if has_several_turns?
       action_per_turn 
@@ -80,10 +81,6 @@ class Move
   private
   attr_reader :pokemon, :pokemon_target
 
-  def has_trigger?
-    false
-  end
-
   def additional_action(pokemon); end
 
   def trigger_perform
@@ -93,12 +90,8 @@ class Move
     pokemon.reinit_metadata
   end
 
-  def has_several_turns?
-    false
-  end
-
   def action_per_turn
-    if pokemon.metadata.nil? || pokemon.metadata[:turn].nil?
+    if pokemon.metadata[:turn].nil?
       pokemon.init_several_turn_attack 
     end
 
@@ -158,10 +151,6 @@ class Move
     status? ? status_effect : damage_effect
   end
 
-  def status?
-    category == :status
-  end
-  
   def status_effect; end
 
   def damage_effect
@@ -169,10 +158,9 @@ class Move
   end
 
   def health_condition_apply(target, condition)
-    if target.health_condition.nil?
-      target.health_condition = condition 
+    if target.health_condition.nil? && !(target.types.any? { |type| type == condition.immune_type })
+      target.health_condition = condition
       puts "#{target.name} got #{condition.name}!"
-      puts
     end
   end
   

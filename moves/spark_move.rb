@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class SparkMove < Move
   include BasicSpecialAtk
   # 30% parali

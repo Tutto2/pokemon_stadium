@@ -49,6 +49,7 @@ class PokemonBattleField
       players.each do |player| 
         if player.current_pokemon.fainted?
           player.current_pokemon = player.team[selection_index(player)]
+          puts
         end
       end
 
@@ -110,7 +111,9 @@ class PokemonBattleField
   def condition_effects
     players.each do |player|
       pok = player.current_pokemon
-      pok.health_condition&.dmg_effect(pok)
+      if !pok.fainted?
+        pok.health_condition&.dmg_effect(pok)
+      end
     end
   end
 end

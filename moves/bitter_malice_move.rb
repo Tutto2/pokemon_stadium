@@ -4,7 +4,6 @@ class BitterMaliceMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
   include StatChanges
-  # Cause frostbite
 
   def self.learn
     new(  attack_name: :bitter_malice,

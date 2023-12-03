@@ -17,6 +17,6 @@ class FlamethrowerMove < Move
   end
 
   def trigger_chance
-    1
+    0.1
   end
 end

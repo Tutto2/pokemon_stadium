@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class MakeItRainMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect

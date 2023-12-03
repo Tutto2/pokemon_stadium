@@ -3,16 +3,18 @@ require_relative "../../pokemon/pokemon"
 require_relative "../../types/type_factory"
 
 class HealthConditions
-  attr_accessor :name, :inmune_type
+  attr_accessor :name, :immune_type
 
-  def initialize(name:, inmune_type: nil)
+  def initialize(name:, immune_type: nil)
     @name = name
-    @inmune_type = inmune_type
+    @immune_type = immune_type
   end
 
   def dmg_effect(pokemon); end
 
-  def fail_change; end
+  def unable_to_move
+    false
+  end
 
   def stat_nerf; end
 

@@ -8,7 +8,7 @@ class Menu
       previous_action
     else
       action_num = action_index(trainer)
-
+      puts
       case action_num
       when 1 then attack_act(trainer, previous_action, current_pokemon, opponents)
       when 2 then switch_act(trainer, previous_action, current_pokemon, opponents)
@@ -21,7 +21,7 @@ class Menu
     go_back(current_pokemon.attacks)
     attk_num = select_attack(current_pokemon, previous_action)
     target = select_target(opponents)
-    
+    puts
     if (1..4).include?(attk_num)
       next_attack = current_pokemon.attacks[attk_num - 1]
       
@@ -50,6 +50,7 @@ class Menu
   def self.action_index(trainer)
     puts "1- Attack"
     puts "2- Change pokemon"
+    puts
     print "#{trainer.name}, what do you want to do with #{trainer.current_pokemon}?: "
     num = gets.chomp.to_i
 

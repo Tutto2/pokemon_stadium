@@ -1,15 +1,14 @@
 require_relative "move"
 
-class SacredFireMove < Move
+class ScladMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :sacred_fire,
-          type: Types::FIRE,
+    new(  attack_name: :scald,
+          type: Types::WATER,
           category: :special,
-          precision: 95,
-          power: 100
+          power: 80
         )
   end
 
@@ -18,6 +17,6 @@ class SacredFireMove < Move
   end
 
   def trigger_chance
-    0.5
+    0.3
   end
 end

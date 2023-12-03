@@ -1,6 +1,5 @@
 require_relative "move"
 
-
 class IvyCudgelMove < Move
   include BasicPhysicalAtk
   include HasHighCritRatio
