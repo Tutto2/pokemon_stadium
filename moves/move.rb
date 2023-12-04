@@ -143,7 +143,7 @@ class Move
 
   def action
     main_effect
-    cast_additional_effect if pokemon.was_successful
+    cast_additional_effect if pokemon.was_successful?
     puts
   end
   

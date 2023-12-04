@@ -26,7 +26,7 @@ class Menu
       next_attack = current_pokemon.attacks[attk_num - 1]
       
       AttackAction.new(
-        speed: current_pokemon.spd_value,
+        speed: current_pokemon.actual_speed,
         behaviour: next_attack,
         trainer: trainer,
         target: target
@@ -41,7 +41,7 @@ class Menu
     return select_action(trainer, previous_action, current_pokemon, opponents) if next_pokemon.nil?
 
     SwitchAction.new(
-      speed: current_pokemon.spd_value,
+      speed: current_pokemon.actual_speed,
       behaviour: next_pokemon,
       trainer: trainer
     )

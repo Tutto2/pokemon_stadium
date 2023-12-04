@@ -1,15 +1,20 @@
 require_relative "move"
 
-class SparkMove < Move
+class VoltTackleMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
+  include HasRecoil
 
   def self.learn
-    new(  attack_name: :spark,
+    new(  attack_name: :volt_tackle,
           type: Types::ELECTRIC,
-          category: :special,
-          power: 65
+          category: :physical,
+          power: 120
         )
+  end
+
+  def recoil_factor
+    1.0/3.0
   end
 
   def secondary_effect

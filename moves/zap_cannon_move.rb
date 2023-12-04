@@ -1,14 +1,15 @@
 require_relative "move"
 
-class SparkMove < Move
+class ZapCannonMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :spark,
+    new(  attack_name: :zap_cannon,
           type: Types::ELECTRIC,
           category: :special,
-          power: 65
+          power: 120,
+          precision: 50
         )
   end
 
@@ -17,6 +18,6 @@ class SparkMove < Move
   end
 
   def trigger_chance
-    0.3
+    1
   end
 end

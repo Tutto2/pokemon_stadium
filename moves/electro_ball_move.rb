@@ -23,6 +23,6 @@ class ElectroBallMove < Move
   end
   
   def calculation_stat
-    (pokemon.spd_value / pokemon_target.spd_value).to_f
+    (pokemon.actual_speed / pokemon_target.actual_speed).to_f
   end
 end

@@ -52,8 +52,10 @@ class Pokemon
   def status
     puts "#{@name} - #{hp_value} / #{hp_total} hp (#{types.map(&:to_s).join("/")}) #{health_condition&.name}"
     stats.each do |stat|
+      next if stat == hp || stat == spd
       puts "#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}"
     end
+    puts "spd #{actual_speed} / #{spd.initial_value} / #{spd.stage}"
     nil
   end
 
@@ -90,12 +92,21 @@ class Pokemon
     !metadata[:banned].nil?
   end
 
-  def was_successful
+  def was_successful?
     metadata[:perform] == "success"
   end
 
   def successful_perform
     metadata[:perform] = "success"
+  end
+
+  def actual_speed
+    speed = spd_value
+    if health_condition == :paralyzed
+      speed / 2
+    else
+      speed
+    end
   end
 
   def reinit_metadata

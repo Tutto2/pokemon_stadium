@@ -21,9 +21,9 @@ class Pokedex < Pokemon
                           Stats.new(name: :spd, base_value: 90 )
                         ],
                   weight: 6,
-                  attacks: [  ElectroBallMove.learn,
-                              DischargeMove.learn,
-                              FlashMove.learn,
+                  attacks: [  VoltTackleMove.learn,
+                              ElectroBallMove.learn,
+                              ThunderWaveMove.learn,
                               AgilityMove.learn
                           ]
                   )
@@ -126,7 +126,7 @@ class Pokedex < Pokemon
                   attacks: [  PsychicMove.learn,
                               SacredFireMove.learn,
                               HypnosisMove.learn,
-                              TriAttackMove.learn
+                              ZapCannonMove.learn
                           ]
                   )             
     when "Dragapult"
@@ -294,7 +294,7 @@ class Pokedex < Pokemon
                         ],
                   weight: 73,
                   attacks: [  FoulPlayMove.learn,
-                              ShadowClawMove.learn,
+                              TriAttackMove.learn,
                               ShadowBallMove.learn,
                               BitterMaliceMove.learn
                           ]

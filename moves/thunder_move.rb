@@ -1,14 +1,15 @@
 require_relative "move"
 
-class SparkMove < Move
+class ThunderMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :spark,
+    new(  attack_name: :thunder,
           type: Types::ELECTRIC,
           category: :special,
-          power: 65
+          power: 110,
+          precision: 70
         )
   end
 

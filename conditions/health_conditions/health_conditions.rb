@@ -16,8 +16,6 @@ class HealthConditions
     false
   end
 
-  def stat_nerf; end
-
   def init_count
     @turn = 0
   end
