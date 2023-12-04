@@ -2,6 +2,7 @@ require_relative "move"
 
 class PollenPuffMove < Move
   include BasicSpecialAtk
+  # heal on self
 
   def self.learn
     new(  attack_name: :pollen_puff,
@@ -12,11 +13,5 @@ class PollenPuffMove < Move
   end
 
   private
-  def damage_effect
-    if false && pokemon.ally?(pokemon_target)
-      # heal_effect(0.5)
-    else
-      super
-    end
-  end
+
 end

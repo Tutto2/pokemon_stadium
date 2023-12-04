@@ -3,7 +3,7 @@ require_relative "../../pokemon/pokemon"
 require_relative "../../types/type_factory"
 
 class HealthConditions
-  attr_accessor :name, :immune_type
+  attr_accessor :name, :immune_type, :turn
 
   def initialize(name:, immune_type: nil)
     @name = name
@@ -17,6 +17,14 @@ class HealthConditions
   end
 
   def stat_nerf; end
+
+  def init_count
+    @turn = 0
+  end
+
+  def turn_count
+    @turn += 1
+  end
 
   def ==(other)
     name == other

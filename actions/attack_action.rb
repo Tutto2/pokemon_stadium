@@ -9,11 +9,9 @@ class AttackAction < Action
   def perform
     current_pokemon = trainer.current_pokemon
     condition = current_pokemon.health_condition
-    if condition == :frozen
-      if condition.free_chance? || self.behaviour.can_defrost?(self.behaviour.attack_name)
-        puts "#{current_pokemon.name} got thawed out"
-        current_pokemon.health_condition = nil
-      end
+    if condition == :frozen && ( condition.free_chance? || behaviour.can_defrost?(behaviour.attack_name) )
+      puts "#{current_pokemon.name} got thawed out"
+      current_pokemon.health_condition = nil
     end
     current_pokemon.attack!(self) unless current_pokemon.fainted?
   end

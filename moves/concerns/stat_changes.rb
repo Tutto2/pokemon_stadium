@@ -5,6 +5,7 @@ module StatChanges
     stat.each do |(stat, stages)|
       target.public_send(stat).stage_modifier(target, stages)
     end
+    pokemon.successful_perform
   end
 
   private

@@ -143,7 +143,7 @@ class Move
 
   def action
     main_effect
-    cast_additional_effect
+    cast_additional_effect if pokemon.was_successful
     puts
   end
   
@@ -158,7 +158,7 @@ class Move
   end
 
   def health_condition_apply(target, condition)
-    if target.health_condition.nil? && !(target.types.any? { |type| type == condition.immune_type })
+    if target == pokemon || ( target.health_condition.nil? && !(target.types.any? { |type| type == condition.immune_type }) )
       target.health_condition = condition
       puts "#{target.name} got #{condition.name}!"
     end

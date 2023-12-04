@@ -1,6 +1,6 @@
 require_relative "move"
 
-class ScladMove < Move
+class ScaldMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
 

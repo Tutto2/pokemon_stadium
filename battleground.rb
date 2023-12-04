@@ -113,6 +113,7 @@ class PokemonBattleField
       pok = player.current_pokemon
       if !pok.fainted?
         pok.health_condition&.dmg_effect(pok)
+        pok.health_condition&.turn_count if !pok.health_condition&.turn.nil?
       end
     end
   end

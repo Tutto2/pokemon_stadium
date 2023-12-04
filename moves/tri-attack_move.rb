@@ -15,7 +15,7 @@ class TriAttackMove < Move
   def secondary_effect
     freeze = FreezeCondition.get_freeze
     burn = BurnCondition.get_burn
-    possible_effects = [freeze]
+    possible_effects = [burn]
     return health_condition_apply(pokemon_target, possible_effects.sample)
   end
 

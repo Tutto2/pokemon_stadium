@@ -55,7 +55,7 @@ class Pokedex < Pokemon
                           Stats.new(name: :spd, base_value: 30 )
                         ],
                   weight: 460,
-                  attacks: [  RecoverMove.learn,
+                  attacks: [  RestMove.learn,
                               DoubleEdgeMove.learn,
                               CurseMove.learn,
                               GyroBallMove.learn
@@ -125,7 +125,7 @@ class Pokedex < Pokemon
                   weight: 4,
                   attacks: [  PsychicMove.learn,
                               SacredFireMove.learn,
-                              ShadowBallMove.learn,
+                              HypnosisMove.learn,
                               TriAttackMove.learn
                           ]
                   )             

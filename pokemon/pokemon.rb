@@ -32,9 +32,20 @@ class Pokemon
 
   def attack!(action)
     attack = action.behaviour
-    return attack.perform_attack(self, action.target.current_pokemon) if health_condition.nil?
-    return attack.perform_attack(self, action.target.current_pokemon) unless health_condition.unable_to_move
-    puts "#{name} is #{health_condition.name}, it was unable to move"
+    target = action.target.current_pokemon
+
+    if !health_condition.nil? && health_condition == :asleep
+      if health_condition.wake_up?
+        puts "#{name} woke up!" 
+        @health_condition = nil
+      end
+    end
+
+    if !health_condition.nil? && health_condition.unable_to_move
+      puts "#{name} is #{health_condition.name}, it was unable to move"
+    else 
+      attack.perform_attack(self, target)
+    end
     puts
   end
 
@@ -77,6 +88,14 @@ class Pokemon
 
   def has_banned_attack?
     !metadata[:banned].nil?
+  end
+
+  def was_successful
+    metadata[:perform] == "success"
+  end
+
+  def successful_perform
+    metadata[:perform] = "success"
   end
 
   def reinit_metadata

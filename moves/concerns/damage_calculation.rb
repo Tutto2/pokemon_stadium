@@ -14,7 +14,6 @@ module DamageFormula
   def damage_calculation(attack, pokemon, pokemon_target, effect)
     @attack, @pokemon, @pokemon_target, @effect = attack, pokemon, pokemon_target, effect
     perform_dmg(damage_formula(crit_chance))
-    defrost_evaluation
   end 
 
   def perform_dmg(dmg)
@@ -22,6 +21,8 @@ module DamageFormula
       puts "#{pokemon_target.name} has recieved #{dmg} damage"
       pokemon_target.hp.decrease(dmg)
       pokemon_target.harm_recieved
+      defrost_evaluation
+      pokemon.successful_perform
       if recoil
         recoil_dmg = calc_recoil(dmg, pokemon.hp_total).to_i
         puts "#{pokemon.name} has recieved #{recoil_dmg} of recoil damage"
