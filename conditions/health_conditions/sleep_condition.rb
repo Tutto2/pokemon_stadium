@@ -7,10 +7,11 @@ class SleepCondition < HealthConditions
     new(name: :asleep, sleep_turns: turns)
   end
 
-  def initialize(name:, sleep_turns:)
+  def initialize(name:, sleep_turns:, immune_type: [])
     @name = name
     @sleep_turns = sleep_turns
-    
+    @immune_type = immune_type
+
     init_count
   end
 

@@ -4,7 +4,7 @@ class FreezeCondition < HealthConditions
   def self.get_freeze
     new(  
       name: :frozen, 
-      immune_type: Types::ICE
+      immune_type: [Types::ICE]
       )
   end
 

@@ -114,6 +114,7 @@ class PokemonBattleField
       if !pok.fainted?
         pok.health_condition&.dmg_effect(pok)
         pok.health_condition&.turn_count if !pok.health_condition&.turn.nil?
+        puts "#{pok.name} has fanited" if pok.fainted?
       end
     end
   end

@@ -227,8 +227,8 @@ class Pokedex < Pokemon
                   weight: 40.5,
                   attacks: [  ShadowBallMove.learn,
                               PsychicMove.learn,
-                              FlamethrowerMove.learn,
-                              CalmMindMove.learn
+                              ToxicMove.learn,
+                              SludgeBombMove.learn
                           ]
                   )
     when "Ceruledge"

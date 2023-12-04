@@ -4,7 +4,7 @@ class ParalysisCondition < HealthConditions
   def self.get_paralyzed
     new(  
       name: :paralyzed, 
-      immune_type: Types::ELECTRIC
+      immune_type: [Types::ELECTRIC]
       )
   end
 

@@ -158,9 +158,16 @@ class Move
   end
 
   def health_condition_apply(target, condition)
-    if target == pokemon || ( target.health_condition.nil? && !(target.types.any? { |type| type == condition.immune_type }) )
+    target.types.each do |target_type|
+      condition.immune_type.each do |immune_type|
+        return "#{target.name} cannot get #{condition.name}" if target_type == immune_type
+      end
+    end
+    if target == pokemon || target.health_condition.nil?
       target.health_condition = condition
       puts "#{target.name} got #{condition.name}!"
+    else
+      puts "But it failed!" if category == :status
     end
   end
   

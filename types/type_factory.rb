@@ -60,6 +60,7 @@ class Types
         STEEL => SUPER_EFFECTIVE,
         ROCK =>  NOT_EFFECTIVE,
         GRASS => SUPER_EFFECTIVE,
+        WATER => NOT_EFFECTIVE,
         DRAGON => NOT_EFFECTIVE
       },
       GRASS => {
