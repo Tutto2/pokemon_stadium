@@ -38,10 +38,10 @@ class Pokedex < Pokemon
                           Stats.new(name: :spd, base_value: 43 )
                         ],
                   weight: 9,
-                  attacks: [  ShellTrapMove.learn,
+                  attacks: [  HurricaneMove.learn,
                               ShellSmashMove.learn,
                               HydroPumpMove.learn,
-                              SkullBashMove.learn
+                              SwaggerMove.learn
                           ]
                   )
     when "Snorlax"
@@ -226,9 +226,9 @@ class Pokedex < Pokemon
                         ],
                   weight: 40.5,
                   attacks: [  ShadowBallMove.learn,
-                              PsychicMove.learn,
-                              ToxicMove.learn,
-                              SludgeBombMove.learn
+                              SludgeBombMove.learn,
+                              ConfuseRayMove.learn,
+                              ToxicMove.learn
                           ]
                   )
     when "Ceruledge"

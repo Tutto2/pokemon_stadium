@@ -96,6 +96,7 @@ class Menu
       stat.reset_stat
     end
     current_pokemon.reinit_metadata
+    current_pokemon.reinit_volatile_condition
     new_pokemon
   end
   

@@ -3,7 +3,6 @@ require_relative "move"
 class OutrageMove < Move
   include BasicPhysicalAtk
   include HasSeveralTurns
-  # Cause confusion
 
   def self.learn
     new(  attack_name: :outrage,
@@ -21,11 +20,18 @@ class OutrageMove < Move
 
   def second_turn_action
     execute
-    end_turn_action if rand < 0.5
+    if rand < 0.5
+      final
+    end
   end
 
   def third_turn_action
     execute
+    final
+  end
+
+  def final
     end_turn_action
+    volatile_condition_apply(pokemon, ConfusionStatus.get_confused(pokemon))
   end
 end

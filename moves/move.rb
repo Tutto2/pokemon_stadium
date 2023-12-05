@@ -5,11 +5,17 @@ file_paths = Dir.glob(File.join(concerns_path, '*.rb'))
 health_conditions_path = File.join(curr_dir, '../conditions', 'health_conditions')
 conditions_paths = Dir.glob(File.join(health_conditions_path, '*.rb'))
 
+volatile_status_path = File.join(curr_dir, '../conditions', 'volatile_status')
+status_paths = Dir.glob(File.join(volatile_status_path, '*.rb'))
+
+file_paths.each do |file_path|
+  require_relative file_path
+end
 conditions_paths.each do |condition_paths|
   require_relative condition_paths
 end
-file_paths.each do |file_path|
-  require_relative file_path
+status_paths.each do |status_path|
+  require_relative status_path
 end
 require_relative "../pokemon/pokemon"
 require_relative "../types/type_factory"
@@ -169,6 +175,10 @@ class Move
     else
       puts "But it failed!" if category == :status
     end
+  end
+
+  def volatile_condition_apply(target, condition)
+    target.volatile_status[condition.name] = condition
   end
   
   def cast_additional_effect; end

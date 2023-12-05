@@ -6,8 +6,8 @@ require "pry"
 
 class Pokemon
   attr_reader :name, :types, :attacks, :lvl, :weight
-  attr_accessor :stats, :condition, :metadata, :health_condition
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, health_condition: nil, teratype: nil)
+  attr_accessor :stats, :condition, :metadata, :health_condition, :volatile_status
+  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, health_condition: nil, volatile_status: {}, teratype: nil)
     @name = name
     @types = types
     @stats = stats
@@ -21,6 +21,7 @@ class Pokemon
     )
     @stats.each {|stat| stat.calc_value(lvl) }
     @health_condition = health_condition
+    @volatile_status = volatile_status
     @teratype = teratype || types.sample
   end
 
@@ -41,9 +42,20 @@ class Pokemon
       end
     end
 
+    if !volatile_status.empty?
+      volatile_status.each do |name, status|
+        if status.wear_off?
+          puts "#{status.name} wore off!" 
+          volatile_status.delete[name]
+        end
+      end
+    end
+
     if !health_condition.nil? && health_condition.unable_to_move
       puts "#{name} is #{health_condition.name}, it was unable to move"
-    else 
+    elsif !volatile_status[:confused].nil?
+      volatile_status[:confused].unable_to_attack? ? perform_confusion_dmg : attack.perform_attack(self, target)
+    else
       attack.perform_attack(self, target)
     end
     puts
@@ -51,12 +63,29 @@ class Pokemon
 
   def status
     puts "#{@name} - #{hp_value} / #{hp_total} hp (#{types.map(&:to_s).join("/")}) #{health_condition&.name}"
+    volatile_status.each { |k, v| puts "#{k}"}
+
     stats.each do |stat|
       next if stat == hp || stat == spd
       puts "#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}"
     end
     puts "spd #{actual_speed} / #{spd.initial_value} / #{spd.stage}"
     nil
+  end
+
+  def perform_confusion_dmg
+    dmg = confusion_damage
+    puts "#{name} hurt itself in its confusion (#{dmg})"
+    self.hp.decrease(dmg)
+    self.harm_recieved
+  end
+
+  def confusion_damage
+    variation = rand(85..100)
+    power = 40
+    vulnerability = metadata[:post_effect] == "vulnerable" ? 2 : 1
+
+    (0.01*variation*vulnerability* ( 2.0+ ((2.0+(2.0*lvl)/5.0)*power*atk_value/def_value)/50.0 )).to_i
   end
 
   def fainted?
@@ -111,6 +140,10 @@ class Pokemon
 
   def reinit_metadata
     @metadata = {}
+  end
+
+  def reinit_volatile_condition
+    @volatile_status = {}
   end
  
   def terastallized

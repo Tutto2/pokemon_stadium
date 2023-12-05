@@ -60,6 +60,7 @@ class PokemonBattleField
       players.each { |player| queue << player.action }
       queue.perform_actions
       condition_effects if players.any? { |player| player.current_pokemon.health_condition != nil }
+      status_effects
       @turn += 1
     end
 
@@ -115,6 +116,15 @@ class PokemonBattleField
         pok.health_condition&.dmg_effect(pok)
         pok.health_condition&.turn_count if !pok.health_condition&.turn.nil?
         puts "#{pok.name} has fanited" if pok.fainted?
+      end
+    end
+  end
+
+  def status_effects
+    players.each do |player|
+      pok = player.current_pokemon
+      if !pok.fainted? && !pok.volatile_status.empty?
+        pok.volatile_status.each { |k, v| v.turn_count if pok.was_successful? }
       end
     end
   end
