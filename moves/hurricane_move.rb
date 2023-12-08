@@ -16,7 +16,7 @@ class HurricaneMove < Move
   private
 
   def secondary_effect
-    health_condition_apply(pokemon_target, ConfusionStatus.get_confused(pokemon_target))
+    volatile_condition_apply(pokemon_target, ConfusionStatus.get_confused(pokemon_target))
   end
 
   def trigger_chance

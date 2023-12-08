@@ -1,6 +1,9 @@
 require_relative "move"
 
 class SwaggerMove < Move
+  include HasSecondaryEffect
+  include StatChanges
+  
   def self.learn
     new(  attack_name: :swagger,
           type: Types::NORMAL,
@@ -21,7 +24,7 @@ class SwaggerMove < Move
   end
 
   def secondary_effect
-    health_condition_apply(pokemon_target, ConfusionStatus.get_confused(pokemon_target))
+    volatile_condition_apply(pokemon_target, ConfusionStatus.get_confused(pokemon_target))
   end
 
   def trigger_chance

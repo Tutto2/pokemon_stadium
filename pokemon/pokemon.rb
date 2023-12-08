@@ -20,7 +20,6 @@ class Pokemon
       Stats.new(name: :acc, base_value: 1)
     )
     @stats.each {|stat| stat.calc_value(lvl) }
-    @health_condition = health_condition
     @volatile_status = volatile_status
     @teratype = teratype || types.sample
   end
@@ -35,30 +34,57 @@ class Pokemon
     attack = action.behaviour
     target = action.target.current_pokemon
 
-    if !health_condition.nil? && health_condition == :asleep
-      if health_condition.wake_up?
-        puts "#{name} woke up!" 
-        @health_condition = nil
-      end
-    end
+    condition_disappear?
+    return if is_unable_to_move?
 
-    if !volatile_status.empty?
-      volatile_status.each do |name, status|
-        if status.wear_off?
-          puts "#{status.name} wore off!" 
-          volatile_status.delete[name]
-        end
-      end
-    end
-
-    if !health_condition.nil? && health_condition.unable_to_move
-      puts "#{name} is #{health_condition.name}, it was unable to move"
-    elsif !volatile_status[:confused].nil?
-      volatile_status[:confused].unable_to_attack? ? perform_confusion_dmg : attack.perform_attack(self, target)
-    else
-      attack.perform_attack(self, target)
-    end
+    attack.perform_attack(self, target)
     puts
+  end
+
+  def condition_disappear?
+    return if health_condition.nil? && volatile_status.empty?
+
+    health_condition_disappear?
+    volatile_condition_disappear?
+  end
+
+  def health_condition_disappear?
+    return if health_condition.nil?
+
+    if health_condition == :asleep && health_condition.wake_up?
+      puts "#{name} woke up!" 
+      @health_condition = nil
+    end
+  end
+
+  def volatile_condition_disappear?
+    return if volatile_status.empty?
+
+    volatile_status.each do |name, status|
+      if status.wear_off?
+        puts "#{name} wore off!" 
+        volatile_status.delete[name]
+      end
+    end
+  end
+  
+  def is_unable_to_move?
+    return if health_condition.nil? && volatile_status.empty?
+
+    if health_condition&.unable_to_move
+      puts "#{name} is #{health_condition.name}, it was unable to move"
+      true
+    elsif !volatile_status[:confused].nil?
+      puts "#{name} is confused."
+      if volatile_status[:confused].unable_to_attack?
+        perform_confusion_dmg
+        true
+      else
+        false
+      end
+    else
+      false
+    end
   end
 
   def status

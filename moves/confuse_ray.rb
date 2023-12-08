@@ -10,7 +10,7 @@ class ConfuseRayMove < Move
   
   private
   def status_effect
-    health_condition_apply(pokemon_target, ConfusionStatus.get_confused(pokemon_target))
+    volatile_condition_apply(pokemon_target, ConfusionStatus.get_confused(pokemon_target))
   end
 end
 
