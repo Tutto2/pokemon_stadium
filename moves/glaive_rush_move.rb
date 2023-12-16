@@ -5,11 +5,13 @@ class GlaiveRushMove < Move
   include PostEffect
 
   def self.learn
-    new(  attack_name: :glaive_rush,
-          type: Types::DRAGON,
-          category: :physical,
-          power: 120
-        )
+    new(
+      attack_name: :glaive_rush,
+      type: Types::DRAGON,
+      pp: 5,
+      category: :physical,
+      power: 120
+      )
   end
 
   private

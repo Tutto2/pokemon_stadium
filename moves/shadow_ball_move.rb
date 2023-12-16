@@ -1,17 +1,18 @@
 require_relative "move"
 
-
 class ShadowBallMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
   include StatChanges
 
   def self.learn
-    new(  attack_name: :shadow_ball,
-          type: Types::GHOST,
-          category: :special,
-          power: 80
-        )
+    new(
+      attack_name: :shadow_ball,
+      type: Types::GHOST,
+      pp: 15,
+      category: :special,
+      power: 80
+      )
   end
 
   private

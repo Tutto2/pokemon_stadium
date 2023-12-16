@@ -5,11 +5,13 @@ class SolarBladeMove < Move
   include HasSeveralTurns
 
   def self.learn
-    new(  attack_name: :solar_blade,
-          type: Types::GRASS,
-          category: :physical,
-          power: 125
-        )
+    new(
+      attack_name: :solar_blade,
+      type: Types::GRASS,
+      pp: 10,
+      category: :physical,
+      power: 125
+      )
   end
 
   private
@@ -20,7 +22,7 @@ class SolarBladeMove < Move
   end
 
   def second_turn_action
-    perform
+    execute
     end_turn_action
   end
 end

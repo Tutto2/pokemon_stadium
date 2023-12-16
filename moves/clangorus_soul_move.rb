@@ -1,21 +1,22 @@
 require_relative "move"
 
-
 class ClangorusSoulMove < Move
   include StatChanges
   include HasSecondaryEffect
   include HpChange
 
   def self.learn
-    new(  attack_name: :clangorus_soul,
-          type: Types::DRAGON,
-          category: :status
-        )
+    new(
+      attack_name: :clangorus_soul,
+      type: Types::DRAGON,
+      pp: 5,
+      category: :status
+      )
   end
 
   private
   def status_effect
-    return if pokemon.hp_value <= (pokemon.hp_total / 3.0)
+    return puts "The attack has failed." if pokemon.hp_value <= (pokemon.hp_total / 3.0)
     stat_changes
   end
 

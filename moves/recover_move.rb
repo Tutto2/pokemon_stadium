@@ -1,15 +1,16 @@
 require_relative "move"
 
-
 class RecoverMove < Move
   include HpChange
 
   def self.learn
-    new(  attack_name: :recover,
-          type: Types::NORMAL,
-          category: :status,
-          precision: nil
-        )
+    new(
+      attack_name: :recover,
+      type: Types::NORMAL,
+      pp: 5,
+      category: :status,
+      precision: nil
+      )
   end
 
   private

@@ -1,16 +1,17 @@
 require_relative "move"
 
-
 class DoubleEdgeMove < Move
   include BasicPhysicalAtk
   include HasRecoil
 
   def self.learn
-    new(  attack_name: :double_edge,
-          type: Types::NORMAL,
-          category: :physical,
-          power: 120
-        )
+    new(
+      attack_name: :double_edge,
+      type: Types::NORMAL,
+      pp: 15,
+      category: :physical,
+      power: 120
+      )
   end
 
   private

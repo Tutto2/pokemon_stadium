@@ -2,7 +2,7 @@ class Types
   EFFECTIVE = 1.freeze
   SUPER_EFFECTIVE = 2.freeze
   NOT_EFFECTIVE = 0.5.freeze
-  INMUNE = 0.freeze
+  IMMUNE = 0.freeze
 
   %w[
     fire
@@ -31,12 +31,12 @@ class Types
     chart = {
       NORMAL => {
         STEEL => NOT_EFFECTIVE,
-        GHOST => INMUNE,
+        GHOST => IMMUNE,
         ROCK =>  NOT_EFFECTIVE
       },
       FIGHTING => {
         NORMAL => SUPER_EFFECTIVE,
-        GHOST =>  INMUNE,
+        GHOST =>  IMMUNE,
         STEEL =>  SUPER_EFFECTIVE,
         ROCK =>   SUPER_EFFECTIVE,
         ICE => SUPER_EFFECTIVE,
@@ -48,7 +48,7 @@ class Types
         FLYING => NOT_EFFECTIVE,
       },
       GHOST => {
-        NORMAL => INMUNE,
+        NORMAL => IMMUNE,
         GHOST =>  SUPER_EFFECTIVE,
         PSYCHIC =>  SUPER_EFFECTIVE,
         DARK =>  NOT_EFFECTIVE
@@ -60,6 +60,7 @@ class Types
         STEEL => SUPER_EFFECTIVE,
         ROCK =>  NOT_EFFECTIVE,
         GRASS => SUPER_EFFECTIVE,
+        WATER => NOT_EFFECTIVE,
         DRAGON => NOT_EFFECTIVE
       },
       GRASS => {
@@ -83,7 +84,7 @@ class Types
         DRAGON =>  NOT_EFFECTIVE
       },
       ELECTRIC => {
-        GROUND => INMUNE,
+        GROUND => IMMUNE,
         WATER => SUPER_EFFECTIVE,
         FLYING => SUPER_EFFECTIVE,
         GRASS =>  NOT_EFFECTIVE,
@@ -102,7 +103,7 @@ class Types
         POISON =>  SUPER_EFFECTIVE,
         STEEL =>  NOT_EFFECTIVE,
         PSYCHIC =>  NOT_EFFECTIVE,
-        DARK => INMUNE
+        DARK => IMMUNE
       },
       FAIRY => {
         DARK => SUPER_EFFECTIVE,
@@ -117,7 +118,7 @@ class Types
         GROUND =>  NOT_EFFECTIVE,
         GHOST =>  NOT_EFFECTIVE,
         ROCK =>  NOT_EFFECTIVE,
-        STEEL => INMUNE,
+        STEEL => IMMUNE,
         FAIRY => SUPER_EFFECTIVE,
         GRASS => SUPER_EFFECTIVE
       },
@@ -139,7 +140,7 @@ class Types
         GROUND =>  NOT_EFFECTIVE
       },
       GROUND => {
-        FLYING => INMUNE,
+        FLYING => IMMUNE,
         BUG =>  NOT_EFFECTIVE,
         GRASS =>  NOT_EFFECTIVE,
         FIRE => SUPER_EFFECTIVE,
@@ -169,7 +170,7 @@ class Types
         ELECTRIC => NOT_EFFECTIVE
       },
       DRAGON => {
-        FAIRY => INMUNE,
+        FAIRY => IMMUNE,
         STEEL => NOT_EFFECTIVE,
         DRAGON => SUPER_EFFECTIVE
       },

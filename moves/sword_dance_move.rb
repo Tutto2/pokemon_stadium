@@ -1,14 +1,15 @@
 require_relative "move"
 
-
 class SwordDanceMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :sowrd_dance,
-          type: Types::NORMAL,
-          category: :status
-        )
+    new(
+      attack_name: :sowrd_dance,
+      type: Types::NORMAL,
+      pp: 20,
+      category: :status
+      )
   end
 
   private

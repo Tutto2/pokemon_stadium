@@ -1,18 +1,18 @@
 require_relative "move"
 
-
 class BitterMaliceMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
   include StatChanges
-  # Cause frostbite
 
   def self.learn
-    new(  attack_name: :bitter_malice,
-          type: Types::GHOST,
-          category: :special,
-          power: 80,
-        )
+    new(
+      attack_name: :bitter_malice,
+      type: Types::GHOST,
+      pp: 10,
+      category: :special,
+      power: 80,
+      )
   end
 
   private

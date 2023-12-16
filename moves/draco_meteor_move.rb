@@ -1,18 +1,19 @@
 require_relative "move"
 
-
 class DracoMeteorMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
   include StatChanges
 
   def self.learn
-    new(  attack_name: :draco_meteor,
-          type: Types::DRAGON,
-          category: :special,
-          precision: 90,
-          power: 130
-        )
+    new(
+      attack_name: :draco_meteor,
+      type: Types::DRAGON,
+      pp: 5,
+      category: :special,
+      precision: 90,
+      power: 130
+      )
   end
 
   private

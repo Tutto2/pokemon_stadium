@@ -5,11 +5,17 @@ class IceBallMove < Move
   include HasSeveralTurns
 
   def self.learn
-    new(  attack_name: :ice_ball,
-          type: Types::ICE,
-          category: :physical,
-          precision: 90
-        )
+    new(
+      attack_name: :ice_ball,
+      type: Types::ICE,
+      pp: 20,
+      category: :physical,
+      precision: 90
+      )
+  end
+
+  def power
+    30 * (2 ** @chain)
   end
 
   private
@@ -17,31 +23,27 @@ class IceBallMove < Move
 
   def first_turn_action
     @chain = 0
-    perform
+    execute
   end
 
   def second_turn_action
     @chain = 1
-    perform
+    execute
   end
 
   def third_turn_action
     @chain = 2
-    perform
+    execute
   end
 
   def fourth_turn_action
     @chain = 3
-    perform
+    execute
   end
 
   def fifth_turn_action
     @chain = 4
-    perform
+    execute
     end_turn_action
-  end
-
-  def power
-    30 * (2 ** @chain)
   end
 end

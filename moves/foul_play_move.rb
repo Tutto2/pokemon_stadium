@@ -4,11 +4,13 @@ class FoulPlayMove < Move
   include BasicPhysicalAtk
 
   def self.learn
-    new(  attack_name: :foul_play,
-          type: Types::DARK,
-          category: :physical,
-          power: 95
-        )
+    new(
+      attack_name: :foul_play,
+      type: Types::DARK,
+      pp: 15,
+      category: :physical,
+      power: 95
+      )
   end
 
   private

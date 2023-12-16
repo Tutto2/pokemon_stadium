@@ -14,6 +14,30 @@ class Stats
     @stage = 0
   end
 
+  def calc_value(lvl)
+    if combat_stat?
+      @initial_value = @base_value
+      @curr_value = @base_value
+    else
+      stat_complement = hp? ? (lvl + 5) : 0
+      common_formula = ( ( ( ( 2 * @base_value + @iv + ( @ev / 4 )) * lvl ) / 100 ) + 5 )
+      calculation = (common_formula + stat_complement) * @nature_value
+      @initial_value = calculation
+      @curr_value = calculation
+    end
+  end
+
+  def stage_modifier(target, stages)
+    return if hp?
+    return puts "#{name} won't go any higher!" if max_stage? && stages > 0
+    return puts "#{name} won't go any lower!" if min_stage? && stages < 0
+    
+    @stage = (stage + stages).clamp(-6, 6)
+
+    @curr_value = initial_value * calc_stage
+    stat_variation_message(target, stages)
+  end
+
   def calc_stage
     return if hp?
     
@@ -45,23 +69,32 @@ class Stats
     curr_value > initial_value ? @curr_value = initial_value : @curr_value
   end
 
-  def stage_modifier(target, stages)
+  def reset_stat
     return if hp?
-    return puts "#{name} won't go any higher!" if max_stage? && stages > 0
-    return puts "#{name} won't go any lower!" if min_stage? && stages < 0
-    
-    @stage = (stage + stages).clamp(-6, 6)
-
-    @curr_value = initial_value * calc_stage
-    stat_variation_message(target, stages)
+    @curr_value = @initial_value
+    @stage = 0
   end
-
+ 
   def max_stage?
     stage == 6
   end
 
   def min_stage?
     stage == -6
+  end
+
+  def regular_stat?
+    [:hp, :atk, :def, :sp_atk, :sp_def, :spd].include?(name)
+  end
+
+  def combat_stat?
+    [:evs, :acc].include?(name)
+  end
+
+  POSSIBLE_STATS.each do |stat|
+    define_method("#{stat}?") do
+      name == stat
+    end
   end
 
   def stat_variation_message(target, stages)
@@ -75,39 +108,5 @@ class Stats
     }
     
     puts "#{target.name}'s #{name} #{text[stages]}"
-  end
-
-
-  def calc_value(lvl)
-    if combat_stat?
-      @initial_value = @base_value
-      @curr_value = @base_value
-    else
-      stat_complement = hp? ? (lvl + 5) : 0
-      common_formula = ( ( ( ( 2 * @base_value + @iv + ( @ev / 4 )) * lvl ) / 100 ) + 5 )
-      calculation = (common_formula + stat_complement) * @nature_value
-      @initial_value = calculation
-      @curr_value = calculation
-    end
-  end
-
-  def reset_stat
-    return if hp?
-    @curr_value = @initial_value
-    @stage = 0
-  end
- 
-  def regular_stat?
-    [:hp, :atk, :def, :sp_atk, :sp_def, :spd].include?(name)
-  end
-
-  def combat_stat?
-    [:evs, :acc].include?(name)
-  end
-
-  POSSIBLE_STATS.each do |stat|
-    define_method("#{stat}?") do
-      name == stat
-    end
   end
 end

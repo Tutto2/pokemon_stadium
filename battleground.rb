@@ -1,62 +1,78 @@
+require_relative "trainer"
+require_relative "actions/menu"
+require_relative "actions/action_queue"
 require_relative "pokedex/pokedex"
-require_relative "moves/move"
+require "pry"
+# binding.pry
 
 class PokemonBattleField
-  SWITCH_ACTION = 0.freeze
-  ATK_ACTION = 5.freeze
+  attr_reader :players, :all_pokes
 
-  attr_reader :all_pokes, :pokemons_p1, :pokemons_p2, :action_p1, :action_p2
+  def self.init_game(players_num, pokemons)
+    players = select_players_names(players_num)
 
-  def initialize(all_pokes: [], pokemons_p1: [], pokemons_p2: [], action_p1: nil, action_p2: nil)
+    battlefield = PokemonBattleField.new(
+      players: players,
+      all_pokes: pokemons
+    )
+
+    battlefield.choose_pokemons
+  end
+
+  def self.select_players_names(players_num)
+    (1..players_num).map do |index|
+      Trainer.select_name(index.to_s)
+    end
+  end
+
+  def initialize(players: [], all_pokes: [])
+    @players = players
     @all_pokes = all_pokes
-    @pokemons_p1 = pokemons_p1
-    @pokemons_p2 = pokemons_p2
-    @action_p1 = action_p1
-    @action_p2 = action_p2
   end
 
   def choose_pokemons
-    view_pokemons(@all_pokes)
-    team_build(:one)
-    team_build(:two)
+    view_pokemons(all_pokes)
+    players.each do |player|
+      player.team_build(all_pokes)
+    end
     start_battle
   end
 
   def start_battle
-    $turn = 1
-    @current_pokemon_p1 = pokemons_p1[selection_index(:one, pokemons_p1.length)]
-    @current_pokemon_p2 = pokemons_p2[selection_index(:two, pokemons_p2.length)]
+    @turn = 1
+    select_initial_pok(players)
 
     loop do
-      break if pokemons_p1.all?(&:fainted?) || pokemons_p2.all?(&:fainted?)
+      break if players.any? { |player| team_fainted?(player) }
       puts
-      puts "############ turn #{$turn} ############"
-      @current_pokemon_p1 = pokemons_p1[selection_index(:one, pokemons_p1.length)] if @current_pokemon_p1.fainted?
-      @current_pokemon_p2 = pokemons_p2[selection_index(:two, pokemons_p2.length)] if @current_pokemon_p2.fainted?
+      puts "############ turn #{@turn} ############"
+      players.each do |player| 
+        if player.current_pokemon.fainted?
+          player.current_pokemon = player.team[selection_index(player)]
+          puts
+        end
+      end
 
-      display_pokemon(@current_pokemon_p1, :one)
-      display_pokemon(@current_pokemon_p2, :two)
+      display_pokemons
+      players.each { |player| player.select_action(players) }
 
-      @action_p1 = select_action(:one, @current_pokemon_p1, pokemons_p1)
-      @action_p2 = select_action(:two, @current_pokemon_p2, pokemons_p2)
-
-      switch_actions, attack_actions = [@action_p1, @action_p2].partition { |action| action[:action] == SWITCH_ACTION }
-      actions = attack_actions.sort(&priority_queue)
-
-      switch_actions.each(&perform)
-      priority_perfom(action_p1)
-      priority_perfom(action_p2)
-      actions.each(&perform)
-      $turn += 1
+      queue = ActionQueue.new
+      players.each { |player| queue << player.action }
+      queue.perform_actions
+      condition_effects if players.any? { |player| player.current_pokemon.health_condition != nil }
+      status_effects
+      @turn += 1
     end
 
-    return 'Player two wins!' if pokemons_p1.all?(&:fainted?)
-    return 'Player one Wins!' if pokemons_p2.all?(&:fainted?)
+    players.each do |player|
+      if team_fainted?(player)
+        winner = players.reject { |i| i == player }
+        puts "#{winner[0].name} has won!"
+      end 
+    end
   end
 
   private
-
-  attr_reader :pokemons_p1, :pokemons_p2
 
   def view_pokemons(pokemons)
     pokemons.each.with_index(1) do |pok, index|
@@ -64,204 +80,53 @@ class PokemonBattleField
     end
   end
 
-  def team_build(player)
-    print "Player #{player} select a set of pokemon to battle: "
-    selection = gets.chomp.split
-    selection = selection.map { |x| x.to_i }
-
-    if !selection.empty? && (1..6).include?(selection.size)
-      selection.each do |pick|
-        if (1..(all_pokes.size)).include?(pick) 
-          case player
-          when :one then pokemons_p1.push(@all_pokes[pick-1])
-          when :two then pokemons_p2.push(@all_pokes[pick-1])
-          end
-        else 
-          puts "Write the index (1 - #{all_pokes.size}) of each pokemon you want"
-          return team_build(player)
-        end
-      end
-    else
-      puts "Pick 1 to 6 pokemons, try again"
-      team_build(player)
+  def select_initial_pok(players)
+    players.each do |player|
+      player.current_pokemon = player.team[selection_index(player)]
     end
   end
 
-  def selection_index(player, limit)
-    pokemons = player == :one ? pokemons_p1 : pokemons_p2
-    view_pokemons(pokemons)
-    go_back(pokemons) if limit == (pokemons.length) + 1
+  def selection_index(player)
+    view_pokemons(player.team)
       
-    print "Player #{player} select your pokemon: "
+    print "#{player.name} select your pokemon: "
     index = gets.chomp.to_i
 
-    return (index - 1) if index > 0 && index <= limit
+    return (index - 1) if index > 0 && index <= player.team.size && !player.team[index-1].fainted?
       
     puts "Invalid option. Try again"
-    return selection_index(player, limit)
+    return selection_index(player)
   end
 
-  def display_pokemon(pokemon, player)
-    puts "Player #{player} pokemon:"
-    puts pokemon.status
+  def team_fainted?(player)
+    player.team.all?(&:fainted?)
   end
 
-  def select_action(player, current_pokemon, pokemons)
-    action_num = action_index(player)
-    case player
-    when :one 
-      previous_atk = action_p1.nil? ? 0 : action_p1[:attk_num]
-    when :two
-      previous_atk = action_p2.nil? ? 0 : action_p2[:attk_num]
+  def display_pokemons
+    players.each do |player|
+      puts "#{player.name}'s pokemon:"
+      puts player.current_pokemon.status
     end
+  end
 
-    case action_num
-    when 1
-      if current_pokemon.is_attacking?
-        player == :one ? action_p1 : action_p2
-      else
-        current_pokemon.view_attacks
-        go_back(current_pokemon.attacks)
-        attk_num = select_attack(current_pokemon, previous_atk)
-
-        if (1..4).include?(attk_num)
-          {
-            action: ATK_ACTION,
-            attk_num: attk_num,
-            player: player
-          }
-        else
-          return select_action(player, current_pokemon, pokemons)
-        end
+  def condition_effects
+    players.each do |player|
+      pok = player.current_pokemon
+      if !pok.fainted?
+        pok.health_condition&.dmg_effect(pok)
+        pok.health_condition&.turn_count if !pok.health_condition&.turn.nil?
+        puts "#{pok.name} has fanited" if pok.fainted?
       end
-    when 2
-      next_pokemon = switch_pokemon(player, current_pokemon, pokemons)
-      return select_action(player, current_pokemon, pokemons) if next_pokemon.nil?
-      
-      {
-        action: SWITCH_ACTION,
-        player: player,
-        next_pokemon: next_pokemon
-      }
     end
   end
 
-  def action_index(player)
-    puts "1- Attack"
-    puts "2- Change pokemon"
-    print "Player #{player}, what do you want to do?: "
-    num = gets.chomp.to_i
-
-    return num if num == 1 || num == 2
-
-    puts "Not a valid option. Try again"
-    action_index(player)
-  end
-
-  def select_attack(current_pokemon, previous_atk)
-    print 'Enter the attack number: '
-    attk_num = gets.chomp.to_i
-
-    if current_pokemon.has_banned_attack? && attk_num == previous_atk
-      puts "This move can't be used twice in a row"
-      return select_attack(current_pokemon, previous_atk)
+  def status_effects
+    players.each do |player|
+      pok = player.current_pokemon
+      if !pok.fainted? && !pok.volatile_status.empty?
+        pok.volatile_status.each { |k, v| v.turn_count if pok.was_successful? }
+      end
     end
-
-    return attk_num if (1..5).include?(attk_num)
-
-    puts "Not a valid option, try again."
-    select_attack(current_pokemon, previous_atk)
-  end
-
-  def switch_pokemon(player, current_pokemon, pokemons)
-    next_pokemon = pokemons[selection_index(player, pokemons.length + 1)]
-
-    return next_pokemon if next_pokemon.nil?
-
-    if current_pokemon == next_pokemon
-      puts "That's your current pokemon, pick another one."
-      return switch_pokemon(player, current_pokemon, pokemons)
-    elsif next_pokemon.fainted?
-      puts "#{next_pokemon} it's fainted, pick another one."
-      return switch_pokemon(player, current_pokemon, pokemons)
-    end
-
-    current_pokemon.stats.each do |stat|
-      stat.reset_stat
-    end
-    current_pokemon.reinit_metadata
-    next_pokemon
-  end
-
-  def priority_queue
-    lambda do |action_a, action_b|
-      current_pokemon = action_a[:player] == :one ? @current_pokemon_p1 : @current_pokemon_p2
-      target_pokemon = action_b[:player] == :one ? @current_pokemon_p1 : @current_pokemon_p2
-
-      current_pokemon.atk_priority(action_a[:attk_num]) <=> target_pokemon.atk_priority(action_b[:attk_num])
-    end
-  end
-
-  def priority_perfom(action_message)
-    i = action_message[:attk_num] - 1
-    player = action_message[:player]
-
-    if player == :one
-      attack = @current_pokemon_p1.attacks[i]
-      pokemon = @current_pokemon_p1
-    else
-      attack = @current_pokemon_p2.attacks[i]
-      pokemon = @current_pokemon_p2
-    end
-
-    attack.perfom_prior_effect(pokemon) if attack.has_priority_effect?
-  end
-
-  def perform
-    ->(action) { perform_action(action) }
-  end
-
-  def perform_action(action_message)
-    if action_message[:action] == SWITCH_ACTION
-      perform_switch(action_message)
-    elsif action_message[:action] == ATK_ACTION
-      perform_attack(action_message)
-    end
-  end
-
-  def perform_switch(action_message)
-    next_pokemon = action_message[:next_pokemon]
-    player = action_message[:player]
-      
-    if player == :one
-      @current_pokemon_p1 = next_pokemon
-    elsif player == :two
-      @current_pokemon_p2 = next_pokemon
-    end
-  end
-
-  def perform_attack(action_message)
-    attk_num = action_message[:attk_num]
-    player = action_message[:player]
-      
-    if player == :one
-      target_pokemon = @current_pokemon_p2
-      current_pokemon = @current_pokemon_p1
-    elsif player == :two
-      target_pokemon = @current_pokemon_p1
-      current_pokemon = @current_pokemon_p2
-    end
-
-    current_pokemon.attack!(attk_num, target_pokemon) unless current_pokemon.fainted?
-  end
-
-  def go_back(list)
-    puts "#{ (list.length) + 1 }- Go back"
-    puts
-  end
-
-  def alive?
-    ->(pokemon) { !pokemon.fainted?}
   end
 end
 
@@ -285,5 +150,5 @@ pokemons = [
   Pokedex.catch("Dracanfly"),
   Pokedex.catch("Zoroark-hisui")
       ]
-battlefield = PokemonBattleField.new(all_pokes: pokemons)
-puts battlefield.choose_pokemons
+
+puts PokemonBattleField.init_game(2, pokemons)

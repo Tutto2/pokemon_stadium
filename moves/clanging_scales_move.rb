@@ -1,17 +1,18 @@
 require_relative "move"
 
-
 class ClangingScalesMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect
   include StatChanges
 
   def self.learn
-    new(  attack_name: :clanging_scales,
-          type: Types::DRAGON,
-          category: :special,
-          power: 110
-        )
+    new(
+      attack_name: :clanging_scales,
+      type: Types::DRAGON,
+      pp: 5,
+      category: :special,
+      power: 110
+      )
   end
 
   private

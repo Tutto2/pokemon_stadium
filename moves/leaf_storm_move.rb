@@ -7,12 +7,14 @@ class LeafStormMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :leaf_storm,
-          type: Types::GRASS,
-          category: :special,
-          precision: 90,
-          power: 130
-        )
+    new(
+      attack_name: :leaf_storm,
+      type: Types::GRASS,
+      pp: 5,
+      category: :special,
+      precision: 90,
+      power: 130
+      )
   end
 
   private

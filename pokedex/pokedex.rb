@@ -21,9 +21,9 @@ class Pokedex < Pokemon
                           Stats.new(name: :spd, base_value: 90 )
                         ],
                   weight: 6,
-                  attacks: [  ElectroBallMove.learn,
-                              DischargeMove.learn,
-                              HeavySlamMove.learn,
+                  attacks: [  VoltTackleMove.learn,
+                              ZapCannonMove.learn,
+                              ThunderWaveMove.learn,
                               AgilityMove.learn
                           ]
                   )
@@ -38,10 +38,10 @@ class Pokedex < Pokemon
                           Stats.new(name: :spd, base_value: 43 )
                         ],
                   weight: 9,
-                  attacks: [  ShellTrapMove.learn,
+                  attacks: [  HurricaneMove.learn,
                               ShellSmashMove.learn,
                               HydroPumpMove.learn,
-                              SkullBashMove.learn
+                              SwaggerMove.learn
                           ]
                   )
     when "Snorlax"
@@ -55,10 +55,10 @@ class Pokedex < Pokemon
                           Stats.new(name: :spd, base_value: 30 )
                         ],
                   weight: 460,
-                  attacks: [  RecoverMove.learn,
+                  attacks: [  RestMove.learn,
                               DoubleEdgeMove.learn,
                               CurseMove.learn,
-                              GyroBallMove.learn
+                              SubstituteMove.learn
                           ]
                   )
     when "Milotic"
@@ -73,9 +73,9 @@ class Pokedex < Pokemon
                         ],
                   weight: 162,
                   attacks: [  HydroPumpMove.learn,
-                              CurseMove.learn,
+                              ScaldMove.learn,
                               ShadowBallMove.learn,
-                              CalmMindMove.learn
+                              RecoverMove.learn
                           ]
                   )
     when "Golem"
@@ -124,9 +124,9 @@ class Pokedex < Pokemon
                         ],
                   weight: 4,
                   attacks: [  PsychicMove.learn,
-                              FlamethrowerMove.learn,
-                              ShadowBallMove.learn,
-                              CalmMindMove.learn
+                              SacredFireMove.learn,
+                              HypnosisMove.learn,
+                              ZapCannonMove.learn
                           ]
                   )             
     when "Dragapult"
@@ -193,7 +193,7 @@ class Pokedex < Pokemon
                   weight: 39.8,
                   attacks: [  SeedBombMove.learn,
                               IvyCudgelMove.learn,
-                              BulletSeedMove.learn,
+                              FlareBlitzMove.learn,
                               SwordDanceMove.learn
                           ]
                   ) 
@@ -226,9 +226,9 @@ class Pokedex < Pokemon
                         ],
                   weight: 40.5,
                   attacks: [  ShadowBallMove.learn,
-                              PsychicMove.learn,
-                              FlamethrowerMove.learn,
-                              CalmMindMove.learn
+                              SludgeBombMove.learn,
+                              ConfuseRayMove.learn,
+                              ToxicMove.learn
                           ]
                   )
     when "Ceruledge"
@@ -294,7 +294,7 @@ class Pokedex < Pokemon
                         ],
                   weight: 73,
                   attacks: [  FoulPlayMove.learn,
-                              ShadowClawMove.learn,
+                              TriAttackMove.learn,
                               ShadowBallMove.learn,
                               BitterMaliceMove.learn
                           ]
@@ -313,7 +313,7 @@ class Pokedex < Pokemon
                   attacks: [  ScalePulseMove.learn,
                               DracoMeteorMove.learn,
                               HydroPumpMove.learn,
-                              ShellTrapMove.learn
+                              TriAttackMove.learn
                           ]
                   )              
     end

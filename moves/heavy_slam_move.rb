@@ -1,15 +1,16 @@
 require_relative "move"
 
-
 class HeavySlamMove < Move
   include BasicPhysicalAtk
   include HasCustomTable
 
   def self.learn
-    new(  attack_name: :heavy_slam,
-          type: Types::STEEL,
-          category: :physical,
-        )
+    new(
+      attack_name: :heavy_slam,
+      type: Types::STEEL,
+      pp: 10,
+      category: :physical,
+      )
   end
 
   private

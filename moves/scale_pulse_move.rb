@@ -4,12 +4,14 @@ class ScalePulseMove < Move
   include BasicSpecialAtk
 
   def self.learn
-    new(  attack_name: :scale_pulse,
-          type: Types::BUG, 
-          secondary_type: Types::DRAGON,
-          category: :special,
-          power: 85
-        )
+    new(
+      attack_name: :scale_pulse,
+      type: Types::BUG, 
+      secondary_type: Types::DRAGON,
+      pp: 5,
+      category: :special,
+      power: 85
+      )
   end
 
   private

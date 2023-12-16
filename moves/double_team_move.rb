@@ -1,14 +1,15 @@
 require_relative "move"
 
-
 class DoubleTeamMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :double_team,
-          type: Types::NORMAL,
-          category: :status
-        )
+    new(
+      attack_name: :double_team,
+      type: Types::NORMAL,
+      pp: 15,
+      category: :status
+      )
   end
 
   private

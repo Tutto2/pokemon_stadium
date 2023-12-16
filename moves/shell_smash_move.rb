@@ -1,14 +1,15 @@
 require_relative "move"
 
-
 class ShellSmashMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :shell_smash,
-          type: Types::NORMAL,
-          category: :status
-        )
+    new(
+      attack_name: :shell_smash,
+      type: Types::NORMAL,
+      pp: 15,
+      category: :status
+      )
   end
 
   private

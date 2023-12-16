@@ -1,17 +1,18 @@
 require_relative "move"
 
-
 class TeraBlastMove < Move
   include BasicSpecialAtk
   include TypeChange
   # Changes category when Terastallized
 
   def self.learn
-    new(  attack_name: :tera_blast,
-          type: Types::NORMAL,
-          category: :special,
-          power: 80
-        )
+    new(
+      attack_name: :tera_blast,
+      type: Types::NORMAL,
+      pp: 10,
+      category: :special,
+      power: 80
+      )
   end
 
   private

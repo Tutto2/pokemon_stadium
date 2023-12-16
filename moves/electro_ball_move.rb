@@ -1,15 +1,16 @@
 require_relative "move"
 
-
 class ElectroBallMove < Move
   include BasicSpecialAtk
   include HasCustomTable
 
   def self.learn
-    new(  attack_name: :electro_ball,
-          type: Types::ELECTRIC,
-          category: :special,
-        )
+    new(
+      attack_name: :electro_ball,
+      type: Types::ELECTRIC,
+      pp: 10,
+      category: :special,
+      )
   end
 
   private
@@ -24,6 +25,6 @@ class ElectroBallMove < Move
   end
   
   def calculation_stat
-    (pokemon.spd_value / pokemon_target.spd_value).to_f
+    (pokemon.actual_speed / pokemon_target.actual_speed).to_f
   end
 end
