@@ -4,10 +4,12 @@ class FlashMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :flash,
-          type: Types::NORMAL,
-          category: :status
-        )
+    new(
+      attack_name: :flash,
+      type: Types::NORMAL,
+      pp: 20,
+      category: :status
+      )
   end
 
   private

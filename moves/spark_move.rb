@@ -5,11 +5,13 @@ class SparkMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :spark,
-          type: Types::ELECTRIC,
-          category: :special,
-          power: 65
-        )
+    new(
+      attack_name: :spark,
+      type: Types::ELECTRIC,
+      pp: 20,
+      category: :special,
+      power: 65
+      )
   end
 
   def secondary_effect

@@ -4,10 +4,12 @@ class AgilityMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :agility,
-          type: Types::NORMAL,
-          category: :status,
-        )
+    new(
+      attack_name: :agility,
+      type: Types::NORMAL,
+      pp: 30,
+      category: :status,
+      )
   end
 
   private

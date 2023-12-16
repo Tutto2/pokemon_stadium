@@ -6,11 +6,13 @@ class FlareBlitzMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :flare_blitz,
-          type: Types::FIRE,
-          category: :physical,
-          power: 120
-        )
+    new(
+      attack_name: :flare_blitz,
+      type: Types::FIRE,
+      pp: 15,
+      category: :physical,
+      power: 120
+      )
   end
 
   private

@@ -4,10 +4,12 @@ class GyroBallMove < Move
   include BasicPhysicalAtk
 
   def self.learn
-    new(  attack_name: :gyro_ball,
-          type: Types::STEEL,
-          category: :physical,
-        )
+    new(
+      attack_name: :gyro_ball,
+      type: Types::STEEL,
+      pp: 5,
+      category: :physical,
+      )
   end
 
   def power

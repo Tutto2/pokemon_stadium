@@ -5,11 +5,13 @@ class SwaggerMove < Move
   include StatChanges
   
   def self.learn
-    new(  attack_name: :swagger,
-          type: Types::NORMAL,
-          category: :status,
-          precision: 85
-        )
+    new(
+      attack_name: :swagger,
+      type: Types::NORMAL,
+      pp: 20,
+      category: :status,
+      precision: 85
+      )
   end
   
   private

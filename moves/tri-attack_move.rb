@@ -5,11 +5,13 @@ class TriAttackMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :tri_attack,
-          type: Types::NORMAL,
-          category: :special,
-          power: 80
-        )
+    new(
+      attack_name: :tri_attack,
+      type: Types::NORMAL,
+      pp: 10,
+      category: :special,
+      power: 80
+      )
   end
 
   def secondary_effect

@@ -6,11 +6,13 @@ class DragonDartsMove < Move
   # Special thing on doubles
 
   def self.learn
-    new(  attack_name: :dragon_darts,
-          type: Types::DRAGON,
-          category: :physical,
-          power: 50
-        )
+    new(
+      attack_name: :dragon_darts,
+      type: Types::DRAGON,
+      pp: 10,
+      category: :physical,
+      power: 50
+      )
   end
 
   private

@@ -26,7 +26,7 @@ class Pokemon
 
   def view_attacks
     attacks.each.with_index(1) do |atk, index|
-      puts "#{index}- #{atk.attack_name}"
+      puts "#{index}- #{atk.attack_name} (#{atk.pp.to_i} PP)"
     end
   end
 
@@ -61,6 +61,7 @@ class Pokemon
     return if volatile_status.empty?
 
     volatile_status.each do |name, status|
+      next if name == :substitute
       if status.wear_off?
         puts "#{name} wore off!" 
         volatile_status.delete[name]
@@ -87,7 +88,15 @@ class Pokemon
     end
   end
 
+  def has_no_remaining_pp?
+    attacks.all? { |atk| atk.no_remaining_pp? }
+  end
+
   def status
+    if !volatile_status[:substitute].nil?
+      puts "#{@name}'s Substitute has #{volatile_status[:substitute].data.to_i} hp"
+    end
+    
     puts "#{@name} - #{hp_value} / #{hp_total} hp (#{types.map(&:to_s).join("/")}) #{health_condition&.name}"
     volatile_status.each { |k, v| puts "#{k}"}
 
@@ -181,7 +190,7 @@ class Pokemon
   end
 
   def ==(other)
-    @name == other.name
+    object_id == other.object_id
   end
 
   ::Stats::POSSIBLE_STATS.each do |stat|

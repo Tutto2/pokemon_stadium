@@ -6,11 +6,13 @@ class BitterMaliceMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :bitter_malice,
-          type: Types::GHOST,
-          category: :special,
-          power: 80,
-        )
+    new(
+      attack_name: :bitter_malice,
+      type: Types::GHOST,
+      pp: 10,
+      category: :special,
+      power: 80,
+      )
   end
 
   private

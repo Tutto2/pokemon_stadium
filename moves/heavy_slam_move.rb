@@ -5,10 +5,12 @@ class HeavySlamMove < Move
   include HasCustomTable
 
   def self.learn
-    new(  attack_name: :heavy_slam,
-          type: Types::STEEL,
-          category: :physical,
-        )
+    new(
+      attack_name: :heavy_slam,
+      type: Types::STEEL,
+      pp: 10,
+      category: :physical,
+      )
   end
 
   private

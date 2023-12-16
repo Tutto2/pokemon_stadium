@@ -3,11 +3,13 @@ require_relative "move"
 class ToxicMove < Move
 
   def self.learn
-    new(  attack_name: :toxic,
-          type: Types::POISON,
-          category: :status,
-          precision: 90
-        )
+    new(
+      attack_name: :toxic,
+      type: Types::POISON,
+      pp: 10,
+      category: :status,
+      precision: 90
+      )
   end
 
   private

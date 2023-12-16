@@ -5,11 +5,13 @@ class PollenPuffMove < Move
   # heal on self
 
   def self.learn
-    new(  attack_name: :pollen_puff,
-          type: Types::BUG,
-          category: :special,
-          power: 90
-        )
+    new(
+      attack_name: :pollen_puff,
+      type: Types::BUG,
+      pp: 15,
+      category: :special,
+      power: 90
+      )
   end
 
   private

@@ -5,11 +5,13 @@ class GigatonHammerMove < Move
   include PostEffect
 
   def self.learn
-    new(  attack_name: :gigaton_hammer,
-          type: Types::STEEL,
-          category: :physical,
-          power: 160
-        )
+    new(
+      attack_name: :gigaton_hammer,
+      type: Types::STEEL,
+      pp: 5,
+      category: :physical,
+      power: 160
+      )
   end
 
   def post_effect(pokemon)

@@ -5,12 +5,14 @@ class HurricaneMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :hurricane,
-          type: Types::FLYING,
-          category: :special,
-          power: 110,
-          precision: 70
-        )
+    new(
+      attack_name: :hurricane,
+      type: Types::FLYING,
+      pp: 10,
+      category: :special,
+      power: 110,
+      precision: 70
+      )
   end
 
   private

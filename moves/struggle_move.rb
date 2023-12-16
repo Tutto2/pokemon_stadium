@@ -1,22 +1,24 @@
 require_relative "move"
 
-class DoubleEdgeMove < Move
+class StruggleMove < Move
   include BasicPhysicalAtk
   include HasRecoil
 
   def self.learn
     new(
-      attack_name: :double_edge,
+      attack_name: :struggle,
       type: Types::NORMAL,
-      pp: 15,
+      pp: 1,
       category: :physical,
-      power: 120
+      power: 50
       )
   end
 
-  private
-
   def recoil_factor
-    1.0/3.0
+    1.0/4.0
+  end
+
+  def recoil_base(dmg, hp)
+    hp
   end
 end

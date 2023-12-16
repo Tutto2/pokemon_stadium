@@ -5,10 +5,12 @@ class GrassKnotMove < Move
   include HasCustomTable
 
   def self.learn
-    new(  attack_name: :grass_knot,
-          type: Types::GRASS,
-          category: :special,
-        )
+    new(
+      attack_name: :grass_knot,
+      type: Types::GRASS,
+      pp: 20,
+      category: :special,
+      )
   end
 
   private

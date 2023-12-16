@@ -5,11 +5,13 @@ class RestMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :rest,
-          type: Types::PSYCHIC,
-          category: :status,
-          precision: nil
-        )
+    new(
+      attack_name: :rest,
+      type: Types::PSYCHIC,
+      pp: 5,
+      category: :status,
+      precision: nil
+      )
   end
 
   private

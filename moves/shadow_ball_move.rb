@@ -6,11 +6,13 @@ class ShadowBallMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :shadow_ball,
-          type: Types::GHOST,
-          category: :special,
-          power: 80
-        )
+    new(
+      attack_name: :shadow_ball,
+      type: Types::GHOST,
+      pp: 15,
+      category: :special,
+      power: 80
+      )
   end
 
   private

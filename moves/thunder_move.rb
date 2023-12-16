@@ -5,12 +5,14 @@ class ThunderMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :thunder,
-          type: Types::ELECTRIC,
-          category: :special,
-          power: 110,
-          precision: 70
-        )
+    new(
+      attack_name: :thunder,
+      type: Types::ELECTRIC,
+      pp: 10,
+      category: :special,
+      power: 110,
+      precision: 70
+      )
   end
 
   def secondary_effect

@@ -5,12 +5,14 @@ class GunkShotMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :gunk_shot,
-          type: Types::POISON,
-          category: :physical,
-          power: 120,
-          precision: 80
-        )
+    new(
+      attack_name: :gunk_shot,
+      type: Types::POISON,
+      pp: 5,
+      category: :physical,
+      power: 120,
+      precision: 80
+      )
   end
 
   def secondary_effect

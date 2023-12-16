@@ -5,10 +5,12 @@ class BulletSeedMove < Move
   include MultiStrikeAtk
 
   def self.learn
-    new(  attack_name: :bullet_seed,
-          type: Types::GRASS,
-          category: :physical,
-          power: 25
-        )
+    new(
+      attack_name: :bullet_seed,
+      type: Types::GRASS,
+      pp: 30,
+      category: :physical,
+      power: 25
+      )
   end
 end

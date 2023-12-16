@@ -18,11 +18,20 @@ module DamageFormula
 
   def perform_dmg(dmg)
     if dmg > 0
-      puts "#{pokemon_target.name} has recieved #{dmg} damage"
-      pokemon_target.hp.decrease(dmg)
-      pokemon_target.harm_recieved
-      defrost_evaluation
-      pokemon.successful_perform
+      if !pokemon_target.volatile_status[:substitute].nil?
+        puts "#{pokemon_target.name}'s substitute has recieved #{dmg} damage"
+        pokemon_target.volatile_status[:substitute].data -= dmg
+        if pokemon_target.volatile_status[:substitute].data <= 0
+          puts "#{pokemon_target.name}'s substitute broke!"
+          pokemon_target.volatile_status.delete(:substitute)
+        end
+      else
+        puts "#{pokemon_target.name} has recieved #{dmg} damage"
+        pokemon_target.hp.decrease(dmg)
+        pokemon_target.harm_recieved
+        defrost_evaluation
+        pokemon.successful_perform
+      end
       if recoil
         recoil_dmg = calc_recoil(dmg, pokemon.hp_total).to_i
         puts "#{pokemon.name} has recieved #{recoil_dmg} of recoil damage"

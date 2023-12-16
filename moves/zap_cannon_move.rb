@@ -5,12 +5,14 @@ class ZapCannonMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :zap_cannon,
-          type: Types::ELECTRIC,
-          category: :special,
-          power: 120,
-          precision: 50
-        )
+    new(
+      attack_name: :zap_cannon,
+      type: Types::ELECTRIC,
+      pp: 5,
+      category: :special,
+      power: 120,
+      precision: 50
+      )
   end
 
   def secondary_effect

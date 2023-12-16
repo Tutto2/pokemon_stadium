@@ -5,11 +5,13 @@ class SludgeBombMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :sludge_bomb,
-          type: Types::POISON,
-          category: :special,
-          power: 90
-        )
+    new(
+      attack_name: :sludge_bomb,
+      type: Types::POISON,
+      pp: 10,
+      category: :special,
+      power: 90
+      )
   end
 
   def secondary_effect

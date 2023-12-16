@@ -5,10 +5,12 @@ class ElectroBallMove < Move
   include HasCustomTable
 
   def self.learn
-    new(  attack_name: :electro_ball,
-          type: Types::ELECTRIC,
-          category: :special,
-        )
+    new(
+      attack_name: :electro_ball,
+      type: Types::ELECTRIC,
+      pp: 10,
+      category: :special,
+      )
   end
 
   private

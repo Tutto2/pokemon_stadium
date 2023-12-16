@@ -22,7 +22,7 @@ class Pokedex < Pokemon
                         ],
                   weight: 6,
                   attacks: [  VoltTackleMove.learn,
-                              ElectroBallMove.learn,
+                              ZapCannonMove.learn,
                               ThunderWaveMove.learn,
                               AgilityMove.learn
                           ]
@@ -58,7 +58,7 @@ class Pokedex < Pokemon
                   attacks: [  RestMove.learn,
                               DoubleEdgeMove.learn,
                               CurseMove.learn,
-                              GyroBallMove.learn
+                              SubstituteMove.learn
                           ]
                   )
     when "Milotic"

@@ -5,11 +5,13 @@ class ScaldMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :scald,
-          type: Types::WATER,
-          category: :special,
-          power: 80
-        )
+    new(
+      attack_name: :scald,
+      type: Types::WATER,
+      pp: 15,
+      category: :special,
+      power: 80
+      )
   end
 
   def secondary_effect

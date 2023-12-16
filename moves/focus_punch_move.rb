@@ -5,12 +5,14 @@ class FocusPunchMove < Move
   include HasTrigger
 
   def self.learn
-    new(  attack_name: :focus_punch,
-          type: Types::FIGHTING,
-          category: :physical,
-          priority: -3,
-          power: 150
-        )
+    new(
+      attack_name: :focus_punch,
+      type: Types::FIGHTING,
+      pp: 20,
+      category: :physical,
+      priority: -3,
+      power: 150
+      )
   end
 
   def additional_move

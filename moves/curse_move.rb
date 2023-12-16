@@ -5,10 +5,12 @@ class CurseMove < Move
   # Different effect depending on the poke type
 
   def self.learn
-    new(  attack_name: :curse,
-          type: Types::GHOST,
-          category: :status
-        )
+    new(
+      attack_name: :curse,
+      type: Types::GHOST,
+      pp: 10,
+      category: :status
+      )
   end
 
   private

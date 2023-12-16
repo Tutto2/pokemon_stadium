@@ -6,11 +6,13 @@ class VoltTackleMove < Move
   include HasRecoil
 
   def self.learn
-    new(  attack_name: :volt_tackle,
-          type: Types::ELECTRIC,
-          category: :physical,
-          power: 120
-        )
+    new(
+      attack_name: :volt_tackle,
+      type: Types::ELECTRIC,
+      pp: 15,
+      category: :physical,
+      power: 120
+      )
   end
 
   def recoil_factor

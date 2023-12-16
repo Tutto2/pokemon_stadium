@@ -5,11 +5,13 @@ class OutrageMove < Move
   include HasSeveralTurns
 
   def self.learn
-    new(  attack_name: :outrage,
-          type: Types::DRAGON,
-          category: :physical,
-          power: 120
-        )
+    new(
+      attack_name: :outrage,
+      type: Types::DRAGON,
+      pp: 10,
+      category: :physical,
+      power: 120
+      )
   end
 
   private

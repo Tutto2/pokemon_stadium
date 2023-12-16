@@ -6,11 +6,13 @@ class PsychicMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :psychic,
-          type: Types::PSYCHIC,
-          category: :special,
-          power: 90
-        )
+    new(
+      attack_name: :psychic,
+      type: Types::PSYCHIC,
+      pp: 10,
+      category: :special,
+      power: 90
+      )
   end
 
   private

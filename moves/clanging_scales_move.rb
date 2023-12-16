@@ -6,11 +6,13 @@ class ClangingScalesMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :clanging_scales,
-          type: Types::DRAGON,
-          category: :special,
-          power: 110
-        )
+    new(
+      attack_name: :clanging_scales,
+      type: Types::DRAGON,
+      pp: 5,
+      category: :special,
+      power: 110
+      )
   end
 
   private

@@ -6,12 +6,14 @@ class PlayRoughMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :play_rough,
-          type: Types::FAIRY,
-          category: :physical,
-          precision: 90,
-          power: 90
-        )
+    new(
+      attack_name: :play_rough,
+      type: Types::FAIRY,
+      pp: 10,
+      category: :physical,
+      precision: 90,
+      power: 90
+      )
   end
 
   private

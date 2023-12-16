@@ -20,16 +20,15 @@ end
 require_relative "../pokemon/pokemon"
 require_relative "../types/type_factory"
 
-
 class Move
   include Messages
   include DamageFormula
   include SpecialFeatures
 
   attr_reader :attack_name, :precision, :power, :priority, :pokemon, :pokemon_target
-  attr_accessor :category, :type, :secondary_type, :metadata
+  attr_accessor :category, :type, :secondary_type, :metadata, :pp
 
-  def initialize(attack_name: nil, type: nil, secondary_type: nil, category: nil, precision: 100, power: 0, priority: 0, metadata: nil)
+  def initialize(attack_name: nil, type: nil, secondary_type: nil, category: nil, precision: 100, power: 0, priority: 0, metadata: nil, pp: nil)
     @attack_name = attack_name
     @type = type
     @secondary_type = secondary_type
@@ -38,6 +37,7 @@ class Move
     @power = power
     @priority = priority
     @metadata = metadata
+    @pp = pp
   end
 
   def perform_attack(*pokemons)
@@ -56,14 +56,13 @@ class Move
       @pokemon.init_whole_turn_action
       puts
     else
-      puts "#{pokemon.name} used #{attack_name}"
+      atk_performed
       trigger_perform
     end
   end
   
   def perform_normal_attack
-    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
-    
+    atk_performed
     if has_several_turns?
       action_per_turn 
     elsif hit_chance
@@ -84,11 +83,20 @@ class Move
 
   def additional_move; end
 
+  def no_remaining_pp?
+    pp <= 0
+  end
+
   private
   attr_reader :pokemon, :pokemon_target
 
   def additional_action(pokemon); end
 
+  def atk_performed
+    @pp -= 1
+    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
+  end
+  
   def trigger_perform
     return execute if trigger(pokemon) 
 
@@ -149,12 +157,19 @@ class Move
 
   def action
     main_effect
-    cast_additional_effect if pokemon.was_successful?
+    if pokemon.was_successful?
+      cast_additional_effect
+    end
     puts
   end
   
   def main_effect
-    status? ? status_effect : damage_effect
+    if status? 
+      return puts "#{attack_name} does not affect #{pokemon_target.name}'s Substitute" if !pokemon_target.volatile_status[:substitute].nil?
+      status_effect
+    else
+      damage_effect
+    end
   end
 
   def status_effect; end
@@ -178,7 +193,9 @@ class Move
   end
 
   def volatile_condition_apply(target, condition)
-    target.volatile_status[condition.name] = condition
+    if target.volatile_status[condition.name].nil?
+      target.volatile_status[condition.name] = condition
+    end
   end
   
   def cast_additional_effect; end

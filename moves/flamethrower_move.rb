@@ -5,11 +5,13 @@ class FlamethrowerMove < Move
   include HasSecondaryEffect
 
   def self.learn
-    new(  attack_name: :flamethrower,
-          type: Types::FIRE,
-          category: :special,
-          power: 90
-        )
+    new(
+      attack_name: :flamethrower,
+      type: Types::FIRE,
+      pp: 15,
+      category: :special,
+      power: 90
+      )
   end
 
   def secondary_effect

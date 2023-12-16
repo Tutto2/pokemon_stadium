@@ -5,12 +5,14 @@ class ShellTrapMove < Move
   include HasTrigger
 
   def self.learn
-    new(  attack_name: :shell_trap,
-          type: Types::FIRE,
-          category: :special,
-          priority: -3,
-          power: 150
-        )
+    new(
+      attack_name: :shell_trap,
+      type: Types::FIRE,
+      pp: 5,
+      category: :special,
+      priority: -3,
+      power: 150
+      )
   end
 
   def additional_move

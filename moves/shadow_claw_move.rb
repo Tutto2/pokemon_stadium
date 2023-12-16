@@ -5,10 +5,12 @@ class ShadowClawMove < Move
   include HasHighCritRatio
 
   def self.learn
-    new(  attack_name: :shadow_claw,
-          type: Types::GHOST,
-          category: :physical,
-          power: 70
-        )
+    new(
+      attack_name: :shadow_claw,
+      type: Types::GHOST,
+      pp: 15,
+      category: :physical,
+      power: 70
+      )
   end
 end

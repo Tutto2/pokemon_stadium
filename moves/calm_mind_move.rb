@@ -4,10 +4,12 @@ class CalmMindMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :calm_mind,
-          type: Types::PSYCHIC,
-          category: :status
-        )
+    new(
+      attack_name: :calm_mind,
+      type: Types::PSYCHIC,
+      pp: 20,
+      category: :status
+      )
   end
 
   private

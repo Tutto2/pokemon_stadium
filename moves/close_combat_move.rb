@@ -6,11 +6,13 @@ class CloseCombatMove < Move
   include StatChanges
 
   def self.learn
-    new(  attack_name: :close_combat,
-          type: Types::FIGHTING,
-          category: :physical,
-          power: 120
-        )
+    new(
+      attack_name: :close_combat,
+      type: Types::FIGHTING,
+      pp: 5,
+      category: :physical,
+      power: 120
+      )
   end
 
   private

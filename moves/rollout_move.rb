@@ -5,11 +5,13 @@ class RolloutMove < Move
   include HasSeveralTurns
 
   def self.learn
-    new(  attack_name: :rollout,
-          type: Types::ROCK,
-          category: :physical,
-          precision: 90
-        )
+    new(
+      attack_name: :rollout,
+      type: Types::ROCK,
+      pp: 20,
+      category: :physical,
+      precision: 90
+      )
   end
 
   def power

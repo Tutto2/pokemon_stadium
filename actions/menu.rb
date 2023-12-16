@@ -17,22 +17,38 @@ class Menu
   end
 
   def self.attack_act(trainer, previous_action, current_pokemon, opponents)
-    current_pokemon.view_attacks
-    go_back(current_pokemon.attacks)
-    attk_num = select_attack(current_pokemon, previous_action)
-    target = select_target(opponents)
-    puts
-    if (1..4).include?(attk_num)
-      next_attack = current_pokemon.attacks[attk_num - 1]
-      
+    if current_pokemon.has_no_remaining_pp?
+      target = select_target(opponents)
+      puts "#{current_pokemon.name} has no moves left."
       AttackAction.new(
-        speed: current_pokemon.actual_speed,
-        behaviour: next_attack,
-        trainer: trainer,
-        target: target
-      )
+            speed: current_pokemon.actual_speed,
+            behaviour: StruggleMove.learn,
+            trainer: trainer,
+            target: target
+          )
     else
-      return select_action(trainer, previous_action, current_pokemon, opponents)
+      current_pokemon.view_attacks
+      go_back(current_pokemon.attacks)
+      attk_num = select_attack(current_pokemon, previous_action)
+      target = select_target(opponents)
+      puts
+      if (1..4).include?(attk_num)
+        next_attack = current_pokemon.attacks[attk_num - 1]
+        
+        unless next_attack.pp <= 0
+          AttackAction.new(
+            speed: current_pokemon.actual_speed,
+            behaviour: next_attack,
+            trainer: trainer,
+            target: target
+          )
+        else
+          puts "#{next_attack.attack_name} has no remaining PP"
+          return attack_act(trainer, previous_action, current_pokemon, opponents)
+        end
+      else
+        return select_action(trainer, previous_action, current_pokemon, opponents)
+      end
     end
   end
 

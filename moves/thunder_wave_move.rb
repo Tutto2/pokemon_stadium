@@ -3,11 +3,13 @@ require_relative "move"
 class ThunderWaveMove < Move
 
   def self.learn
-    new(  attack_name: :thunder_wave,
-          type: Types::ELECTRIC,
-          category: :status,
-          precision: 90
-        )
+    new(
+      attack_name: :thunder_wave,
+      type: Types::ELECTRIC,
+      pp: 20,
+      category: :status,
+      precision: 90
+      )
   end
 
   private

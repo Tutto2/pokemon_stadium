@@ -5,11 +5,13 @@ class IceBallMove < Move
   include HasSeveralTurns
 
   def self.learn
-    new(  attack_name: :ice_ball,
-          type: Types::ICE,
-          category: :physical,
-          precision: 90
-        )
+    new(
+      attack_name: :ice_ball,
+      type: Types::ICE,
+      pp: 20,
+      category: :physical,
+      precision: 90
+      )
   end
 
   def power

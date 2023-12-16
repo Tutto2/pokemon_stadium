@@ -3,11 +3,13 @@ require_relative "move"
 class HypnosisMove < Move
 
   def self.learn
-    new(  attack_name: :hypnosis,
-          type: Types::PSYCHIC,
-          category: :status,
-          precision: 60
-        )
+    new(
+      attack_name: :hypnosis,
+      type: Types::PSYCHIC,
+      pp: 20,
+      category: :status,
+      precision: 60
+      )
   end
 
   private

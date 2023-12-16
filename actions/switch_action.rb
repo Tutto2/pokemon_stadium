@@ -7,6 +7,8 @@ class SwitchAction < Action
   
   def perform
     next_pokemon = behaviour
+    puts "#{next_pokemon.name} got out to battle!"
     @trainer.current_pokemon = next_pokemon
+    puts
   end
 end
