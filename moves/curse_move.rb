@@ -1,6 +1,8 @@
 require_relative "move"
 
 class CurseMove < Move
+  include EffectDependsTarget
+  include HpChange
   include StatChanges
   # Different effect depending on the poke type
 
@@ -13,8 +15,21 @@ class CurseMove < Move
       )
   end
 
-  private
+  def alter_effect_activated?
+    pokemon.types.include?(Types::GHOST)
+  end
+
   def status_effect
+    return puts "The attack has failed." if pokemon.hp_value < (pokemon.hp_total / 2.0)
+    lose_hp
+    volatile_condition_apply(pokemon_target, CurseStatus.get_cursed(pokemon, pokemon_target)) if pokemon.hp_value >= (pokemon.hp_total / 2.0)
+  end
+
+  def value
+    (pokemon.hp_total) * ( 1.0 / 2.0 )
+  end
+
+  def alter_effect
     stat_changes
   end
 

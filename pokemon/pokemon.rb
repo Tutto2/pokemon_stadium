@@ -6,20 +6,22 @@ require "pry"
 
 class Pokemon
   attr_reader :name, :types, :attacks, :lvl, :weight
-  attr_accessor :stats, :condition, :metadata, :health_condition, :volatile_status
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, health_condition: nil, volatile_status: {}, teratype: nil)
+  attr_accessor :stats, :condition, :trainer, :metadata, :health_condition, :volatile_status
+  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, trainer: nil, health_condition: nil, volatile_status: {}, teratype: nil)
     @name = name
     @types = types
     @stats = stats
     @weight = weight
     @attacks = attacks
     @lvl = lvl
+    @trainer = trainer
     @metadata = {}
     @stats.push(
       Stats.new(name: :evs, base_value: 1),
       Stats.new(name: :acc, base_value: 1)
     )
     @stats.each {|stat| stat.calc_value(lvl) }
+    @health_condition = health_condition
     @volatile_status = volatile_status
     @teratype = teratype || types.sample
   end
@@ -73,6 +75,7 @@ class Pokemon
     return if health_condition.nil? && volatile_status.empty?
 
     if health_condition&.unable_to_move
+      puts
       puts "#{name} is #{health_condition.name}, it was unable to move"
       true
     elsif !volatile_status[:confused].nil?
@@ -183,6 +186,10 @@ class Pokemon
  
   def terastallized
     false
+  end
+
+  def allied?(other)
+    trainer == other.trainer
   end
 
   def to_s

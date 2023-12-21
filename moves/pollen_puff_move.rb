@@ -1,8 +1,10 @@
 require_relative "move"
 
 class PollenPuffMove < Move
+  include CanSelectTarget
   include BasicSpecialAtk
-  # heal on self
+  include EffectDependsTarget
+  include HpChange
 
   def self.learn
     new(
@@ -14,6 +16,15 @@ class PollenPuffMove < Move
       )
   end
 
-  private
+  def alter_effect_activated?
+    pokemon != pokemon_target
+  end
 
+  def alter_effect
+    gain_hp(pokemon)
+  end
+
+  def value
+    (pokemon.hp_total) * ( 1.0 / 2.0 )
+  end
 end

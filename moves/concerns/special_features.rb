@@ -13,6 +13,10 @@ module SpecialFeatures
     category == :status
   end
 
+  def can_select_target?
+    false
+  end
+
   def can_defrost?(attack)
     heat_attacks = [
       :flame_wheel, 

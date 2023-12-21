@@ -19,6 +19,8 @@ status_paths.each do |status_path|
 end
 require_relative "../pokemon/pokemon"
 require_relative "../types/type_factory"
+require_relative "../actions/menu"
+require_relative "../trainer"
 
 class Move
   include Messages

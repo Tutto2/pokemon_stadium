@@ -33,7 +33,7 @@ class PokemonBattleField
   def choose_pokemons
     view_pokemons(all_pokes)
     players.each do |player|
-      player.team_build(all_pokes)
+      player.team_build(all_pokes, players)
     end
     start_battle
   end
@@ -54,7 +54,7 @@ class PokemonBattleField
       end
 
       display_pokemons
-      players.each { |player| player.select_action(players) }
+      players.each { |player| player.select_action }
 
       queue = ActionQueue.new
       players.each { |player| queue << player.action }
@@ -112,19 +112,26 @@ class PokemonBattleField
   def condition_effects
     players.each do |player|
       pok = player.current_pokemon
-      if !pok.fainted?
-        pok.health_condition&.dmg_effect(pok)
-        pok.health_condition&.turn_count if !pok.health_condition&.turn.nil?
-        puts "#{pok.name} has fanited" if pok.fainted?
-      end
+  
+      next if pok.fainted? || pok.health_condition.nil?
+  
+      condition = pok.health_condition
+  
+      condition.dmg_effect(pok) unless condition.dmg_effect(pok).nil?
+      condition&.turn_count if !condition&.turn.nil?
+      puts "#{pok.name} has fainted" if pok.fainted?
     end
   end
 
   def status_effects
     players.each do |player|
       pok = player.current_pokemon
-      if !pok.fainted? && !pok.volatile_status.empty?
-        pok.volatile_status.each { |k, v| v.turn_count if pok.was_successful? }
+
+      next if pok.fainted? || pok.volatile_status.empty?
+
+      pok.volatile_status.each do |_, status|
+        status&.dmg_effect(pok)
+        status.turn_count if pok.was_successful?
       end
     end
   end

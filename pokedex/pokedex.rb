@@ -22,7 +22,7 @@ class Pokedex < Pokemon
                         ],
                   weight: 6,
                   attacks: [  VoltTackleMove.learn,
-                              ZapCannonMove.learn,
+                              VoltSwitchMove.learn,
                               ThunderWaveMove.learn,
                               AgilityMove.learn
                           ]
@@ -228,7 +228,7 @@ class Pokedex < Pokemon
                   attacks: [  ShadowBallMove.learn,
                               SludgeBombMove.learn,
                               ConfuseRayMove.learn,
-                              ToxicMove.learn
+                              CurseMove.learn
                           ]
                   )
     when "Ceruledge"
@@ -312,8 +312,8 @@ class Pokedex < Pokemon
                   weight: 47,
                   attacks: [  ScalePulseMove.learn,
                               DracoMeteorMove.learn,
-                              HydroPumpMove.learn,
-                              TriAttackMove.learn
+                              UTurnMove.learn,
+                              PollenPuffMove.learn
                           ]
                   )              
     end

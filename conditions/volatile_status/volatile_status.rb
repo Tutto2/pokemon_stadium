@@ -23,4 +23,8 @@ class VolatileConditions
   def ==(other)
     name == other.name
   end
+
+  def dmg_effect(pok)
+    nil
+  end
 end
