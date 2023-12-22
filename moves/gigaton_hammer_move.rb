@@ -15,6 +15,6 @@ class GigatonHammerMove < Move
   end
 
   def post_effect(pokemon)
-    pokemon.metadata = {banned: "last attack"}
+    pokemon.metadata[:banned] = "last attack"
   end
 end

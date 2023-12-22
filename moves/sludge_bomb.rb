@@ -19,6 +19,6 @@ class SludgeBombMove < Move
   end
 
   def trigger_chance
-    1
+    0.3
   end
 end

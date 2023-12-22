@@ -4,7 +4,6 @@ class CurseMove < Move
   include EffectDependsTarget
   include HpChange
   include StatChanges
-  # Different effect depending on the poke type
 
   def self.learn
     new(
@@ -30,6 +29,7 @@ class CurseMove < Move
   end
 
   def alter_effect
+    atk_performed
     stat_changes
   end
 

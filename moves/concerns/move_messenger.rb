@@ -22,6 +22,7 @@ module Messages
   end
 
   def failed_attack_message
+    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
     puts "The attack has failed"
     return false
   end

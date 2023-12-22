@@ -32,10 +32,19 @@ module DamageFormula
         defrost_evaluation
         pokemon.successful_perform
       end
+
       if recoil
         recoil_dmg = calc_recoil(dmg, pokemon.hp_total).to_i
         puts "#{pokemon.name} has recieved #{recoil_dmg} of recoil damage"
         pokemon.hp.decrease(recoil_dmg)
+      end
+
+      if drain
+        drain = calc_drain(dmg)
+        initial_hp = pokemon.hp_value
+        pokemon.hp.increase(drain)
+
+        puts "#{pokemon.name} restored #{drain} HP" if pokemon.hp_value != initial_hp
       end
     end
   end
@@ -49,7 +58,7 @@ module DamageFormula
     vulnerability = pokemon_target.metadata[:post_effect] == "vulnerable" ? 2 : 1
     puts "Power: #{attack.power}"
     dmg = (0.01*bonus*effect*variation*vulnerability*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*attack.power*attk/defn)/50.0 )).to_i
-    if pokemon.health_condition == :burned && attack.category == :physical 
+    if pokemon.health_condition == :burned && attack.category == :physical && attack.attack_name != :facade
       (dmg / 2)
     else
       dmg

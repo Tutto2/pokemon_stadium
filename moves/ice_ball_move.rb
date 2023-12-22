@@ -15,7 +15,12 @@ class IceBallMove < Move
   end
 
   def power
-    30 * (2 ** @chain)
+    power = 30 * (2 ** chain)
+    if pokemon.has_power_up?
+      power * 2
+    else
+      power
+    end
   end
 
   private

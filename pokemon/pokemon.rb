@@ -5,15 +5,16 @@ require_relative "../conditions/health_conditions/health_conditions"
 require "pry"
 
 class Pokemon
-  attr_reader :name, :types, :attacks, :lvl, :weight
+  attr_reader :name, :types, :attacks, :lvl, :gender, :weight
   attr_accessor :stats, :condition, :trainer, :metadata, :health_condition, :volatile_status
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, trainer: nil, health_condition: nil, volatile_status: {}, teratype: nil)
+  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, gender: nil, trainer: nil, health_condition: nil, volatile_status: {}, teratype: nil)
     @name = name
     @types = types
     @stats = stats
     @weight = weight
     @attacks = attacks
     @lvl = lvl
+    @gender = gender
     @trainer = trainer
     @metadata = {}
     @stats.push(
@@ -78,13 +79,19 @@ class Pokemon
       puts
       puts "#{name} is #{health_condition.name}, it was unable to move"
       true
-    elsif !volatile_status[:confused].nil?
-      puts "#{name} is confused."
-      if volatile_status[:confused].unable_to_attack?
-        perform_confusion_dmg
-        true
-      else
-        false
+    elsif volatile_status.any? { |k, v| k == :confused || k == :infatuated }
+      if !volatile_status[:confused].nil?
+        puts "#{name} is confused."
+        if volatile_status[:confused].unable_to_attack?
+          perform_confusion_dmg
+          true
+        else
+          false
+        end
+      end
+      if !volatile_status[:infatuated].nil?
+        puts "#{name} is in love."
+        volatile_status[:infatuated].unable_to_attack?
       end
     else
       false
@@ -109,6 +116,17 @@ class Pokemon
     end
     puts "spd #{actual_speed} / #{spd.initial_value} / #{spd.stage}"
     nil
+  end
+
+  def opposite_gender(pokemon_target)
+    case gender
+    when :male 
+      true if pokemon_target.gender == :female
+    when :female
+      true if pokemon_target.gender == :male
+    else
+      false
+    end
   end
 
   def perform_confusion_dmg
@@ -140,6 +158,14 @@ class Pokemon
 
   def is_attacking?
     !metadata[:turn].nil?
+  end
+
+  def has_power_up?
+    !metadata[:defense_curl].nil?
+  end
+
+  def defense_curl_power_up
+    @metadata[:defense_curl] = "Power up"
   end
 
   def init_whole_turn_action
@@ -177,6 +203,11 @@ class Pokemon
   end
 
   def reinit_metadata
+    exceptions = [:defense_curl, :turn]
+    @metadata.keep_if { |key, _| exceptions.include?(key) }
+  end
+
+  def reinit_all_metadata
     @metadata = {}
   end
 
@@ -216,4 +247,3 @@ class Pokemon
 end
 
 # ESTUDIAR METODOS ACCESORES
-# AGREGAR ESTADOS DE SALUD DEL POKE (CONFUSION, CONGELADO, QUEMADO, ETC)

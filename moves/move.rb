@@ -58,13 +58,11 @@ class Move
       @pokemon.init_whole_turn_action
       puts
     else
-      atk_performed
       trigger_perform
     end
   end
   
   def perform_normal_attack
-    atk_performed
     if has_several_turns?
       action_per_turn 
     elsif hit_chance
@@ -73,12 +71,13 @@ class Move
   end
 
   def execute
+    atk_performed
     effectiveness_message(pokemon, pokemon_target, effect, self)
     if effect != 0 || category == :status
       strikes_count ? perform_multistrike : action
       end_of_action_message(pokemon, pokemon_target)
 
-      end_turn_action if pokemon.metadata[:turn] == nil
+      pokemon.reinit_metadata
       post_effect(pokemon) if has_post_effect?
     end
   end
@@ -95,19 +94,22 @@ class Move
   def additional_action(pokemon); end
 
   def atk_performed
-    @pp -= 1
     puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
   end
   
   def trigger_perform
-    return execute if trigger(pokemon) 
-
-    puts "But it failed."
-    pokemon.reinit_metadata
+    if trigger(pokemon)
+      @pp -= 1
+      execute
+    else
+      puts "But it failed."
+      pokemon.reinit_metadata
+    end
   end
 
   def action_per_turn
     if pokemon.metadata[:turn].nil?
+      @pp -= 1
       pokemon.init_several_turn_attack 
     end
 
@@ -123,6 +125,7 @@ class Move
   end
 
   def hit_chance
+    @pp -= 1
     return true if precision.nil?
     if !pokemon_target.metadata.nil?
       return true if pokemon_target.metadata[:post_effect] == "vulnerable"
@@ -203,10 +206,14 @@ class Move
   def cast_additional_effect; end
 
   def end_turn_action
-    pokemon.reinit_metadata
+    pokemon.metadata.delete(:turn)
   end
 
   def has_post_effect?
+    false
+  end
+
+  def drain
     false
   end
 end

@@ -21,6 +21,7 @@ class PollenPuffMove < Move
   end
 
   def alter_effect
+    atk_performed
     gain_hp(pokemon)
   end
 

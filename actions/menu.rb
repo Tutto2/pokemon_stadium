@@ -56,11 +56,11 @@ class Menu
     target = opponents[0]
     puts "#{current_pokemon.name} has no left moves."
     AttackAction.new(
-          speed: current_pokemon.actual_speed,
-          behaviour: StruggleMove.learn,
-          trainer: trainer,
-          target: target
-        )
+      speed: current_pokemon.actual_speed,
+      behaviour: StruggleMove.learn,
+      trainer: trainer,
+      target: target
+    )
   end
 
   def self.select_target(trainer, next_attack, opponents)

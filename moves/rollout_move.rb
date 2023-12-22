@@ -15,7 +15,12 @@ class RolloutMove < Move
   end
 
   def power
-    30 * (2 ** chain)
+    pwr = 30 * (2 ** chain)
+    if pokemon.has_power_up?
+      pwr * 2
+    else
+      pwr
+    end
   end
 
   private
