@@ -195,8 +195,8 @@ class Pokedex < Pokemon
         attacks: [
           CloseCombatMove.learn,
           ClangingScalesMove.learn,
-          ClangorusSoulMove.learn,
-          HypnosisMove.learn
+          BoomburstMove.learn,
+          ClangorusSoulMove.learn
         ]
         )            
     when "Baxcalibur"
