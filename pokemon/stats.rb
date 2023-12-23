@@ -1,7 +1,8 @@
 class Stats
   POSSIBLE_STATS = [:hp, :atk, :def, :sp_atk, :sp_def, :spd, :evs, :acc]
 
-  attr_reader :name, :initial_value, :curr_value, :stage
+  attr_accessor :stage
+  attr_reader :name, :initial_value, :curr_value
 
   def initialize(name:, base_value: , ev: 0, iv: 31, nature_value: 1.0)
     @name = name
@@ -54,6 +55,11 @@ class Stats
     end
 
     (factor + numerator) / (factor + denominator)
+  end
+
+  def baton_calc
+    return if hp?
+    @curr_value = curr_value * calc_stage
   end
 
   def decrease(value)

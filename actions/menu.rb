@@ -43,6 +43,15 @@ class Menu
       next_attack = current_pokemon.attacks[attk_num - 1]
       target = select_target(trainer, next_attack, opponents)
 
+      if next_attack.attack_name == :baton_pass
+        team = trainer.team.reject { |pok| pok == current_pokemon }
+
+        if team.all?(&:fainted?)
+          puts "Can't use that attack"
+          return attack_select(trainer, previous_action, current_pokemon, opponents)
+        end
+      end
+
       return attack_act(trainer, current_pokemon, next_attack, target) unless next_attack.pp <= 0
       
       puts "#{next_attack.attack_name} has no remaining PP"
@@ -136,7 +145,7 @@ class Menu
       puts "Invalid option. Try again"
       return pokemon_selection_index(trainer, current_pokemon, source: source)
     else
-      switch_act(trainer, index)
+      switch_act(trainer, index, source)
     end
   end
   
@@ -154,8 +163,8 @@ class Menu
     end
   end
   
-  def self.switch_act(trainer, index)
-    trainer.select_pokemon(index)
+  def self.switch_act(trainer, index, source)
+    trainer.select_pokemon(index, source)
   end
 
   def self.go_back(list)

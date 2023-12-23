@@ -17,35 +17,28 @@ module DamageFormula
   end 
 
   def perform_dmg(dmg)
-    if dmg > 0
-      if !pokemon_target.volatile_status[:substitute].nil?
-        puts "#{pokemon_target.name}'s substitute has recieved #{dmg} damage"
-        pokemon_target.volatile_status[:substitute].data -= dmg
-        if pokemon_target.volatile_status[:substitute].data <= 0
-          puts "#{pokemon_target.name}'s substitute broke!"
-          pokemon_target.volatile_status.delete(:substitute)
-        end
-      else
-        puts "#{pokemon_target.name} has recieved #{dmg} damage"
-        pokemon_target.hp.decrease(dmg)
-        pokemon_target.harm_recieved
-        defrost_evaluation
-        pokemon.successful_perform
-      end
+    return if dmg <= 0
+    return substitute_take_dmg(dmg) if !pokemon_target.volatile_status[:substitute].nil? && !sound_based?
 
-      if recoil
-        recoil_dmg = calc_recoil(dmg, pokemon.hp_total).to_i
-        puts "#{pokemon.name} has recieved #{recoil_dmg} of recoil damage"
-        pokemon.hp.decrease(recoil_dmg)
-      end
+    puts "#{pokemon_target.name} has recieved #{dmg} damage"
 
-      if drain
-        drain = calc_drain(dmg)
-        initial_hp = pokemon.hp_value
-        pokemon.hp.increase(drain)
+    pokemon_target.hp.decrease(dmg)
+    pokemon_target.harm_recieved
+    drain_calculation(dmg)
+    recoil_calculation(dmg)
+    defrost_evaluation
+    pokemon.successful_perform
+  end
 
-        puts "#{pokemon.name} restored #{drain} HP" if pokemon.hp_value != initial_hp
-      end
+  def substitute_take_dmg(dmg)
+    substitute_status = pokemon_target.volatile_status[:substitute]
+
+    puts "#{pokemon_target.name}'s substitute has recieved #{dmg} damage"
+    substitute_status.data -= dmg
+
+    if substitute_status.data <= 0
+      puts "#{pokemon_target.name}'s substitute broke!"
+      pokemon_target.volatile_status.delete(:substitute)
     end
   end
 
@@ -55,14 +48,11 @@ module DamageFormula
     attk = crit && atk.stage < 0 ? atk.initial_value : atk.curr_value
     defn = crit && dfn.stage > 0 ? dfn.initial_value : dfn.curr_value
     crit_value = crit || 1
-    vulnerability = pokemon_target.metadata[:post_effect] == "vulnerable" ? 2 : 1
+    vulnerability = calc_vulnerability
+    burn = burn_condition
+
     puts "Power: #{attack.power}"
-    dmg = (0.01*bonus*effect*variation*vulnerability*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*attack.power*attk/defn)/50.0 )).to_i
-    if pokemon.health_condition == :burned && attack.category == :physical && attack.attack_name != :facade
-      (dmg / 2)
-    else
-      dmg
-    end
+    (0.01*bonus*effect*variation*vulnerability*burn*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*attack.power*attk/defn)/50.0 )).to_i
   end
 
   def crit_chance
@@ -72,10 +62,18 @@ module DamageFormula
 
     if num < chance
       puts "It's a critical hit!" 
-      return 1.5
+      1.5
     else
-      return false
+      false
     end
+  end
+
+  def calc_vulnerability
+    pokemon_target.metadata[:post_effect] == "vulnerable" ? 2 : 1
+  end
+
+  def burn_condition
+    pokemon.health_condition == :burned && attack.category == :physical && attack.attack_name != :facade ? 1/2 : 1
   end
 
   def atk; end
@@ -93,6 +91,24 @@ module DamageFormula
 
   def recoil
     false
+  end
+
+  def drain_calculation(dmg)
+    return unless drain
+
+    drain = calc_drain(dmg)
+    initial_hp = pokemon.hp_value
+    pokemon.hp.increase(drain)
+
+    puts "#{pokemon.name} restored #{drain} HP" if pokemon.hp_value != initial_hp
+  end
+
+  def recoil_calculation(dmg)
+    return unless recoil
+
+    recoil_dmg = calc_recoil(dmg, pokemon.hp_total).to_i
+    puts "#{pokemon.name} has recieved #{recoil_dmg} of recoil damage"
+    pokemon.hp.decrease(recoil_dmg)
   end
 
   def defrost_evaluation

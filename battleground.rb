@@ -59,6 +59,7 @@ class PokemonBattleField
       queue = ActionQueue.new
       players.each { |player| queue << player.action }
       queue.perform_actions
+      evaluate_protection
       condition_effects if players.any? { |player| player.current_pokemon.health_condition != nil }
       status_effects
       @turn += 1
@@ -106,6 +107,13 @@ class PokemonBattleField
     players.each do |player|
       puts "#{player.name}'s pokemon:"
       puts player.current_pokemon.status
+    end
+  end
+
+  def evaluate_protection
+    players.each do |player|
+      pok = player.current_pokemon
+      pok.protection_delete if pok.is_protected?
     end
   end
 

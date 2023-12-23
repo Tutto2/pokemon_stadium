@@ -17,7 +17,7 @@ module SpecialFeatures
     false
   end
 
-  def can_defrost?(attack)
+  def can_defrost?
     heat_attacks = [
       :flame_wheel, 
       :flare_blitz, 
@@ -30,7 +30,17 @@ module SpecialFeatures
       :scorching_sands, 
       :matcha_gotcha
     ]
-    return true if heat_attacks.include?(attack)
+    return true if heat_attacks.include?(attack_name)
+    false
+  end
+
+  def sound_based?
+    sound_attacks = [
+      :boomburst,
+      :clanging_scales,
+      :clangorus_soul
+    ]
+    return true if sound_attacks.include?(attack_name)
     false
   end
 end

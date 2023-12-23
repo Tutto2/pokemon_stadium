@@ -27,10 +27,10 @@ class Move
   include DamageFormula
   include SpecialFeatures
 
-  attr_reader :attack_name, :precision, :power, :priority, :pokemon, :pokemon_target
-  attr_accessor :category, :type, :secondary_type, :metadata, :pp
+  attr_reader :attack_name, :precision, :power, :priority, :pokemon, :pokemon_target, :target
+  attr_accessor :category, :type, :secondary_type, :pp, :metadata
 
-  def initialize(attack_name: nil, type: nil, secondary_type: nil, category: nil, precision: 100, power: 0, priority: 0, metadata: nil, pp: nil)
+  def initialize(attack_name: nil, type: nil, secondary_type: nil, category: nil, precision: 100, power: 0, priority: 0, pp: nil, metadata: nil, target: nil)
     @attack_name = attack_name
     @type = type
     @secondary_type = secondary_type
@@ -38,12 +38,18 @@ class Move
     @precision = precision
     @power = power
     @priority = priority
-    @metadata = metadata
     @pp = pp
+    @metadata = metadata
+    @target = target
   end
 
   def perform_attack(*pokemons)
     @pokemon, @pokemon_target = pokemons
+    if category == :status && target.nil?
+      @target = pokemon 
+    elsif category != :status || target == :pokemon_target
+      @target = pokemon_target
+    end
 
     if has_trigger?
       perform_attack_with_trigger
@@ -72,6 +78,9 @@ class Move
 
   def execute
     atk_performed
+    return puts "#{pokemon_target.name} protected itself." if pokemon_target.is_protected? && pokemon_target == target
+    return puts "#{pokemon.name} failed." if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
+
     effectiveness_message(pokemon, pokemon_target, effect, self)
     if effect != 0 || category == :status
       strikes_count ? perform_multistrike : action
@@ -89,7 +98,7 @@ class Move
   end
 
   private
-  attr_reader :pokemon, :pokemon_target
+  attr_reader :pokemon, :pokemon_target, :target
 
   def additional_action(pokemon); end
 
@@ -170,7 +179,7 @@ class Move
   
   def main_effect
     if status? 
-      return puts "#{attack_name} does not affect #{pokemon_target.name}'s Substitute" if !pokemon_target.volatile_status[:substitute].nil?
+      return puts "#{attack_name} does not affect #{pokemon_target.name}'s Substitute" if !pokemon_target.volatile_status[:substitute].nil? && !(pokemon == target)
       status_effect
     else
       damage_effect

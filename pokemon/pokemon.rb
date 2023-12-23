@@ -174,7 +174,7 @@ class Pokemon
 
   def harm_recieved
     return if metadata[:harm].nil?
-    metadata[:harm] += 1
+    @metadata[:harm] += 1
   end
 
   def got_harm?
@@ -185,12 +185,32 @@ class Pokemon
     !metadata[:banned].nil?
   end
 
+  def is_protected
+    @metadata[:protected] = "Protect"
+  end
+
+  def is_protected?
+    metadata[:protected] == "Protect"
+  end
+
+  def make_invulnerable(source)
+    @metadata[:invulnerable] = source
+  end
+
+  def init_count_of_consecutive_hits
+    @metadata[:consecutive_hits] = 0
+  end
+
+  def add_consecutive_hits
+    @metadata[:consecutive_hits] += 1
+  end
+
   def was_successful?
     metadata[:perform] == "success"
   end
 
   def successful_perform
-    metadata[:perform] = "success"
+    @metadata[:perform] = "success"
   end
 
   def actual_speed
@@ -202,8 +222,16 @@ class Pokemon
     end
   end
 
+  def protection_delete
+    metadata.delete(:protected)
+  end
+
+  def vulnerable_again
+    metadata.delete(:invulnerable)
+  end
+
   def reinit_metadata
-    exceptions = [:defense_curl, :turn]
+    exceptions = [:defense_curl, :turn, :protected, :consecutive_hits, :invulnerable]
     @metadata.keep_if { |key, _| exceptions.include?(key) }
   end
 

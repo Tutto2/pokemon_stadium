@@ -49,7 +49,7 @@ class Pokedex < Pokemon
           BlizzardMove.learn,
           HydroPumpMove.learn,
           ShellSmashMove.learn,
-          SubstituteMove.learn
+          ProtectMove.learn
         ]
       )
     when "Snorlax"
@@ -90,7 +90,7 @@ class Pokedex < Pokemon
         attacks: [
           HydroPumpMove.learn,
           ScaldMove.learn,
-          AttractMove.learn,
+          ProtectMove.learn,
           RecoverMove.learn
         ]
       )
@@ -133,7 +133,7 @@ class Pokedex < Pokemon
           GigaDrainMove.learn,
           FrenzyPlantMove.learn,
           LeafStormMove.learn,
-          DoubleTeamMove.learn
+          ProtectMove.learn
         ]
       )
     when "Mew"
@@ -141,7 +141,7 @@ class Pokedex < Pokemon
         name: "Mew",
         types: [Types::PSYCHIC],
         stats: [
-          Stats.new(name: :hp, base_value: 1000 ),
+          Stats.new(name: :hp, base_value: 100 ),
           Stats.new(name: :atk, base_value: 100 ),
           Stats.new(name: :def, base_value: 100 ),
           Stats.new(name: :sp_atk, base_value: 100 ),
@@ -151,48 +151,54 @@ class Pokedex < Pokemon
         gender: :female,
         weight: 4,
         attacks: [
-          PsychicMove.learn,
           SacredFireMove.learn,
-          HypnosisMove.learn,
-          ZapCannonMove.learn
+          NastyPlotMove.learn,
+          SubstituteMove.learn,
+          BatonPassMove.learn
         ]
       )             
     when "Dragapult"
-      Pokemon.new( name: "Dragapult",
-                  types: [Types::DRAGON, Types::GHOST],
-                  stats: [Stats.new(name: :hp, base_value: 88 ),
-                          Stats.new(name: :atk, base_value: 120 ),
-                          Stats.new(name: :def, base_value: 75 ),
-                          Stats.new(name: :sp_atk, base_value: 100 ),
-                          Stats.new(name: :sp_def, base_value: 75 ),
-                          Stats.new(name: :spd, base_value: 142 )
-                        ],
-                  gender: :male,
-                  weight: 50,
-                  attacks: [  ShadowClawMove.learn,
-                              DragonDartsMove.learn,
-                              OutrageMove.learn,
-                              DragonDanceMove.learn
-                          ]
-                  )
+      Pokemon.new(
+        name: "Dragapult",
+        types: [Types::DRAGON, Types::GHOST],
+        stats: [
+          Stats.new(name: :hp, base_value: 88 ),
+          Stats.new(name: :atk, base_value: 120 ),
+          Stats.new(name: :def, base_value: 75 ),
+          Stats.new(name: :sp_atk, base_value: 100 ),
+          Stats.new(name: :sp_def, base_value: 75 ),
+          Stats.new(name: :spd, base_value: 142 )
+        ],
+        gender: :male,
+        weight: 50,
+        attacks: [
+          PhantomForceMove.learn,
+          DragonDartsMove.learn,
+          UTurnMove.learn,
+          DragonDanceMove.learn
+        ]
+      )
     when "Kommo-o"
-      Pokemon.new( name: "Kommo-o",
-                  types: [Types::DRAGON, Types::FIGHTING],
-                  stats: [Stats.new(name: :hp, base_value: 75 ),
-                          Stats.new(name: :atk, base_value: 110 ),
-                          Stats.new(name: :def, base_value: 125 ),
-                          Stats.new(name: :sp_atk, base_value: 100 ),
-                          Stats.new(name: :sp_def, base_value: 105 ),
-                          Stats.new(name: :spd, base_value: 85 )
-                        ],
-                  gender: :male,
-                  weight: 78.2,
-                  attacks: [  CloseCombatMove.learn,
-                              ClangingScalesMove.learn,
-                              ClangorusSoulMove.learn,
-                              FocusPunchMove.learn
-                          ]
-                  )            
+      Pokemon.new(
+        name: "Kommo-o",
+        types: [Types::DRAGON, Types::FIGHTING],
+        stats: [
+          Stats.new(name: :hp, base_value: 75 ),
+          Stats.new(name: :atk, base_value: 110 ),
+          Stats.new(name: :def, base_value: 125 ),
+          Stats.new(name: :sp_atk, base_value: 100 ),
+          Stats.new(name: :sp_def, base_value: 105 ),
+          Stats.new(name: :spd, base_value: 85 )
+        ],
+        gender: :male,
+        weight: 78.2,
+        attacks: [
+          CloseCombatMove.learn,
+          ClangingScalesMove.learn,
+          ClangorusSoulMove.learn,
+          HypnosisMove.learn
+        ]
+        )            
     when "Baxcalibur"
       Pokemon.new( name: "Baxcalibur",
                   types: [Types::DRAGON, Types::ICE],

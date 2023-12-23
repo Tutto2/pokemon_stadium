@@ -46,19 +46,49 @@ class Trainer
     end
   end
   
-  def select_pokemon(index)
+  def select_pokemon(index, source)
+    next_pokemon = team[index]
+
+    if source == :baton_pass
+      baton_pass_stats(next_pokemon)
+      baton_pass_volatile_status(next_pokemon)
+    end
+
     current_pokemon.stats.each do |stat|
       stat.reset_stat
     end
     current_pokemon.reinit_all_metadata
     current_pokemon.reinit_volatile_condition
-    next_pokemon = team[index]
 
     SwitchAction.new(
       speed: current_pokemon.actual_speed,
       behaviour: next_pokemon,
       trainer: self
     )
+  end
+
+  def baton_pass_stats(next_pokemon)
+    stages = []
+    current_pokemon.stats.each do |stat|
+      next if stat.hp?
+      stages << stat.stage
+    end
+    next_pokemon.stats.each do |stat|
+      next if stat.hp?
+      stat.stage = stages.shift
+    end
+
+    next_pokemon.stats.each { |stat| stat.baton_calc }
+  end
+
+  def baton_pass_volatile_status(next_pokemon)
+    status = current_pokemon.volatile_status
+    return if status.empty?
+
+    it_passes = [:confused, :substitute, :cursed]
+    status.keep_if { |name, status| it_passes.include?(name) }
+
+    next_pokemon.volatile_status = status
   end
 
   def ==(other)
