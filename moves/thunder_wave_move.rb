@@ -8,7 +8,8 @@ class ThunderWaveMove < Move
       type: Types::ELECTRIC,
       pp: 20,
       category: :status,
-      precision: 90
+      precision: 90,
+      target: :pokemon_target
       )
   end
 

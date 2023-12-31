@@ -27,7 +27,12 @@ class Menu
     puts
     print "#{trainer.name}, what do you want to do with #{trainer.current_pokemon}?: "
     num = gets.chomp.to_i
+    pok = trainer.current_pokemon
 
+    if num == 2 && !pok.volatile_status[:bound].nil? && !pok.types.include?(Types::GHOST)
+      puts "#{pok.name} can't escape of his bound"
+      return action_index(trainer) 
+    end
     return num if num == 1 || num == 2
 
     puts "Not a valid option. Try again"

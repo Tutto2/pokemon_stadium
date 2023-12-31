@@ -6,14 +6,15 @@ class AttractMove < Move
       attack_name: :attract,
       type: Types::NORMAL,
       pp: 15,
-      category: :status
+      category: :status,
+      target: :pokemon_target
       )
   end
   
   private
   def status_effect
     if pokemon.opposite_gender(pokemon_target)
-      volatile_condition_apply(pokemon_target, InfatuationStatus.get_infatuated(pokemon_target))
+      volatile_status_apply(pokemon_target, InfatuationStatus.get_infatuated)
     end
   end
 end

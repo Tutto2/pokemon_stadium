@@ -9,10 +9,6 @@ module SpecialFeatures
     false
   end
 
-  def status?
-    category == :status
-  end
-
   def can_select_target?
     false
   end
@@ -30,8 +26,7 @@ module SpecialFeatures
       :scorching_sands, 
       :matcha_gotcha
     ]
-    return true if heat_attacks.include?(attack_name)
-    false
+    heat_attacks.include?(attack_name)
   end
 
   def sound_based?
@@ -40,7 +35,6 @@ module SpecialFeatures
       :clanging_scales,
       :clangorus_soul
     ]
-    return true if sound_attacks.include?(attack_name)
-    false
+    sound_attacks.include?(attack_name)
   end
 end

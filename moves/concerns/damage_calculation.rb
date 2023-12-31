@@ -17,6 +17,7 @@ module DamageFormula
   end 
 
   def perform_dmg(dmg)
+    return puts "#{pokemon_target.name} has not recieved any damage" if dmg <= 0 && category != :status
     return if dmg <= 0
     return substitute_take_dmg(dmg) if !pokemon_target.volatile_status[:substitute].nil? && !sound_based?
 
@@ -56,16 +57,16 @@ module DamageFormula
   end
 
   def crit_chance
-    num = rand
-    chances = { 0 => 0.0417, 1 => 0.125, 2 => 0.5 }
-    chance = chances[crit_stage] || 1
+    pok_stage = pokemon.metadata[:crit_stage]
+    move_stage = crit_ratio
+    chance_by_stage = { 0 => 0.0417, 1 => 0.125, 2 => 0.5 }
 
-    if num < chance
-      puts "It's a critical hit!" 
-      1.5
-    else
-      false
-    end
+    chance = chance_by_stage[pok_stage + move_stage] || 1
+    puts "Chance of crit: #{chance}"
+    return false if rand > chance
+
+    puts "It's a critical hit!" 
+    1.5
   end
 
   def calc_vulnerability
@@ -85,7 +86,7 @@ module DamageFormula
     stab ? 1.5 : 1
   end
 
-  def crit_stage
+  def crit_ratio
     0
   end
 

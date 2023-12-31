@@ -1,9 +1,7 @@
 require_relative "volatile_status"
 
 class SubstituteStatus < VolatileConditions
-  def self.put_substitute(value, pokemon)
-    puts "#{pokemon.name} put in a substitute!"
-
+  def self.put_substitute(value)
     new(
       name: :substitute,
       data: value

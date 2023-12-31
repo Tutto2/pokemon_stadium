@@ -1,9 +1,7 @@
 require_relative "volatile_status"
 
 class InfatuationStatus < VolatileConditions
-  def self.get_infatuated(pokemon)
-    puts "#{pokemon.name} fell in love!"
-
+  def self.get_infatuated
     new(
       name: :infatuated
       )

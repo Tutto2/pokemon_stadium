@@ -12,3 +12,4 @@ class BoomburstMove < Move
       power: 140
       )
   end
+end

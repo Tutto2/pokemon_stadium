@@ -81,10 +81,10 @@ class Move
     return puts "#{pokemon_target.name} protected itself." if pokemon_target.is_protected? && pokemon_target == target
     return puts "#{pokemon.name} failed." if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
 
-    effectiveness_message(pokemon, pokemon_target, effect, self)
+    effectiveness_message
     if effect != 0 || category == :status
       strikes_count ? perform_multistrike : action
-      end_of_action_message(pokemon, pokemon_target)
+      end_of_action_message
 
       pokemon.reinit_metadata
       post_effect(pokemon) if has_post_effect?
@@ -166,7 +166,7 @@ class Move
       hits += 1
       break if pokemon_target.fainted?
     end
-    multihit_message(hits, pokemon_target)
+    multihit_message(hits)
   end
 
   def action
@@ -206,9 +206,12 @@ class Move
     end
   end
 
-  def volatile_condition_apply(target, condition)
-    if target.volatile_status[condition.name].nil?
-      target.volatile_status[condition.name] = condition
+  def volatile_status_apply(aim_to, status)
+    if aim_to.volatile_status[status.name].nil?
+      volatile_status_apply_msg(status.name)
+      aim_to.volatile_status[status.name] = status
+    else
+      puts "But it failed." if category == :status
     end
   end
   
@@ -222,6 +225,10 @@ class Move
     false
   end
 
+  def status?
+    category == :status
+  end
+  
   def drain
     false
   end

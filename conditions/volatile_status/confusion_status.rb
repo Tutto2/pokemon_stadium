@@ -1,9 +1,7 @@
 require_relative "volatile_status"
 
 class ConfusionStatus < VolatileConditions
-  def self.get_confused(pokemon)
-    puts "#{pokemon.name} got confused!"
-
+  def self.get_confused
     new(
       name: :confused, 
       duration: rand(1..4)
@@ -11,7 +9,7 @@ class ConfusionStatus < VolatileConditions
   end
 
   def unable_to_attack?
-    return true if (rand < 0.33)
+    return true if (self.duration < 0.33)
     false
   end
 end

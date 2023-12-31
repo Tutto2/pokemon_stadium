@@ -11,7 +11,7 @@ class ZapCannonMove < Move
       pp: 5,
       category: :special,
       power: 120,
-      precision: 50
+      precision: 0
       )
   end
 

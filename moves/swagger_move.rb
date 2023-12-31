@@ -10,7 +10,8 @@ class SwaggerMove < Move
       type: Types::NORMAL,
       pp: 20,
       category: :status,
-      precision: 85
+      precision: 85,
+      target: :pokemon_target
       )
   end
   
@@ -26,7 +27,7 @@ class SwaggerMove < Move
   end
 
   def secondary_effect
-    volatile_condition_apply(pokemon_target, ConfusionStatus.get_confused(pokemon_target))
+    volatile_status_apply(pokemon_target, ConfusionStatus.get_confused)
   end
 
   def trigger_chance

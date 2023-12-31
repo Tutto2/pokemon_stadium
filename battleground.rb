@@ -136,9 +136,9 @@ class PokemonBattleField
 
       next if pok.fainted? || pok.volatile_status.empty?
 
-      pok.volatile_status.each do |_, status|
+      pok.volatile_status.each do |name, status|
         status&.dmg_effect(pok)
-        status.turn_count if pok.was_successful?
+        status.turn_count if pok.was_successful? || name == :flinched
       end
     end
   end
@@ -155,7 +155,7 @@ pokemons = [
   Pokedex.catch("Pikachu"),
   Pokedex.catch("Squirtle"),
   Pokedex.catch("Baxcalibur"),
-  Pokedex.catch("Ogerpon"),
+  Pokedex.catch("Ogerpon (Fire)"),
   Pokedex.catch("Tinkaton"),
   Pokedex.catch("Gengar"),
   Pokedex.catch("Ceruledge"),

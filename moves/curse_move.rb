@@ -15,13 +15,13 @@ class CurseMove < Move
   end
 
   def alter_effect_activated?
-    pokemon.types.include?(Types::GHOST)
+    !pokemon.types.include?(Types::GHOST)
   end
 
   def status_effect
     return puts "The attack has failed." if pokemon.hp_value < (pokemon.hp_total / 2.0)
     lose_hp
-    volatile_condition_apply(pokemon_target, CurseStatus.get_cursed(pokemon, pokemon_target)) if pokemon.hp_value >= (pokemon.hp_total / 2.0)
+    volatile_status_apply(pokemon_target, CurseStatus.get_cursed) if pokemon.hp_value >= (pokemon.hp_total / 2.0)
   end
 
   def value

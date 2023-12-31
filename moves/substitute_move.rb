@@ -28,6 +28,6 @@ class SubstituteMove < Move
   end
 
   def secondary_effect
-    volatile_condition_apply(pokemon, SubstituteStatus.put_substitute(value.to_i, pokemon))
+    volatile_status_apply(pokemon, SubstituteStatus.put_substitute(value.to_i))
   end
 end

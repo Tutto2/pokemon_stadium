@@ -8,7 +8,8 @@ class ToxicMove < Move
       type: Types::POISON,
       pp: 10,
       category: :status,
-      precision: 90
+      precision: 90,
+      target: :pokemon_target
       )
   end
 

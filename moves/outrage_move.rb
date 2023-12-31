@@ -34,6 +34,6 @@ class OutrageMove < Move
 
   def final
     end_turn_action
-    volatile_condition_apply(pokemon, ConfusionStatus.get_confused(pokemon))
+    volatile_status_apply(pokemon, ConfusionStatus.get_confused)
   end
 end

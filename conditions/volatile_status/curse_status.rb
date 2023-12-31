@@ -1,11 +1,9 @@
 require_relative "volatile_status"
 
 class CurseStatus < VolatileConditions
-  def self.get_cursed(pokemon, pokemon_target)
-    puts "#{pokemon.name} cut his own HP and laid a curse on #{pokemon_target.name}"
-
+  def self.get_cursed
     new(
-      name: :cursed, 
+      name: :cursed 
       )
   end
 

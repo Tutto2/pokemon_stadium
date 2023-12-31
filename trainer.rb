@@ -70,22 +70,26 @@ class Trainer
   def baton_pass_stats(next_pokemon)
     stages = []
     current_pokemon.stats.each do |stat|
-      next if stat.hp?
-      stages << stat.stage
+      stages << stat.stage unless stat.hp?
     end
     next_pokemon.stats.each do |stat|
-      next if stat.hp?
-      stat.stage = stages.shift
+      stat.stage = stages.shift unless stat.hp?
     end
 
     next_pokemon.stats.each { |stat| stat.baton_calc }
+    next_pokemon.metadata[:crit_stage] = current_pokemon.metadata[:crit_stage]
   end
 
   def baton_pass_volatile_status(next_pokemon)
     status = current_pokemon.volatile_status
     return if status.empty?
 
-    it_passes = [:confused, :substitute, :cursed]
+    it_passes = %i[
+      confused
+      substitute
+      cursed
+      seeded
+    ]
     status.keep_if { |name, status| it_passes.include?(name) }
 
     next_pokemon.volatile_status = status

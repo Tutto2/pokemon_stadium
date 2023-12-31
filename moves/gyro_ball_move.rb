@@ -8,7 +8,7 @@ class GyroBallMove < Move
       attack_name: :gyro_ball,
       type: Types::STEEL,
       pp: 5,
-      category: :physical,
+      category: :physical
       )
   end
 

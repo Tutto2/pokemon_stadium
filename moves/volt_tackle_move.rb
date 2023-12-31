@@ -1,7 +1,7 @@
 require_relative "move"
 
 class VoltTackleMove < Move
-  include BasicSpecialAtk
+  include BasicPhysicalAtk
   include HasSecondaryEffect
   include HasRecoil
 

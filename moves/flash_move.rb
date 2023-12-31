@@ -8,7 +8,8 @@ class FlashMove < Move
       attack_name: :flash,
       type: Types::NORMAL,
       pp: 20,
-      category: :status
+      category: :status,
+      target: :pokemon_target
       )
   end
 

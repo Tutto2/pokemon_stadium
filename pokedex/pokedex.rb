@@ -22,7 +22,7 @@ class Pokedex < Pokemon
           Stats.new(name: :sp_def, base_value: 50 ),
           Stats.new(name: :spd, base_value: 90 )
         ],
-        gender: :male,
+        gender: :female,
         weight: 6,
         attacks: [
           ElectroBallMove.learn,
@@ -43,7 +43,7 @@ class Pokedex < Pokemon
           Stats.new(name: :sp_def, base_value: 64 ),
           Stats.new(name: :spd, base_value: 43 )
         ],
-        gender: :female,
+        gender: :male,
         weight: 9,
         attacks: [
           BlizzardMove.learn,
@@ -90,7 +90,7 @@ class Pokedex < Pokemon
         attacks: [
           HydroPumpMove.learn,
           ScaldMove.learn,
-          ProtectMove.learn,
+          BindMove.learn,
           RecoverMove.learn
         ]
       )
@@ -127,13 +127,13 @@ class Pokedex < Pokemon
           Stats.new(name: :sp_def, base_value: 85 ),
           Stats.new(name: :spd, base_value: 120 )
         ],
-        gender: :female,
+        gender: :male,
         weight: 52.2,
         attacks: [
           GigaDrainMove.learn,
           FrenzyPlantMove.learn,
           LeafStormMove.learn,
-          ProtectMove.learn
+          SubstituteMove.learn
         ]
       )
     when "Mew"
@@ -148,12 +148,11 @@ class Pokedex < Pokemon
           Stats.new(name: :sp_def, base_value: 100 ),
           Stats.new(name: :spd, base_value: 100 )
         ],
-        gender: :female,
         weight: 4,
         attacks: [
           SacredFireMove.learn,
+          PsychicMove.learn,
           NastyPlotMove.learn,
-          SubstituteMove.learn,
           BatonPassMove.learn
         ]
       )             
@@ -200,41 +199,47 @@ class Pokedex < Pokemon
         ]
         )            
     when "Baxcalibur"
-      Pokemon.new( name: "Baxcalibur",
-                  types: [Types::DRAGON, Types::ICE],
-                  stats: [Stats.new(name: :hp, base_value: 115 ),
-                          Stats.new(name: :atk, base_value: 145 ),
-                          Stats.new(name: :def, base_value: 92 ),
-                          Stats.new(name: :sp_atk, base_value: 75 ),
-                          Stats.new(name: :sp_def, base_value: 86 ),
-                          Stats.new(name: :spd, base_value: 87 )
-                        ],
-                  gender: :male,
-                  weight: 210,
-                  attacks: [  IcicleSpearMove.learn,
-                              GlaiveRushMove.learn,
-                              IceBallMove.learn,
-                              DragonDanceMove.learn
-                          ]
-                  )            
-    when "Ogerpon"
-      Pokemon.new( name: "Ogerpon",
-                  types: [Types::GRASS, Types::FIRE],
-                  stats: [Stats.new(name: :hp, base_value: 80 ),
-                          Stats.new(name: :atk, base_value: 120 ),
-                          Stats.new(name: :def, base_value: 84 ),
-                          Stats.new(name: :sp_atk, base_value: 60 ),
-                          Stats.new(name: :sp_def, base_value: 96 ),
-                          Stats.new(name: :spd, base_value: 110 )
-                        ],
-                  gender: :male,
-                  weight: 39.8,
-                  attacks: [  SeedBombMove.learn,
-                              IvyCudgelMove.learn,
-                              FlareBlitzMove.learn,
-                              SwordDanceMove.learn
-                          ]
-                  ) 
+      Pokemon.new(
+        name: "Baxcalibur",
+        types: [Types::DRAGON, Types::ICE],
+        stats: [
+          Stats.new(name: :hp, base_value: 115 ),
+          Stats.new(name: :atk, base_value: 145 ),
+          Stats.new(name: :def, base_value: 92 ),
+          Stats.new(name: :sp_atk, base_value: 75 ),
+          Stats.new(name: :sp_def, base_value: 86 ),
+          Stats.new(name: :spd, base_value: 87 )
+        ],
+        gender: :female,
+        weight: 210,
+        attacks: [
+          IcicleCrashMove.learn,
+          GlaiveRushMove.learn,
+          FocusEnergyMove.learn,
+          DragonDanceMove.learn
+        ]
+      )            
+    when "Ogerpon (Fire)"
+      Pokemon.new( 
+        name: "Ogerpon",
+        types: [Types::GRASS, Types::FIRE],
+        stats: [
+          Stats.new(name: :hp, base_value: 80 ),
+          Stats.new(name: :atk, base_value: 120 ),
+          Stats.new(name: :def, base_value: 84 ),
+          Stats.new(name: :sp_atk, base_value: 60 ),
+          Stats.new(name: :sp_def, base_value: 96 ),
+          Stats.new(name: :spd, base_value: 110 )
+        ],
+        gender: :male,
+        weight: 39.8,
+        attacks: [
+          HornLeechMove.learn,
+          SappySeedMove.learn,
+          IvyCudgelMove.learn,
+          FlareBlitzMove.learn
+        ]
+      ) 
     when "Tinkaton"
       Pokemon.new( name: "Tinkaton",
                   types: [Types::FAIRY, Types::STEEL],
@@ -286,7 +291,7 @@ class Pokedex < Pokemon
                   attacks: [  FlareBlitzMove.learn,
                               ShadowClawMove.learn,
                               SolarBladeMove.learn,
-                              SwordDanceMove.learn
+                              FireSpinMove.learn
                           ]
                   )
     when "Poltchageist"
@@ -339,7 +344,7 @@ class Pokedex < Pokemon
                   weight: 73,
                   attacks: [  FoulPlayMove.learn,
                               TriAttackMove.learn,
-                              ShadowBallMove.learn,
+                              ThroatChopMove.learn,
                               BitterMaliceMove.learn
                           ]
                   )
