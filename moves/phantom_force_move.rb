@@ -3,6 +3,7 @@ require_relative "move"
 class PhantomForceMove < Move
   include BasicPhysicalAtk
   include HasSeveralTurns
+  include ProtectionBreak
 
   def self.learn
     new(
@@ -20,11 +21,7 @@ class PhantomForceMove < Move
   end
 
   def second_turn_action
-    if pokemon_target.is_protected?
-      puts "#{pokemon.name} broke through #{pokemon_target}'s protection"
-      pokemon_target.protection_delete 
-    end
-    execute
+    protect_evaluation
     pokemon.vulnerable_again
     end_turn_action
   end

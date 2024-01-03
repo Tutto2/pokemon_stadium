@@ -19,7 +19,7 @@ class Pokemon
     @lvl = lvl
     @gender = gender
     @trainer = trainer
-    @metadata = {crit_stage: 0}
+    @metadata = {crit_stage: 0, harm: 0}
     @stats.push(
       Stats.new(name: :evs, base_value: 1),
       Stats.new(name: :acc, base_value: 1)
@@ -132,7 +132,7 @@ class Pokemon
     dmg = confusion_damage
     puts "#{name} hurt itself in its confusion (#{dmg})"
     self.hp.decrease(dmg)
-    self.harm_recieved
+    self.harm_recieved(dmg)
   end
 
   def confusion_damage

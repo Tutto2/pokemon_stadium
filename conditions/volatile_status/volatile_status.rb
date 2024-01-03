@@ -14,7 +14,7 @@ class VolatileConditions
 
   def turn_count
     @turn += 1
-    puts "Condition status turn: #{turn}"
+    puts "#{name} turn: #{turn}"
   end
 
   def wear_off?

@@ -13,6 +13,10 @@ module SpecialFeatures
     false
   end
 
+  def action_for_other_turn?
+    false
+  end
+
   def can_defrost?
     heat_attacks = [
       :flame_wheel, 
@@ -36,5 +40,13 @@ module SpecialFeatures
       :clangorus_soul
     ]
     sound_attacks.include?(attack_name)
+  end
+
+  def goes_through_protection?
+    ignore_protection_attacks = [
+      :curse,
+      :future_sight
+    ]
+    ignore_protection_attacks.include?(attack_name)
   end
 end

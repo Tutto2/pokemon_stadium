@@ -6,7 +6,7 @@ require "pry"
 # binding.pry
 
 class PokemonBattleField
-  attr_reader :players, :all_pokes
+  attr_reader :players, :all_pokes, :turn
 
   def self.init_game(players_num, pokemons)
     players = select_players_names(players_num)
@@ -57,11 +57,22 @@ class PokemonBattleField
       players.each { |player| player.select_action }
 
       queue = ActionQueue.new
-      players.each { |player| queue << player.action }
+      players.each do |player|
+        queue << player.action
+        queue << player.pending_action if action_count_complete?(player)
+      end
+
       queue.perform_actions
-      evaluate_protection
+      reinit_protection_and_harm
+      players.each { |player| player.regressive_count unless player.data[:remaining_turns].nil? }
       condition_effects if players.any? { |player| player.current_pokemon.health_condition != nil }
       status_effects
+      players.each do |player| 
+        if player.current_pokemon.fainted?
+          puts "#{player.current_pokemon.name} fainted."
+        end
+        puts
+      end
       @turn += 1
     end
 
@@ -74,6 +85,10 @@ class PokemonBattleField
   end
 
   private
+
+  def action_count_complete?(trainer)
+    trainer.data[:remaining_turns] == 0
+  end
 
   def view_pokemons(pokemons)
     pokemons.each.with_index(1) do |pok, index|
@@ -110,10 +125,11 @@ class PokemonBattleField
     end
   end
 
-  def evaluate_protection
+  def reinit_protection_and_harm
     players.each do |player|
       pok = player.current_pokemon
       pok.protection_delete if pok.is_protected?
+      pok.harm_reinit
     end
   end
 
@@ -138,7 +154,7 @@ class PokemonBattleField
 
       pok.volatile_status.each do |name, status|
         status&.dmg_effect(pok)
-        status.turn_count if pok.was_successful? || name == :flinched
+        status.turn_count
       end
     end
   end

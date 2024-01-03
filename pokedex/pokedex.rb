@@ -69,7 +69,7 @@ class Pokedex < Pokemon
         attacks: [
           FacadeMove.learn,
           OutrageMove.learn,
-          HeavySlamMove.learn,
+          CounterMove.learn,
           RestMove.learn
         ]
       )
@@ -90,7 +90,7 @@ class Pokedex < Pokemon
         attacks: [
           HydroPumpMove.learn,
           ScaldMove.learn,
-          BindMove.learn,
+          MirrorCoatMove.learn,
           RecoverMove.learn
         ]
       )
@@ -151,8 +151,8 @@ class Pokedex < Pokemon
         weight: 4,
         attacks: [
           SacredFireMove.learn,
-          PsychicMove.learn,
-          NastyPlotMove.learn,
+          FutureSightMove.learn,
+          GrowthMove.learn,
           BatonPassMove.learn
         ]
       )             
@@ -215,8 +215,8 @@ class Pokedex < Pokemon
         attacks: [
           IcicleCrashMove.learn,
           GlaiveRushMove.learn,
-          FocusEnergyMove.learn,
-          DragonDanceMove.learn
+          CounterMove.learn,
+          FocusEnergyMove.learn
         ]
       )            
     when "Ogerpon (Fire)"
@@ -234,8 +234,8 @@ class Pokedex < Pokemon
         gender: :male,
         weight: 39.8,
         attacks: [
-          HornLeechMove.learn,
           SappySeedMove.learn,
+          SpikyShieldMove.learn,
           IvyCudgelMove.learn,
           FlareBlitzMove.learn
         ]

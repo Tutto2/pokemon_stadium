@@ -7,13 +7,12 @@ class AttackAction < Action
   end
 
   def perform
-    current_pokemon = trainer.current_pokemon
-    condition = current_pokemon.health_condition
+    condition = user_pokemon.health_condition
     if condition == :frozen && ( condition.free_chance? || behaviour.can_defrost?(behaviour.attack_name) )
-      puts "#{current_pokemon.name} got thawed out"
-      current_pokemon.health_condition = nil
+      puts "#{user_pokemon.name} got thawed out"
+      user_pokemon.health_condition = nil
     end
-    current_pokemon.attack!(self) unless current_pokemon.fainted?
+    user_pokemon.attack!(self) if !user_pokemon.fainted? || behaviour.attack_name == :future_sight
   end
 
   def enqueueable

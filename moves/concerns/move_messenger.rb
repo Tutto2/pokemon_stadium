@@ -22,7 +22,7 @@ module Messages
   end
 
   def failed_attack_message
-    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type}) (since failed)"
+    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
     puts "The attack has failed"
     return false
   end
@@ -44,7 +44,12 @@ module Messages
 
   def volatile_status_apply_msg(status)
     case status
-    when :confused then puts "#{target.name} got confused!"
+    when :confused 
+      if attack_name == :outrage 
+        puts "#{pokemon.name} got confused!"
+      else
+        puts "#{pokemon_target.name} got confused!"
+      end
     when :cursed then puts "#{pokemon.name} cut his own HP and laid a curse on #{pokemon_target.name}"
     when :infatuated then puts "#{target.name} fell in love!"
     when :seeded then puts "#{target.name} was seeded"

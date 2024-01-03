@@ -73,6 +73,7 @@ class Menu
       speed: current_pokemon.actual_speed,
       behaviour: StruggleMove.learn,
       trainer: trainer,
+      user_pokemon: trainer.current_pokemon,
       target: target
     )
   end
@@ -133,6 +134,7 @@ class Menu
       speed: current_pokemon.actual_speed,
       behaviour: next_attack,
       trainer: trainer,
+      user_pokemon: current_pokemon,
       target: target
     )
   end

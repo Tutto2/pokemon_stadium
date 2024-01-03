@@ -1,7 +1,7 @@
 require_relative "actions/menu"
 
 class Trainer
-  attr_accessor :name, :team, :current_pokemon, :action, :opponents
+  attr_accessor :name, :team, :current_pokemon, :action, :opponents, :data
 
   def initialize(name:)
     @name = name
@@ -9,6 +9,7 @@ class Trainer
     @current_pokemon = nil
     @action = nil
     @opponents = nil
+    @data = {}
   end
 
   def self.select_name(index)
@@ -93,6 +94,27 @@ class Trainer
     status.keep_if { |name, status| it_passes.include?(name) }
 
     next_pokemon.volatile_status = status
+  end
+
+  def keep_action(action, turns)
+    return unless data[:pending_action].nil?
+    @data[:pending_action] = action
+    @data[:remaining_turns] = turns
+  end
+
+  def regressive_count
+    if data[:remaining_turns] <= 0
+      @data.delete(:remaining_turns)
+      @data.delete(:pending_action)
+      return
+    end
+
+    @data[:remaining_turns] -= 1
+    puts "Turns remaining #{data[:remaining_turns]} for #{data[:pending_action].behaviour.attack_name} to execute"
+  end
+
+  def pending_action
+    data[:pending_action]
   end
 
   def ==(other)

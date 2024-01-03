@@ -9,7 +9,7 @@ class ConfusionStatus < VolatileConditions
   end
 
   def unable_to_attack?
-    return true if (self.duration < 0.33)
+    return true if (rand < 0.33)
     false
   end
 end

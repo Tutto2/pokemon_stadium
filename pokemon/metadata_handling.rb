@@ -1,4 +1,5 @@
 require_relative "pokemon"
+require_relative "../moves/move"
 
 module MetadataHandling
   def increase_crit_stage(stages)
@@ -26,28 +27,31 @@ module MetadataHandling
   end  
 
   def init_whole_turn_action
-    @metadata[:harm] = 0
+    @metadata[:waiting] = 0
   end
 
-  def harm_recieved
-    return if metadata[:harm].nil?
-    @metadata[:harm] += 1
+  def harm_recieved(dmg)
+    @metadata[:harm] = dmg
   end
 
   def got_harm?
-    metadata[:harm] == 1
+    metadata[:harm] != 0
+  end
+
+  def harm_reinit
+    metadata[:harm] = 0
   end
 
   def has_banned_attack?
     !metadata[:banned].nil?
   end
 
-  def is_protected
-    @metadata[:protected] = "Protect"
+  def is_protected(source)
+    @metadata[:protected] = source
   end
 
   def is_protected?
-    metadata[:protected] == "Protect"
+    !metadata[:protected].nil?
   end
 
   def protection_delete
@@ -62,12 +66,20 @@ module MetadataHandling
     metadata.delete(:invulnerable)
   end
 
-  def add_consecutive_hits
-    @metadata[:consecutive_hits] ||= 0
-    @metadata[:consecutive_hits] += 1
+  def add_protection_consecutive_uses
+    @metadata[:protection_consecutive_uses] ||= 0
+    @metadata[:protection_consecutive_uses] += 1
   end
 
-  def cant_emit_sound
+  def made_contact
+    @metadata[:touched] = 1
+  end
+
+  def was_touched?
+    !metadata[:touched].nil?
+  end
+
+  def prevent_emit_sound
     @metadata[:mute] = 0
   end
 
@@ -89,12 +101,14 @@ module MetadataHandling
     metadata[:perform] == "success"
   end
 
-  def reinit_metadata
-    exceptions = [:crit_stage, :defense_curl, :turn, :protected, :consecutive_hits, :invulnerable]
+  def reinit_metadata(move)
+    exceptions = [:crit_stage, :defense_curl, :turn, :protected, :invulnerable, :harm]
+    exceptions << :protection_consecutive_uses if move.respond_to?(:chance_of_succeed)
     @metadata.keep_if { |key, _| exceptions.include?(key) }
+    @metadata[:harm] = 0
   end
 
   def reinit_all_metadata
-    @metadata = {crit_stage: 0}
+    @metadata = {crit_stage: 0, harm: 0}
   end
 end

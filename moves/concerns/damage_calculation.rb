@@ -24,7 +24,7 @@ module DamageFormula
     puts "#{pokemon_target.name} has recieved #{dmg} damage"
 
     pokemon_target.hp.decrease(dmg)
-    pokemon_target.harm_recieved
+    pokemon_target.harm_recieved(dmg)
     drain_calculation(dmg)
     recoil_calculation(dmg)
     defrost_evaluation

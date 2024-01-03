@@ -15,6 +15,6 @@ class ThroatChopMove < Move
   end
 
   def secondary_effect
-    pokemon_target.cant_emit_sound
+    pokemon_target.prevent_emit_sound
   end
 end

@@ -45,21 +45,43 @@ class Move
 
   def perform_attack(*pokemons)
     @pokemon, @pokemon_target = pokemons
-    if category == :status && target.nil?
-      @target = pokemon 
-    elsif category != :status || target == :pokemon_target
-      @target = pokemon_target
-    end
+    @target = determine_target
 
-    if has_trigger?
+    if return_dmg?
+      return_dmg_effect
+    elsif has_trigger?
       perform_attack_with_trigger
-    else
+    elsif action_for_other_turn? && pokemon.trainer.data[:pending_action].nil?
+      additional_action(pokemon)
+      handle_in_other_turn
+    else 
       perform_normal_attack
     end
   end
   
+  def determine_target
+    if category == :status && target.nil?
+      pokemon
+    elsif category != :status || target == :pokemon_target
+      pokemon_target
+    end
+  end
+
+  def return_dmg_effect
+    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
+    return puts "But it failed." unless triggered?
+
+    if type == Types::FIGHTING && pokemon_target.types.any? { |type| type == Types::GHOST }
+      puts "#{pokemon_target.name} it's immune" 
+      pokemon.reinit_metadata(self)
+    else
+      perform_dmg(dmg)
+      pokemon.reinit_metadata(self)
+    end
+  end
+
   def perform_attack_with_trigger
-    if pokemon.metadata[:harm].nil?
+    if pokemon.metadata[:waiting].nil?
       additional_action(pokemon)
       @pokemon.init_whole_turn_action
       puts
@@ -78,7 +100,7 @@ class Move
 
   def execute
     atk_performed
-    return puts "#{pokemon_target.name} protected itself." if pokemon_target.is_protected? && pokemon_target == target
+    return if protected?
     return puts "#{pokemon.name} failed." if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
 
     effectiveness_message
@@ -86,7 +108,7 @@ class Move
       strikes_count ? perform_multistrike : action
       end_of_action_message
 
-      pokemon.reinit_metadata
+      pokemon.reinit_metadata(self)
       post_effect(pokemon) if has_post_effect?
     end
   end
@@ -112,7 +134,7 @@ class Move
       execute
     else
       puts "But it failed."
-      pokemon.reinit_metadata
+      pokemon.reinit_metadata(self)
     end
   end
 
@@ -143,7 +165,7 @@ class Move
     chance = rand(0..100)
     if (@category == :status && precision < chance) || (@category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance)
       failed_attack_message
-      pokemon.reinit_metadata if !pokemon.metadata.nil?
+      pokemon.reinit_metadata(self) if !pokemon.metadata.nil?
     else
       return true
     end
@@ -153,6 +175,21 @@ class Move
   def effect
     attack_types = [self.type, self.secondary_type].compact
     Types.calc_multiplier( attack_types, pokemon_target.types )
+  end
+
+  def protected?
+    return false if !pokemon_target.is_protected? || goes_through_protection? || pokemon_target != target
+
+    puts "#{pokemon_target.name} protected itself."
+    protection_harm
+    true
+  end
+
+  def protection_harm
+    return unless pokemon_target.metadata[:protected] == :spiky_shield
+
+    pokemon.hp.decrease((pokemon.hp_total / 8).to_i)
+    puts "#{pokemon.name} has lost #{(pokemon.hp_total / 8).to_i} HP due to Spiky Shield"
   end
 
   def strikes_count
@@ -172,6 +209,7 @@ class Move
   def action
     main_effect
     if pokemon.was_successful?
+      pokemon_target.made_contact if category == :physical
       cast_additional_effect
     end
     puts
@@ -227,6 +265,10 @@ class Move
 
   def status?
     category == :status
+  end
+
+  def return_dmg?
+    false
   end
   
   def drain
