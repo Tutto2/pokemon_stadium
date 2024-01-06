@@ -9,12 +9,14 @@ class ScalePulseMove < Move
       type: Types::BUG, 
       secondary_type: Types::DRAGON,
       pp: 5,
-      category: :special,
-      power: 85
+      category: :special
       )
   end
 
-  private
+  def power
+    rand > 0.2 ? 85 : 170
+  end
+
   def dfn
     pokemon_target.def
   end

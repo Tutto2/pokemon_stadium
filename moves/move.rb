@@ -46,6 +46,7 @@ class Move
   def perform_attack(*pokemons)
     @pokemon, @pokemon_target = pokemons
     @target = determine_target
+    return puts "#{pokemon.name} used #{attack_name} but it has no remaining PP" if pp <= 0
 
     if return_dmg?
       return_dmg_effect
@@ -100,10 +101,9 @@ class Move
 
   def execute
     atk_performed
-    return if protected?
     return puts "#{pokemon.name} failed." if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
 
-    effectiveness_message
+    effectiveness_message if !protected?
     if effect != 0 || category == :status
       strikes_count ? perform_multistrike : action
       end_of_action_message
@@ -179,17 +179,20 @@ class Move
 
   def protected?
     return false if !pokemon_target.is_protected? || goes_through_protection? || pokemon_target != target
-
-    puts "#{pokemon_target.name} protected itself."
-    protection_harm
     true
   end
 
-  def protection_harm
-    return unless pokemon_target.metadata[:protected] == :spiky_shield
+  def protected_itself
+    puts "#{pokemon_target.name} protected itself."
+    protection_harm
+  end
 
-    pokemon.hp.decrease((pokemon.hp_total / 8).to_i)
-    puts "#{pokemon.name} has lost #{(pokemon.hp_total / 8).to_i} HP due to Spiky Shield"
+  def protection_harm
+    return unless pokemon_target.metadata[:protected] == :spiky_shield && category == :physical
+  
+    damage = (pokemon.hp_total / 8).to_i
+    pokemon.hp.decrease(damage)
+    puts "#{pokemon.name} has lost #{damage} HP due to Spiky Shield"
   end
 
   def strikes_count
@@ -197,6 +200,7 @@ class Move
   end
 
   def perform_multistrike
+    return protected_itself if protected?
     hits = 0
     strikes_count.times do 
       action
@@ -217,6 +221,7 @@ class Move
   
   def main_effect
     if status? 
+      return protected_itself if !(target == pokemon) && protected?
       return puts "#{attack_name} does not affect #{pokemon_target.name}'s Substitute" if !pokemon_target.volatile_status[:substitute].nil? && !(pokemon == target)
       status_effect
     else
@@ -273,5 +278,9 @@ class Move
   
   def drain
     false
+  end
+
+  def crit_ratio
+    0
   end
 end

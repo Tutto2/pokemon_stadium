@@ -46,9 +46,9 @@ class Pokedex < Pokemon
         gender: :male,
         weight: 9,
         attacks: [
-          BlizzardMove.learn,
+          FakeOutMove.learn,
           HydroPumpMove.learn,
-          ShellSmashMove.learn,
+          BlizzardMove.learn,
           ProtectMove.learn
         ]
       )
@@ -68,9 +68,9 @@ class Pokedex < Pokemon
         weight: 460,
         attacks: [
           FacadeMove.learn,
-          OutrageMove.learn,
+          PsychUpMove.learn,
           CounterMove.learn,
-          RestMove.learn
+          SuckerPunchMove.learn
         ]
       )
     when "Milotic"
@@ -155,6 +155,23 @@ class Pokedex < Pokemon
           GrowthMove.learn,
           BatonPassMove.learn
         ]
+      )
+    when "Ditto"
+      Pokemon.new(
+        name: "Ditto",
+        types: [Types::NORMAL],
+        stats: [
+          Stats.new(name: :hp, base_value: 48 ),
+          Stats.new(name: :atk, base_value: 48 ),
+          Stats.new(name: :def, base_value: 48 ),
+          Stats.new(name: :sp_atk, base_value: 48 ),
+          Stats.new(name: :sp_def, base_value: 48 ),
+          Stats.new(name: :spd, base_value: 48 )
+        ],
+        weight: 4,
+        attacks: [
+          TransformMove.learn
+        ]
       )             
     when "Dragapult"
       Pokemon.new(
@@ -215,7 +232,7 @@ class Pokedex < Pokemon
         attacks: [
           IcicleCrashMove.learn,
           GlaiveRushMove.learn,
-          CounterMove.learn,
+          IceShardMove.learn,
           FocusEnergyMove.learn
         ]
       )            
@@ -241,77 +258,88 @@ class Pokedex < Pokemon
         ]
       ) 
     when "Tinkaton"
-      Pokemon.new( name: "Tinkaton",
-                  types: [Types::FAIRY, Types::STEEL],
-                  stats: [Stats.new(name: :hp, base_value: 85 ),
-                          Stats.new(name: :atk, base_value: 75 ),
-                          Stats.new(name: :def, base_value: 77 ),
-                          Stats.new(name: :sp_atk, base_value: 70),
-                          Stats.new(name: :sp_def, base_value: 105),
-                          Stats.new(name: :spd, base_value: 94)
-                        ],
-                  gender: :male,
-                  weight: 112.8,
-                  attacks: [  GigatonHammerMove.learn,
-                              PlayRoughMove.learn,
-                              GyroBallMove.learn,
-                              SwordDanceMove.learn
-                          ]
-                  )
+      Pokemon.new(
+        name: "Tinkaton",
+        types: [Types::FAIRY, Types::STEEL],
+        stats: [
+          Stats.new(name: :hp, base_value: 85 ),
+          Stats.new(name: :atk, base_value: 75 ),
+          Stats.new(name: :def, base_value: 77 ),
+          Stats.new(name: :sp_atk, base_value: 70),
+          Stats.new(name: :sp_def, base_value: 105),
+          Stats.new(name: :spd, base_value: 94)
+        ],
+        gender: :male,
+        weight: 112.8,
+        attacks: [
+          PlayRoughMove.learn,
+          MetronomeMove.learn,
+          GigatonHammerMove.learn,
+          SwordDanceMove.learn
+        ]
+      )
     when "Gengar"
-      Pokemon.new( name: "Gengar",
-                  types: [Types::GHOST, Types::POISON],
-                  stats: [Stats.new(name: :hp, base_value: 60 ),
-                          Stats.new(name: :atk, base_value: 65 ),
-                          Stats.new(name: :def, base_value: 60 ),
-                          Stats.new(name: :sp_atk, base_value: 130),
-                          Stats.new(name: :sp_def, base_value: 75),
-                          Stats.new(name: :spd, base_value: 110)
-                        ],
-                  gender: :male,
-                  weight: 40.5,
-                  attacks: [  ShadowBallMove.learn,
-                              SludgeBombMove.learn,
-                              ConfuseRayMove.learn,
-                              CurseMove.learn
-                          ]
-                  )
+      Pokemon.new(
+        name: "Gengar",
+        types: [Types::GHOST, Types::POISON],
+        stats: [
+          Stats.new(name: :hp, base_value: 60 ),
+          Stats.new(name: :atk, base_value: 65 ),
+          Stats.new(name: :def, base_value: 60 ),
+          Stats.new(name: :sp_atk, base_value: 130),
+          Stats.new(name: :sp_def, base_value: 75),
+          Stats.new(name: :spd, base_value: 110)
+        ],
+        gender: :male,
+        weight: 40.5,
+        attacks: [
+          ShadowBallMove.learn,
+          SludgeBombMove.learn,
+          ConfuseRayMove.learn,
+          SpiteMove.learn
+        ]
+      )
     when "Ceruledge"
-      Pokemon.new( name: "Ceruledge",
-                  types: [Types::GHOST, Types::FIRE],
-                  stats: [Stats.new(name: :hp, base_value: 75 ),
-                          Stats.new(name: :atk, base_value: 125 ),
-                          Stats.new(name: :def, base_value: 80 ),
-                          Stats.new(name: :sp_atk, base_value: 60 ),
-                          Stats.new(name: :sp_def, base_value: 100),
-                          Stats.new(name: :spd, base_value: 85)
-                        ],
-                  gender: :male,
-                  weight: 62,
-                  attacks: [  FlareBlitzMove.learn,
-                              ShadowClawMove.learn,
-                              SolarBladeMove.learn,
-                              FireSpinMove.learn
-                          ]
-                  )
+      Pokemon.new(
+        name: "Ceruledge",
+        types: [Types::GHOST, Types::FIRE],
+        stats: [
+          Stats.new(name: :hp, base_value: 75 ),
+          Stats.new(name: :atk, base_value: 125 ),
+          Stats.new(name: :def, base_value: 80 ),
+          Stats.new(name: :sp_atk, base_value: 60 ),
+          Stats.new(name: :sp_def, base_value: 100),
+          Stats.new(name: :spd, base_value: 85)
+        ],
+        gender: :male,
+        weight: 62,
+        attacks: [
+          ShadowClawMove.learn,
+          BitterBladeMove.learn,
+          SolarBladeMove.learn,
+          ShadowSneakMove.learn
+        ]
+      )
     when "Poltchageist"
-      Pokemon.new( name: "Poltchageist",
-                  types: [Types::GHOST, Types::GRASS],
-                  stats: [Stats.new(name: :hp, base_value: 40 ),
-                          Stats.new(name: :atk, base_value: 45 ),
-                          Stats.new(name: :def, base_value: 45 ),
-                          Stats.new(name: :sp_atk, base_value: 74 ),
-                          Stats.new(name: :sp_def, base_value: 54),
-                          Stats.new(name: :spd, base_value: 50)
-                        ],
-                  gender: :male,
-                  weight: 1.1,
-                  attacks: [  LeafStormMove.learn,
-                              ShadowBallMove.learn,
-                              FoulPlayMove.learn,
-                              GrassKnotMove.learn
-                          ]
-                  )
+      Pokemon.new(
+        name: "Poltchageist",
+        types: [Types::GHOST, Types::GRASS],
+        stats: [
+          Stats.new(name: :hp, base_value: 40 ),
+          Stats.new(name: :atk, base_value: 45 ),
+          Stats.new(name: :def, base_value: 45 ),
+          Stats.new(name: :sp_atk, base_value: 74 ),
+          Stats.new(name: :sp_def, base_value: 54),
+          Stats.new(name: :spd, base_value: 50)
+        ],
+        weight: 1.1,
+        attacks: [  
+          FoulPlayMove.learn,
+          # PainSplitMove.learn,
+          # EndureMove.learn,
+          CurseMove.learn
+        ]
+      )
     when "Gholdengo"
       Pokemon.new( name: "Gholdengo",
                   types: [Types::GHOST, Types::STEEL],
@@ -327,7 +355,7 @@ class Pokedex < Pokemon
                   attacks: [  MakeItRainMove.learn,
                               GyroBallMove.learn,
                               ShadowBallMove.learn,
-                              DoubleTeamMove.learn
+                              MetalSoundMove.learn
                           ]
                   )
     when "Zoroark-hisui"
@@ -342,7 +370,7 @@ class Pokedex < Pokemon
                         ],
                   gender: :male,
                   weight: 73,
-                  attacks: [  FoulPlayMove.learn,
+                  attacks: [  SuckerPunchMove.learn,
                               TriAttackMove.learn,
                               ThroatChopMove.learn,
                               BitterMaliceMove.learn

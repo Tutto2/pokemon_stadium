@@ -16,7 +16,7 @@ class GlaiveRushMove < Move
 
   private
   def post_effect(pokemon)
-    pokemon.metadata = {post_effect: "vulnerable"}
+    pokemon.metadata[:post_effect] = "vulnerable"
     puts "#{pokemon.name} is vulnerable"
   end
 end

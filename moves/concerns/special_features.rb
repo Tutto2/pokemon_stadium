@@ -37,7 +37,9 @@ module SpecialFeatures
     sound_attacks = [
       :boomburst,
       :clanging_scales,
-      :clangorus_soul
+      :clangorus_soul,
+      :perish_song,
+      :metal_sound
     ]
     sound_attacks.include?(attack_name)
   end
@@ -45,7 +47,11 @@ module SpecialFeatures
   def goes_through_protection?
     ignore_protection_attacks = [
       :curse,
-      :future_sight
+      :future_sight,
+      :psych_up,
+      :roar,
+      :perish_song,
+      :transform
     ]
     ignore_protection_attacks.include?(attack_name)
   end

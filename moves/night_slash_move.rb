@@ -1,0 +1,16 @@
+require_relative "move"
+
+class NightSlashMove < Move
+  include BasicPhysicalAtk
+  include HasHighCritRatio
+
+  def self.learn
+    new(
+      attack_name: :night_slash,
+      type: Types::DARK,
+      pp: 15,
+      category: :physical,
+      power: 70
+      )
+  end
+end

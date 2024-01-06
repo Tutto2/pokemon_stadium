@@ -12,7 +12,7 @@ class Stats
     @nature_value = name == :hp ? 1.0 : nature_value
     @initial_value = 0
     @curr_value = @initial_value
-    @stage = 0
+    @stage = stage || 0
   end
 
   def calc_value(lvl)
@@ -34,7 +34,6 @@ class Stats
     return puts "#{name} won't go any lower!" if min_stage? && stages < 0
     
     @stage = (stage + stages).clamp(-6, 6)
-
     @curr_value = initial_value * calc_stage
     stat_variation_message(target, stages)
   end
@@ -57,7 +56,7 @@ class Stats
     (factor + numerator) / (factor + denominator)
   end
 
-  def baton_calc
+  def in_game_stat_calc
     return if hp?
     @curr_value = curr_value * calc_stage
   end

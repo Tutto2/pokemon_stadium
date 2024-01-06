@@ -14,7 +14,7 @@ class FutureSightMove < Move
   end
 
   def action_for_other_turn?
-    true
+    true unless pokemon.fainted?
   end
 
   def additional_action(pokemon)

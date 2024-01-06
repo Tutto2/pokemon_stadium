@@ -1,8 +1,10 @@
 require_relative "pokemon"
 require_relative "../moves/move"
+require "pry"
 
 module MetadataHandling
   def increase_crit_stage(stages)
+    @metadata[:crit_stage] ||= 0
     @metadata[:crit_stage] += stages
   end
 
@@ -102,13 +104,14 @@ module MetadataHandling
   end
 
   def reinit_metadata(move)
-    exceptions = [:crit_stage, :defense_curl, :turn, :protected, :invulnerable, :harm]
+    exceptions = [:crit_stage, :defense_curl, :turn, :protected, :invulnerable, :harm, :actions]
     exceptions << :protection_consecutive_uses if move.respond_to?(:chance_of_succeed)
     @metadata.keep_if { |key, _| exceptions.include?(key) }
     @metadata[:harm] = 0
+    @metadata[:actions] += 1
   end
 
   def reinit_all_metadata
-    @metadata = {crit_stage: 0, harm: 0}
+    @metadata = {crit_stage: 0, harm: 0, actions: 0}
   end
 end

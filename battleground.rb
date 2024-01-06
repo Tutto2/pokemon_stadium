@@ -67,12 +67,6 @@ class PokemonBattleField
       players.each { |player| player.regressive_count unless player.data[:remaining_turns].nil? }
       condition_effects if players.any? { |player| player.current_pokemon.health_condition != nil }
       status_effects
-      players.each do |player| 
-        if player.current_pokemon.fainted?
-          puts "#{player.current_pokemon.name} fainted."
-        end
-        puts
-      end
       @turn += 1
     end
 
@@ -155,30 +149,32 @@ class PokemonBattleField
       pok.volatile_status.each do |name, status|
         status&.dmg_effect(pok)
         status.turn_count
+        status.perish_song_effect(pok) if name == :perish_song && status.turn == 4
       end
     end
   end
 end
 
 pokemons = [
-  Pokedex.catch("Kommo-o"),
-  Pokedex.catch("Mew"),
+  Pokedex.catch("Squirtle"),
+  Pokedex.catch("Pikachu"),
+  Pokedex.catch("Golem"),
   Pokedex.catch("Snorlax"),
-  Pokedex.catch("Dragapult"),
+  Pokedex.catch("Gengar"),
+  Pokedex.catch("Ditto"),
+  Pokedex.catch("Mew"),
   Pokedex.catch("Sceptile"),
   Pokedex.catch("Milotic"),
-  Pokedex.catch("Golem"),
-  Pokedex.catch("Pikachu"),
-  Pokedex.catch("Squirtle"),
+  Pokedex.catch("Kommo-o"),
+  Pokedex.catch("Dragapult"),
   Pokedex.catch("Baxcalibur"),
   Pokedex.catch("Ogerpon (Fire)"),
   Pokedex.catch("Tinkaton"),
-  Pokedex.catch("Gengar"),
   Pokedex.catch("Ceruledge"),
   Pokedex.catch("Poltchageist"),
   Pokedex.catch("Gholdengo"),
-  Pokedex.catch("Dracanfly"),
-  Pokedex.catch("Zoroark-hisui")
+  Pokedex.catch("Zoroark-hisui"),
+  Pokedex.catch("Dracanfly")
       ]
 
 puts PokemonBattleField.init_game(2, pokemons)

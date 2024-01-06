@@ -17,8 +17,10 @@ module DamageFormula
   end 
 
   def perform_dmg(dmg)
+    pokemon.successful_perform
+
+    return protected_itself if protected?
     return puts "#{pokemon_target.name} has not recieved any damage" if dmg <= 0 && category != :status
-    return if dmg <= 0
     return substitute_take_dmg(dmg) if !pokemon_target.volatile_status[:substitute].nil? && !sound_based?
 
     puts "#{pokemon_target.name} has recieved #{dmg} damage"
@@ -28,7 +30,6 @@ module DamageFormula
     drain_calculation(dmg)
     recoil_calculation(dmg)
     defrost_evaluation
-    pokemon.successful_perform
   end
 
   def substitute_take_dmg(dmg)
@@ -57,7 +58,7 @@ module DamageFormula
   end
 
   def crit_chance
-    pok_stage = pokemon.metadata[:crit_stage]
+    pok_stage = pokemon.metadata[:crit_stage].to_i
     move_stage = crit_ratio
     chance_by_stage = { 0 => 0.0417, 1 => 0.125, 2 => 0.5 }
 
@@ -74,7 +75,7 @@ module DamageFormula
   end
 
   def burn_condition
-    pokemon.health_condition == :burned && attack.category == :physical && attack.attack_name != :facade ? 1/2 : 1
+    pokemon.health_condition == :burned && category == :physical && attack_name != :facade ? 1/2 : 1
   end
 
   def atk; end

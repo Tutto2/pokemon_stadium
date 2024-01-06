@@ -77,7 +77,7 @@ class Trainer
       stat.stage = stages.shift unless stat.hp?
     end
 
-    next_pokemon.stats.each { |stat| stat.baton_calc }
+    next_pokemon.stats.each { |stat| stat.in_game_stat_calc }
     next_pokemon.metadata[:crit_stage] = current_pokemon.metadata[:crit_stage]
   end
 

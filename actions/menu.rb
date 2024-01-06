@@ -10,7 +10,12 @@ class Menu
     opponents = trainer.opponents
 
     if current_pokemon.is_attacking?
-      previous_action
+      if previous_action.behaviour.attack_name == :metronome
+        previous_action.behaviour = previous_action.behaviour.metadata
+        previous_action
+      else
+        previous_action
+      end
     else
       action_num = action_index(trainer)
       puts

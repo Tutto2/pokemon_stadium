@@ -55,6 +55,7 @@ module Messages
     when :seeded then puts "#{target.name} was seeded"
     when :substitute then puts "#{pokemon.name} put in a substitute!"
     when :bound then puts "#{target.name} was trapped!"
+    when :transformed then puts "#{pokemon.name} transformed into #{pokemon_target.name}!"
     end
   end
 end

@@ -1,7 +1,8 @@
 require_relative "../pokemon/pokemon"
 
 class Action
-  attr_reader :speed, :behaviour, :trainer, :user_pokemon, :target, :priority
+  attr_accessor :behaviour
+  attr_reader :speed, :trainer, :user_pokemon, :target, :priority
   
   def initialize(speed:, behaviour:, trainer:, user_pokemon: nil, target: nil, priority:)
     @speed = speed

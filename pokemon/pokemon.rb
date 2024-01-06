@@ -8,8 +8,8 @@ require "pry"
 class Pokemon
   include MetadataHandling
 
-  attr_reader :name, :types, :attacks, :lvl, :gender, :weight
-  attr_accessor :stats, :condition, :trainer, :metadata, :health_condition, :volatile_status
+  attr_reader :name, :lvl
+  attr_accessor :stats, :types, :attacks, :gender, :weight, :condition, :trainer, :metadata, :health_condition, :volatile_status
   def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, gender: nil, trainer: nil, health_condition: nil, volatile_status: {}, teratype: nil)
     @name = name
     @types = types
@@ -19,7 +19,7 @@ class Pokemon
     @lvl = lvl
     @gender = gender
     @trainer = trainer
-    @metadata = {crit_stage: 0, harm: 0}
+    @metadata = {crit_stage: 0, harm: 0, actions: 0}
     @stats.push(
       Stats.new(name: :evs, base_value: 1),
       Stats.new(name: :acc, base_value: 1)
@@ -29,6 +29,8 @@ class Pokemon
     @volatile_status = volatile_status
     @teratype = teratype || types.sample
   end
+
+  # metronomo quedo en loop despues de usar ice ball
 
   def status
     if !volatile_status[:substitute].nil?
@@ -179,7 +181,27 @@ class Pokemon
   end
 
   def reinit_volatile_condition
+    unless volatile_status[:transformed].nil?
+      att = volatile_status[:transformed].data
+      previous_stats = att[:stats]
+      @types = att[:types]
+      @weight = att[:weight]
+      @gender = att[:gender]
+      @attacks = att[:attacks]
+      reinit_stats(previous_stats)
+    end
+
     @volatile_status = {}
+  end
+
+  def reinit_stats(previous_stats)
+    stats_transfer = []
+    previous_stats.each do |stat|
+      stats_transfer << stat.dup unless stat.hp?
+    end
+    @stats.each_with_index do |stat, index|
+      @stats[index] = stats_transfer.shift unless stat.hp?
+    end
   end
  
   def terastallized
