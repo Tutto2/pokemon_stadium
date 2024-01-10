@@ -178,6 +178,7 @@ class Move
   end
 
   def protected?
+    return true if attack_name == :pain_split && pokemon_target.is_protected?
     return false if !pokemon_target.is_protected? || goes_through_protection? || pokemon_target != target
     true
   end

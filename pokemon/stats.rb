@@ -63,8 +63,13 @@ class Stats
 
   def decrease(value)
     return unless hp?
+    old_hp = curr_value
 
-    @curr_value -= value
+    if old_hp - value <= 0 
+      @curr_value = 0
+    else
+      @curr_value -= value
+    end
   end
 
   def increase(value)
@@ -74,6 +79,12 @@ class Stats
     curr_value > initial_value ? @curr_value = initial_value : @curr_value
   end
 
+  def endured_the_hit
+    return unless hp?
+
+    @curr_value = 1
+  end
+  
   def reset_stat
     return if hp?
     @curr_value = @initial_value

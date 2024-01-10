@@ -95,16 +95,24 @@ module MetadataHandling
     attack.sound_based?
   end
 
+  def will_survive
+    @metadata[:will_survive] = 1
+  end
+
+  def reinit_endure
+    metadata.delete(:will_survive)
+  end
+
   def successful_perform
     @metadata[:perform] = "success"
   end
 
   def was_successful?
-    metadata[:perform] == "success"
+    @metadata[:perform] == "success"
   end
 
   def reinit_metadata(move)
-    exceptions = [:crit_stage, :defense_curl, :turn, :protected, :invulnerable, :harm, :actions]
+    exceptions = [:crit_stage, :defense_curl, :turn, :protected, :invulnerable, :harm, :actions, :will_survive]
     exceptions << :protection_consecutive_uses if move.respond_to?(:chance_of_succeed)
     @metadata.keep_if { |key, _| exceptions.include?(key) }
     @metadata[:harm] = 0

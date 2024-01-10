@@ -52,6 +52,27 @@ class Pokedex < Pokemon
           ProtectMove.learn
         ]
       )
+    when "Jigglypuff"
+      Pokemon.new(
+        name: "Jigglypuff",
+        types: [Types::NORMAL, Types::FAIRY],
+        stats: [
+          Stats.new(name: :hp, base_value: 115 ),
+          Stats.new(name: :atk, base_value: 45 ),
+          Stats.new(name: :def, base_value: 15 ),
+          Stats.new(name: :sp_atk, base_value: 45 ),
+          Stats.new(name: :sp_def, base_value: 25 ),
+          Stats.new(name: :spd, base_value: 20 )
+        ],
+        gender: :female,
+        weight: 5.5,
+        attacks: [
+          HyperVoiceMove.learn,
+          DoubleEdgeMove.learn,
+          CopycatMove.learn,
+          SweetKissMove.learn
+        ]
+      )
     when "Snorlax"
       Pokemon.new(
         name: "Snorlax",
@@ -335,65 +356,74 @@ class Pokedex < Pokemon
         weight: 1.1,
         attacks: [  
           FoulPlayMove.learn,
-          # PainSplitMove.learn,
-          # EndureMove.learn,
+          PainSplitMove.learn,
+          EndureMove.learn,
           CurseMove.learn
         ]
       )
     when "Gholdengo"
-      Pokemon.new( name: "Gholdengo",
-                  types: [Types::GHOST, Types::STEEL],
-                  stats: [Stats.new(name: :hp, base_value: 87 ),
-                          Stats.new(name: :atk, base_value: 60 ),
-                          Stats.new(name: :def, base_value: 95 ),
-                          Stats.new(name: :sp_atk, base_value: 133 ),
-                          Stats.new(name: :sp_def, base_value: 91),
-                          Stats.new(name: :spd, base_value: 84)
-                        ],
-                  gender: :male,
-                  weight: 30,
-                  attacks: [  MakeItRainMove.learn,
-                              GyroBallMove.learn,
-                              ShadowBallMove.learn,
-                              MetalSoundMove.learn
-                          ]
-                  )
+      Pokemon.new(
+        name: "Gholdengo",
+        types: [Types::GHOST, Types::STEEL],
+        stats: [
+          Stats.new(name: :hp, base_value: 87 ),
+          Stats.new(name: :atk, base_value: 60 ),
+          Stats.new(name: :def, base_value: 95 ),
+          Stats.new(name: :sp_atk, base_value: 133 ),
+          Stats.new(name: :sp_def, base_value: 91),
+          Stats.new(name: :spd, base_value: 84)
+        ],
+        gender: :male,
+        weight: 30,
+        attacks: [
+          PsyshockMove.learn,
+          ShadowBallMove.learn,
+          MakeItRainMove.learn,
+          MetalSoundMove.learn
+        ]
+      )
     when "Zoroark-hisui"
-      Pokemon.new( name: "Zoroark-hisui",
-                  types: [Types::GHOST, Types::NORMAL],
-                  stats: [Stats.new(name: :hp, base_value: 55 ),
-                          Stats.new(name: :atk, base_value: 100 ),
-                          Stats.new(name: :def, base_value: 60 ),
-                          Stats.new(name: :sp_atk, base_value: 125 ),
-                          Stats.new(name: :sp_def, base_value: 60),
-                          Stats.new(name: :spd, base_value: 110)
-                        ],
-                  gender: :male,
-                  weight: 73,
-                  attacks: [  SuckerPunchMove.learn,
-                              TriAttackMove.learn,
-                              ThroatChopMove.learn,
-                              BitterMaliceMove.learn
-                          ]
-                  )
+      Pokemon.new(
+        name: "Zoroark-hisui",
+        types: [Types::GHOST, Types::NORMAL],
+        stats: [
+          Stats.new(name: :hp, base_value: 55 ),
+          Stats.new(name: :atk, base_value: 100 ),
+          Stats.new(name: :def, base_value: 60 ),
+          Stats.new(name: :sp_atk, base_value: 125 ),
+          Stats.new(name: :sp_def, base_value: 60),
+          Stats.new(name: :spd, base_value: 110)
+        ],
+        gender: :male,
+        weight: 73,
+        attacks: [
+          SuckerPunchMove.learn,
+          BitterMaliceMove.learn,
+          HexMove.learn,
+          WillOWispMove.learn
+        ]
+      )
     when "Dracanfly"
-      Pokemon.new( name: "Dracanfly",
-                  types: [Types::DRAGON, Types::BUG],
-                  stats: [Stats.new(name: :hp, base_value: 75 ),
-                          Stats.new(name: :atk, base_value: 105 ),
-                          Stats.new(name: :def, base_value: 45 ),
-                          Stats.new(name: :sp_atk, base_value: 142 ),
-                          Stats.new(name: :sp_def, base_value: 90),
-                          Stats.new(name: :spd, base_value: 143)
-                        ],
-                  gender: :male,
-                  weight: 47,
-                  attacks: [  ScalePulseMove.learn,
-                              FlamethrowerMove.learn,
-                              UTurnMove.learn,
-                              PollenPuffMove.learn
-                          ]
-                  )              
+      Pokemon.new(
+        name: "Dracanfly",
+        types: [Types::DRAGON, Types::BUG],
+        stats: [
+          Stats.new(name: :hp, base_value: 75 ),
+          Stats.new(name: :atk, base_value: 105 ),
+          Stats.new(name: :def, base_value: 45 ),
+          Stats.new(name: :sp_atk, base_value: 142 ),
+          Stats.new(name: :sp_def, base_value: 90),
+          Stats.new(name: :spd, base_value: 143)
+        ],
+        gender: :male,
+        weight: 47,
+        attacks: [
+          UTurnMove.learn,
+          FlamethrowerMove.learn,
+          ScalePulseMove.learn,
+          DracoMeteorMove.learn
+        ]
+      )              
     end
   end
 end

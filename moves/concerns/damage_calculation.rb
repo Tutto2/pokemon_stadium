@@ -18,14 +18,19 @@ module DamageFormula
 
   def perform_dmg(dmg)
     pokemon.successful_perform
+    target_initial_hp = pokemon_target.hp.curr_value
 
     return protected_itself if protected?
     return puts "#{pokemon_target.name} has not recieved any damage" if dmg <= 0 && category != :status
     return substitute_take_dmg(dmg) if !pokemon_target.volatile_status[:substitute].nil? && !sound_based?
 
-    puts "#{pokemon_target.name} has recieved #{dmg} damage"
-
     pokemon_target.hp.decrease(dmg)
+    if !pokemon_target.metadata[:will_survive].nil? && pokemon_target.hp.curr_value <= 0
+      pokemon_target.hp.endured_the_hit
+      puts "#{pokemon_target.name} endured the hit!"
+    end
+
+    puts "#{pokemon_target.name} has recieved #{target_initial_hp - pokemon_target.hp.curr_value} damage"
     pokemon_target.harm_recieved(dmg)
     drain_calculation(dmg)
     recoil_calculation(dmg)

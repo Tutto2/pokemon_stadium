@@ -68,6 +68,7 @@ class Pokemon
     condition_disappear?
     return if is_unable_to_move?
 
+    trainer.battlefield.attack_list << attack.dup
     attack.perform_attack(self, target)
     puts
   end

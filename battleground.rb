@@ -6,6 +6,7 @@ require "pry"
 # binding.pry
 
 class PokemonBattleField
+  attr_accessor :attack_list
   attr_reader :players, :all_pokes, :turn
 
   def self.init_game(players_num, pokemons)
@@ -25,15 +26,16 @@ class PokemonBattleField
     end
   end
 
-  def initialize(players: [], all_pokes: [])
+  def initialize(players: [], all_pokes: [], attack_list: [])
     @players = players
     @all_pokes = all_pokes
+    @attack_list = attack_list
   end
 
   def choose_pokemons
     view_pokemons(all_pokes)
     players.each do |player|
-      player.team_build(all_pokes, players)
+      player.team_build(all_pokes, players, self)
     end
     start_battle
   end
@@ -63,7 +65,7 @@ class PokemonBattleField
       end
 
       queue.perform_actions
-      reinit_protection_and_harm
+      reinit_protections_and_harm
       players.each { |player| player.regressive_count unless player.data[:remaining_turns].nil? }
       condition_effects if players.any? { |player| player.current_pokemon.health_condition != nil }
       status_effects
@@ -119,10 +121,11 @@ class PokemonBattleField
     end
   end
 
-  def reinit_protection_and_harm
+  def reinit_protections_and_harm
     players.each do |player|
       pok = player.current_pokemon
       pok.protection_delete if pok.is_protected?
+      pok.reinit_endure if pok.will_survive
       pok.harm_reinit
     end
   end
@@ -158,6 +161,7 @@ end
 pokemons = [
   Pokedex.catch("Squirtle"),
   Pokedex.catch("Pikachu"),
+  Pokedex.catch("Jigglypuff"),
   Pokedex.catch("Golem"),
   Pokedex.catch("Snorlax"),
   Pokedex.catch("Gengar"),

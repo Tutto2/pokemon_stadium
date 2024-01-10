@@ -1,7 +1,7 @@
 require_relative "actions/menu"
 
 class Trainer
-  attr_accessor :name, :team, :current_pokemon, :action, :opponents, :data
+  attr_accessor :name, :team, :current_pokemon, :action, :opponents, :data, :battlefield
 
   def initialize(name:)
     @name = name
@@ -9,6 +9,7 @@ class Trainer
     @current_pokemon = nil
     @action = nil
     @opponents = nil
+    @battlefield = nil
     @data = {}
   end
 
@@ -18,10 +19,10 @@ class Trainer
 
     return Trainer.new(name: name) if !name.empty? && name.length < 10
     puts "Invalid input, the name must be less than 10 characters"
-    select_name(index)
+    select_name(index, battlefield)
   end
 
-  def team_build(pokemons, players)
+  def team_build(pokemons, players, battlefield)
     print "#{name} select a set of pokemon to battle: "
     @team.clear
     @opponents = players.reject { |player| player == self }
@@ -30,9 +31,10 @@ class Trainer
     if selection.all? { |pick| (1..pokemons.size).include?(pick) } && (1..6).include?(selection.size)
       @team = selection.map { |pick| pokemons[pick-1] }
       @team.each { |pok| pok.trainer = self }
+      @battlefield = battlefield
     else
       puts "Pick 1 to 6 pokemons, and provide valid indices. Try again."
-      return team_build(pokemons, players)
+      return team_build(pokemons, players, battlefield)
     end
   end
 
