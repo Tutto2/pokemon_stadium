@@ -1,3 +1,4 @@
+require_relative "messages_pool"
 require_relative "actions/menu"
 
 class Trainer
@@ -14,16 +15,16 @@ class Trainer
   end
 
   def self.select_name(index)
-    print "Player #{index}, select your name: "
+    MessagesPool.select_player_name(index)
     name = gets.chomp
 
     return Trainer.new(name: name) if !name.empty? && name.length < 10
-    puts "Invalid input, the name must be less than 10 characters"
-    select_name(index, battlefield)
+    MessagesPool.invalid_name_input
+    select_name(index)
   end
 
   def team_build(pokemons, players, battlefield)
-    print "#{name} select a set of pokemon to battle: "
+    MessagesPool.pokemon_selection(name)
     @team.clear
     @opponents = players.reject { |player| player == self }
     selection = gets.chomp.split.map(&:to_i)
@@ -33,7 +34,7 @@ class Trainer
       @team.each { |pok| pok.trainer = self }
       @battlefield = battlefield
     else
-      puts "Pick 1 to 6 pokemons, and provide valid indices. Try again."
+      MessagesPool.invalid_pokemon_selection
       return team_build(pokemons, players, battlefield)
     end
   end

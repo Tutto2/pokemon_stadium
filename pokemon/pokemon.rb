@@ -1,3 +1,4 @@
+require_relative "../messages_pool"
 require_relative "../actions/action"
 require_relative "../types/type_factory"
 require_relative "stats"
@@ -33,19 +34,15 @@ class Pokemon
   # metronomo quedo en loop despues de usar ice ball
 
   def status
-    if !volatile_status[:substitute].nil?
-      puts "#{@name}'s Substitute has #{volatile_status[:substitute].data.to_i} hp"
-    end
-    
-    puts "#{@name} - #{hp_value} / #{hp_total} hp (#{types.map(&:to_s).join("/")}) #{health_condition&.name}"
-    volatile_status.each { |k, v| puts "#{k}"}
+    display_substitute_message
+    MessagesPool.pokemon_state(self)
+  end
 
-    stats.each do |stat|
-      next if stat == hp || stat == spd
-      puts "#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}"
-    end
-    puts "spd #{actual_speed} / #{spd.initial_value} / #{spd.stage}"
-    nil
+  def display_substitute_message
+    substitute_status = volatile_status[:substitute]
+    return unless substitute_status
+  
+    MessagesPool.substitute_state(name, substitute_status.data.to_i)
   end
 
   def actual_speed

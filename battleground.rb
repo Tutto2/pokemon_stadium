@@ -1,3 +1,5 @@
+require_relative "messages_pool"
+require_relative "battle_log"
 require_relative "trainer"
 require_relative "actions/menu"
 require_relative "actions/action_queue"
@@ -46,8 +48,7 @@ class PokemonBattleField
 
     loop do
       break if players.any? { |player| team_fainted?(player) }
-      puts
-      puts "############ turn #{@turn} ############"
+      MessagesPool.turn(turn)
       players.each do |player| 
         if player.current_pokemon.fainted?
           player.current_pokemon = player.team[selection_index(player)]
@@ -69,6 +70,7 @@ class PokemonBattleField
       players.each { |player| player.regressive_count unless player.data[:remaining_turns].nil? }
       condition_effects if players.any? { |player| player.current_pokemon.health_condition != nil }
       status_effects
+      BattleLog.instance.display_messages
       @turn += 1
     end
 
@@ -100,13 +102,13 @@ class PokemonBattleField
 
   def selection_index(player)
     view_pokemons(player.team)
-      
-    print "#{player.name} select your pokemon: "
+    
+    MessagesPool.select_pokemon(player.name)
     index = gets.chomp.to_i
 
     return (index - 1) if index > 0 && index <= player.team.size && !player.team[index-1].fainted?
       
-    puts "Invalid option. Try again"
+    MessagesPool.invalid_option
     return selection_index(player)
   end
 
@@ -116,8 +118,8 @@ class PokemonBattleField
 
   def display_pokemons
     players.each do |player|
-      puts "#{player.name}'s pokemon:"
-      puts player.current_pokemon.status
+      MessagesPool.player_current_pokemon(player.name)
+      player.current_pokemon.status
     end
   end
 
@@ -179,6 +181,7 @@ pokemons = [
   Pokedex.catch("Gholdengo"),
   Pokedex.catch("Zoroark-hisui"),
   Pokedex.catch("Dracanfly")
-      ]
+  # Pokedex.catch("Dracanfly")
+]
 
 puts PokemonBattleField.init_game(2, pokemons)

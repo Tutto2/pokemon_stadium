@@ -425,5 +425,27 @@ class Pokedex < Pokemon
         ]
       )              
     end
+    # when "Volkenji"
+    #   Pokemon.new(
+    #     name: "Volkenji",
+    #     types: [Types::ROCK],
+    #     stats: [
+    #       Stats.new(name: :hp, base_value: 172),
+    #       Stats.new(name: :atk, base_value: 65),
+    #       Stats.new(name: :def, base_value: 130),
+    #       Stats.new(name: :sp_atk, base_value: 93),
+    #       Stats.new(name: :sp_def, base_value: 106),
+    #       Stats.new(name: :spd, base_value: 34)
+    #     ],
+    #     gender: :male,
+    #     weight: 640,
+    #     attacks: [
+    #       UTurnMove.learn,
+    #       FlamethrowerMove.learn,
+    #       ScalePulseMove.learn,
+    #       DracoMeteorMove.learn
+    #     ]
+    #   )              
+    # end
   end
 end

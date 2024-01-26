@@ -31,7 +31,7 @@ class ClangorusSoulMove < Move
   end
 
   def secondary_effect
-    lose_hp
+    lose_hp(value)
   end
 
   def value
