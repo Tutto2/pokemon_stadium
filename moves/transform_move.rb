@@ -1,8 +1,6 @@
 require_relative "move"
 
 class TransformMove < Move
-  include MigratePokInfo
-
   def self.learn
     new(
       attack_name: :transform,
@@ -15,6 +13,7 @@ class TransformMove < Move
 
   private
   def status_effect
-    volatile_status_apply(pokemon, TransformedStatus.get_transformed(pokemon, pokemon_target)).migrate_attributes(pokemon, pokemon_target)
+    volatile_status_apply(pokemon, TransformedStatus.get_transformed(pokemon))
+    pokemon.volatile_status[:transformed].migrate_attributes(pokemon, pokemon_target.dup)
   end
 end

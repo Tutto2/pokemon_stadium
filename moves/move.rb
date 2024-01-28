@@ -250,10 +250,10 @@ class Move
     end
   end
 
-  def volatile_status_apply(aim_to, status)
-    if aim_to.volatile_status[status.name].nil?
+  def volatile_status_apply(target, status)
+    if target.volatile_status[status.name].nil?
       volatile_status_apply_msg(status.name)
-      aim_to.volatile_status[status.name] = status
+      target.volatile_status[status.name] = status
     else
       puts "But it failed." if category == :status
     end

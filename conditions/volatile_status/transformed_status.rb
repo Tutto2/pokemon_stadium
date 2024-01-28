@@ -1,7 +1,7 @@
 require_relative "volatile_status"
 
 class TransformedStatus < VolatileConditions
-  def self.get_transformed(pokemon, pokemon_target)
+  def self.get_transformed(pokemon)
     new(
       name: :transformed,
       data: previous_attributes(pokemon)
@@ -19,16 +19,25 @@ class TransformedStatus < VolatileConditions
   end
 
   def migrate_attributes(pokemon, pokemon_target)
-    pokemon.types = pokemon_target.types.dup
-    pokemon.weight = pokemon_target.weight.dup
-    pokemon.gender = pokemon_target.gender.dup
+    pokemon.types = pokemon_target.types
+    pokemon.weight = pokemon_target.weight
+    pokemon.gender = pokemon_target.gender
     migrate_attacks(pokemon, pokemon_target)
     migrate_stats(pokemon, pokemon_target)
-    pokemon_target.metadata[:crit_stage] = pokemon.metadata[:crit_stage]
+    pokemon.metadata[:crit_stage] = pokemon_target.metadata[:crit_stage]
   end
 
   def migrate_attacks(pokemon, pokemon_target)
-    pokemon.attacks = pokemon_target.attacks.dup
+    attack_transfer = []
+    pokemon_target.attacks.each do |attack|
+      attack_transfer << attack.dup 
+    end
+    pokemon.attacks.clear
+
+    attack_transfer.each do |attack|
+      pokemon.attacks << attack
+    end
+
     pokemon.attacks.each { |atk| atk.pp = 5 }
   end
 
