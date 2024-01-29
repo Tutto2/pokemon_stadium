@@ -45,14 +45,13 @@ class PokemonBattleField
   def start_battle
     @turn = 1
     select_initial_pok(players)
-
+    puts
     loop do
       break if players.any? { |player| team_fainted?(player) }
       MessagesPool.turn(turn)
       players.each do |player| 
         if player.current_pokemon.fainted?
           player.current_pokemon = player.team[selection_index(player)]
-          puts
         end
       end
 
@@ -74,12 +73,7 @@ class PokemonBattleField
       @turn += 1
     end
 
-    players.each do |player|
-      if team_fainted?(player)
-        winner = players.reject { |i| i == player }
-        puts "#{winner[0].name} has won!"
-      end 
-    end
+    declare_winner
   end
 
   private
@@ -98,6 +92,7 @@ class PokemonBattleField
     players.each do |player|
       player.current_pokemon = player.team[selection_index(player)]
     end
+    puts
   end
 
   def selection_index(player)
@@ -141,14 +136,13 @@ class PokemonBattleField
       condition = pok.health_condition
       condition&.dmg_effect(pok)
       condition&.turn_count if !condition&.turn.nil?
-      puts "#{pok.name} has fainted" if pok.fainted?
+      BattleLog.instance.log(MessagesPool.pok_fainted_msg(pok.name)) if pok.fainted? && !condition.dmg_effect(pok).nil?
     end
   end
 
   def status_effects
     players.each do |player|
       pok = player.current_pokemon
-
       next if pok.fainted? || pok.volatile_status.empty?
 
       pok.volatile_status.each do |name, status|
@@ -156,6 +150,13 @@ class PokemonBattleField
         status.turn_count
         status.perish_song_effect(pok) if name == :perish_song && status.turn == 4
       end
+    end
+  end
+
+  def declare_winner
+    players.each do |player|
+      next if team_fainted?(player)
+      MessagesPool.declare_winner(player.name)
     end
   end
 end

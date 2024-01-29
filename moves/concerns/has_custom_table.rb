@@ -7,7 +7,6 @@ module HasCustomTable
     end
   end
 
-  private
   def calculation_stat; end
 
   def table; end

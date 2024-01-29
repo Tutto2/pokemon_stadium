@@ -13,7 +13,7 @@ class EndureMove < Move
 
   private
   def status_effect
-    puts "#{pokemon.name} braced itself!"
+    BattleLog.instance.log(MessagesPool.endure_msg(pokemon.name))
     pokemon.will_survive
   end
 end

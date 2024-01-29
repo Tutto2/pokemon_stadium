@@ -1,6 +1,6 @@
 require_relative "volatile_status"
 
-class ConfusionStatus < VolatileConditions
+class ConfusionStatus < VolatileStatus
   def self.get_confused
     new(
       name: :confused, 

@@ -24,6 +24,7 @@ class Trainer
   end
 
   def team_build(pokemons, players, battlefield)
+    puts
     MessagesPool.pokemon_selection(name)
     @team.clear
     @opponents = players.reject { |player| player == self }

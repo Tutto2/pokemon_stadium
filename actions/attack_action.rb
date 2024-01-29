@@ -1,5 +1,4 @@
 require_relative "../trainer"
-require "pry"
 
 class AttackAction < Action
   def initialize(**args) 
@@ -7,9 +6,10 @@ class AttackAction < Action
   end
 
   def perform
+    BattleLog.instance.log(MessagesPool.leap)
     condition = user_pokemon.health_condition
     if condition == :frozen && ( condition.free_chance? || behaviour.can_defrost?(behaviour.attack_name) )
-      puts "#{user_pokemon.name} got thawed out"
+      BattleLog.instance.log(MessagesPool.thawed_out_msg(user_pokemon.name))
       user_pokemon.health_condition = nil
     end
     user_pokemon.attack!(self) if !user_pokemon.fainted? || behaviour.attack_name == :future_sight

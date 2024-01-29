@@ -1,4 +1,5 @@
 require_relative "../messages_pool"
+require_relative "../battle_log"
 require_relative "../actions/action"
 require_relative "../types/type_factory"
 require_relative "stats"
@@ -51,7 +52,7 @@ class Pokemon
 
   def view_attacks
     attacks.each.with_index(1) do |atk, index|
-      puts "#{index}- #{atk.attack_name} (#{atk.pp.to_i} PP)"
+      puts "#{index}- #{atk.attack_name} / #{atk.pp.to_i} PP"
     end
   end
 
@@ -60,14 +61,13 @@ class Pokemon
     target = action.target.current_pokemon
 
     evaluate_mute_turn
-    return puts "#{name} can't use sound-based moves for a while" if sound_based_attack_blocked?(attack)
+    return BattleLog.instance.log(MessagesPool.sound_based_blocked_msg(name)) if sound_based_attack_blocked?(attack)
 
     condition_disappear?
     return if is_unable_to_move?
 
     trainer.battlefield.attack_list << attack.dup
     attack.perform_attack(self, target)
-    puts
   end
 
   def condition_disappear?
@@ -81,7 +81,7 @@ class Pokemon
     return if health_condition.nil?
 
     if health_condition == :asleep && health_condition.wake_up?
-      puts "#{name} woke up!" 
+      BattleLog.instance.log(MessagesPool.woke_up_msg)
       @health_condition = nil
     end
   end
@@ -91,7 +91,7 @@ class Pokemon
 
     volatile_status.each do |name, status|
       if status.wear_off?
-        puts "#{name} wore off!" unless name == :flinched
+        BattleLog.instance.log(MessagesPool.status_wore_off_msg(name)) unless name == :flinched
         volatile_status.delete(name)
       end
     end
@@ -101,8 +101,7 @@ class Pokemon
     return if health_condition.nil? && volatile_status.empty?
 
     if health_condition&.unable_to_move
-      puts
-      puts "#{name} is #{health_condition.name}, it was unable to move"
+      BattleLog.instance.log(MessagesPool.unable_to_move_msg(name, health_condition.name))
       true
     elsif volatile_status.any? { |name, _| volatile_status_blocking_action(name) }
       flinched? || confused? || infatuated?
@@ -121,16 +120,23 @@ class Pokemon
     conditions.include?(condition_name)
   end
 
+  def flinched?
+    return false if volatile_status[:flinched].nil?
+
+    BattleLog.instance.log(MessagesPool.flinched_msg(name))
+    volatile_status[:flinched].unable_to_attack?
+  end
+
   def confused?
     return false if volatile_status[:confused].nil?
 
-    puts "#{name} is confused."
+    BattleLog.instance.log(MessagesPool.confused_msg(name))
     volatile_status[:confused].unable_to_attack? ? perform_confusion_dmg : false
   end
 
   def perform_confusion_dmg
     dmg = confusion_damage
-    puts "#{name} hurt itself in its confusion (#{dmg})"
+    BattleLog.instance.log(MessagesPool.confusion_dmg_msg(name, dmg))
     self.hp.decrease(dmg)
     self.harm_recieved(dmg)
   end
@@ -147,15 +153,8 @@ class Pokemon
   def infatuated?
     return false if volatile_status[:infatuated].nil?
 
-    puts "#{name} is in love."
+    BattleLog.instance.log(MessagesPool.infatuated_msg(name))
     volatile_status[:infatuated].unable_to_attack?
-  end
-
-  def flinched?
-    return false if volatile_status[:flinched].nil?
-
-    puts "#{name} flinch after being attacked"
-    volatile_status[:flinched].unable_to_attack?
   end
 
   def has_no_remaining_pp?

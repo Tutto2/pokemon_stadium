@@ -16,7 +16,7 @@ class ThunderWaveMove < Move
   private
   def status_effect
     if pokemon_target.types.any? { |type| type == Types::ELECTRIC || type == Types::GROUND }
-      puts "It doesn't affects #{pokemon_target.name}"
+      BattleLog.instance.log(MessagesPool.no_affect_target_msg(pokemon_target.name))
     else
       health_condition_apply(pokemon_target, ParalysisCondition.get_paralyzed)
     end

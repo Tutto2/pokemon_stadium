@@ -1,3 +1,6 @@
+require_relative "../messages_pool"
+require_relative "../battle_log"
+
 class Stats
   POSSIBLE_STATS = [:hp, :atk, :def, :sp_atk, :sp_def, :spd, :evs, :acc]
 
@@ -30,12 +33,12 @@ class Stats
 
   def stage_modifier(target, stages)
     return if hp?
-    return puts "#{name} won't go any higher!" if max_stage? && stages > 0
-    return puts "#{name} won't go any lower!" if min_stage? && stages < 0
+    return BattleLog.instance.log(MessagesPool.stat_at_max_msg(name)) if max_stage? && stages > 0
+    return BattleLog.instance.log(MessagesPool.stat_at_min_msg(name)) if min_stage? && stages < 0
     
     @stage = (stage + stages).clamp(-6, 6)
     @curr_value = initial_value * calc_stage
-    stat_variation_message(target, stages)
+    stat_variation_msg(target, stages)
   end
 
   def calc_stage
@@ -113,8 +116,8 @@ class Stats
     end
   end
 
-  def stat_variation_message(target, stages)
-    text = {
+  def stat_variation_msg(target, stages)
+    possible_texts = {
       1 => "rose!",
       2 => "sharply rose!",
       3 => "drastically rose!",
@@ -123,6 +126,7 @@ class Stats
       -3 => "severely fell!"
     }
     
-    puts "#{target.name}'s #{name} #{text[stages]}"
+    text = possible_texts[stages]
+    BattleLog.instance.log(MessagesPool.stat_variation_msg(target.name, name, text))
   end
 end

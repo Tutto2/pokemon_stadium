@@ -1,7 +1,9 @@
 require_relative "../move"
+require_relative "../../messages_pool"
+require_relative "../../battle_log"
 
 module SwitchAfterAttack
-  def cant_switch?
+  def unable_to_switch?
     team = pokemon.trainer.team.reject { |pok| pok == pokemon }
     
     team.all?(&:fainted?)
@@ -16,8 +18,8 @@ module SwitchAfterAttack
   end
 
   def switch_effect
-    return puts "#{pokemon.trainer.name} has no pokemon remaining, #{pokemon.name} couldn't switch" if cant_switch?
-    puts
+    return BattleLog.instance.log(MessagesPool.unable_to_switch_msg(pokemon.trainer.name, pokemon.name)) if unable_to_switch?
+
     Menu.pokemon_selection_index(pokemon.trainer, pokemon, source: :move).perform
   end
 end

@@ -34,6 +34,6 @@ class ShellTrapCharge < Move
   end
 
   def additional_action(pokemon)
-    puts "#{pokemon.name} set a shell trap."
+    BattleLog.instance.log(MessagesPool.shell_trap_msg(pokemon.name))
   end
 end

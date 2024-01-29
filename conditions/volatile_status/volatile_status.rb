@@ -1,8 +1,10 @@
 require_relative "../../pokemon/stats"
 require_relative "../../pokemon/pokemon"
 require_relative "../../types/type_factory"
+require_relative "../../messages_pool"
+require_relative "../../battle_log"
 
-class VolatileConditions
+class VolatileStatus
   attr_accessor :name, :turn, :duration, :data
 
   def initialize(name:, turn: 0, duration: nil, data: nil)
@@ -14,7 +16,6 @@ class VolatileConditions
 
   def turn_count
     @turn += 1
-    puts "#{name} turn: #{turn}"
   end
 
   def wear_off?

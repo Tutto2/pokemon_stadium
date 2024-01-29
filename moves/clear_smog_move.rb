@@ -16,7 +16,7 @@ class ClearSmogMove < Move
 
   private
   def secondary_effect
-    puts "All stat changes of #{pokemon_target.name} has been reset"
+    BattleLog.instance.log(MessagesPool.clear_smog_msg(pokemon_target.name))
     pokemon_target.stats.each do |stat|
       stat.reset_stat
     end

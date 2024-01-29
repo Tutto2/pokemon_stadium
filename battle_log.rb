@@ -14,7 +14,6 @@ class BattleLog
   def display_messages
     until @messages.empty?
       puts @messages.dequeue
-      puts
     end
   end
 end

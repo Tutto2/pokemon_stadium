@@ -1,6 +1,6 @@
 require_relative "volatile_status"
 
-class BoundStatus < VolatileConditions
+class BoundStatus < VolatileStatus
   def self.get_bound(name, user, opponent)
     new(
       name: :bound,
@@ -15,7 +15,7 @@ class BoundStatus < VolatileConditions
 
   def dmg_effect(pokemon)
     value = (pokemon.hp_total) * ( 1.0 / 8.0 )
-    puts "#{pokemon.name} is hurt by #{data.name}! (#{value.to_i})"
+    BattleLog.instance.log(MessagesPool.bound_dmg_msg(pokemon.name, data.name, value.to_i))
     pokemon.hp.decrease(value.to_i)
   end
 

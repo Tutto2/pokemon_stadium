@@ -17,7 +17,7 @@ module SpecialFeatures
     false
   end
 
-  def can_defrost?
+  def can_defrost?(attack_name)
     heat_attacks = %i[
       flame_wheel 
       flare_blitz 
@@ -33,7 +33,7 @@ module SpecialFeatures
     heat_attacks.include?(attack_name)
   end
 
-  def sound_based?
+  def sound_based?(attack_name)
     sound_attacks = %i[
       boomburst
       clanging_scales
@@ -45,7 +45,7 @@ module SpecialFeatures
     sound_attacks.include?(attack_name)
   end
 
-  def goes_through_protection?
+  def goes_through_protection?(attack_name)
     ignore_protection_attacks = %i[
       curse
       future_sight
@@ -57,7 +57,7 @@ module SpecialFeatures
     ignore_protection_attacks.include?(attack_name)
   end
 
-  def cant_be_copied?
+  def cant_be_copied?(attack_name)
     copycat_uncallable_moves = %i[
       copycat
       counter

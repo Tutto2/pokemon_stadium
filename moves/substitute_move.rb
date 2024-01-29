@@ -16,11 +16,7 @@ class SubstituteMove < Move
   private
 
   def status_effect
-    if pokemon.volatile_status[:substitute].nil?
-      lose_hp 
-    else
-      puts "But it failed."
-    end
+    pokemon.volatile_status[:substitute].nil? ? lose_hp : BattleLog.instance.log(MessagesPool.attack_failed_msg)
   end
 
   def value

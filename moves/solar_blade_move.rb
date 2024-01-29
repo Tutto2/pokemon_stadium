@@ -17,8 +17,7 @@ class SolarBladeMove < Move
   private
 
   def first_turn_action
-    puts "The attack is charging"
-    puts
+    BattleLog.instance.log(MessagesPool.charging_atk_msg)
   end
 
   def second_turn_action

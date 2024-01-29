@@ -1,6 +1,6 @@
 require_relative "volatile_status"
 
-class CurseStatus < VolatileConditions
+class CurseStatus < VolatileStatus
   def self.get_cursed
     new(
       name: :cursed 
@@ -9,7 +9,7 @@ class CurseStatus < VolatileConditions
 
   def dmg_effect(pokemon)
     value = (pokemon.hp_total) * ( 1.0 / 4.0 )
-    puts "#{pokemon.name} is afflicted by the curse! (#{value.to_i})"
+    BattleLog.instance.log(MessagesPool.curse_dmg_msg(pokemon.name, value.to_i))
     pokemon.hp.decrease(value.to_i)
   end
 end

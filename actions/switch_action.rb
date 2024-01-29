@@ -6,9 +6,9 @@ class SwitchAction < Action
   end
   
   def perform
+    BattleLog.instance.log(MessagesPool.leap)
     next_pokemon = behaviour
-    puts "#{next_pokemon.name} got out to battle!"
+    BattleLog.instance.log(MessagesPool.switch_action_msg(next_pokemon.name))
     @trainer.current_pokemon = next_pokemon
-    puts
   end
 end

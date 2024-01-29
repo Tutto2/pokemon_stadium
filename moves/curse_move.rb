@@ -19,7 +19,7 @@ class CurseMove < Move
   end
 
   def status_effect
-    return puts "The attack has failed." if pokemon.hp_value < (pokemon.hp_total / 2.0)
+    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if pokemon.hp_value < (pokemon.hp_total / 2.0)
     lose_hp
     volatile_status_apply(pokemon_target, CurseStatus.get_cursed) if pokemon.hp_value >= (pokemon.hp_total / 2.0)
   end

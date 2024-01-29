@@ -15,7 +15,7 @@ class CopycatMove < Move
 
   private
   def status_effect
-    return puts "But it failed" if pokemon.trainer.battlefield.attack_list.size < 2 
+    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if pokemon.trainer.battlefield.attack_list.size < 2 
     pokemon.trainer.battlefield.attack_list[-2].perform_attack(pokemon, pokemon_target)
   end
 end

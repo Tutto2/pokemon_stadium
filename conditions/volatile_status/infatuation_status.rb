@@ -1,6 +1,6 @@
 require_relative "volatile_status"
 
-class InfatuationStatus < VolatileConditions
+class InfatuationStatus < VolatileStatus
   def self.get_infatuated
     new(
       name: :infatuated
@@ -9,8 +9,8 @@ class InfatuationStatus < VolatileConditions
 
   def unable_to_attack?
     if rand < 0.5
-      puts "Unable to attack due to love"
-      return true
+      BattleLog.instance.log(MessagesPool.infatuated_block_attack_msg)
+      true
     else
       false
     end

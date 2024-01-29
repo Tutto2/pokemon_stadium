@@ -34,6 +34,6 @@ class FocusPunchCharge < Move
   end
 
   def additional_action(pokemon)
-    puts "#{pokemon.name} is focusing."
+    BattleLog.instance.log(MessagesPool.focus_punch_msg(pokemon.name))
   end
 end

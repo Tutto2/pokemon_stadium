@@ -1,4 +1,6 @@
 require_relative "../move"
+require_relative "../../messages_pool"
+require_relative "../../battle_log"
 
 module MakesTargetSwitch
   def status_effect
@@ -7,7 +9,7 @@ module MakesTargetSwitch
 
   def target_switch
     target_team = pokemon_target.trainer.team.reject { |pok| pok == pokemon_target }
-    return puts "#{pokemon_target.trainer.name} has no pokemon remaining, #{attack_name} failed." if target_team.all?(&:fainted?)
+    return BattleLog.instance.log(MessagesPool.switch_failed_alert(pokemon_target.trainer.name, attack_name)) if target_team.all?(&:fainted?)
     
     pokemon_target.stats.each do |stat|
       stat.reset_stat
@@ -16,7 +18,6 @@ module MakesTargetSwitch
     pokemon_target.reinit_volatile_condition
 
     pokemon_target.trainer.current_pokemon = target_team.sample
-    puts
-    puts "#{pokemon_target.trainer.current_pokemon} got out to battle!"
+    BattleLog.instance.log(MessagesPool.switch_action_msg(pokemon_target.trainer.current_pokemon.name))
   end
 end

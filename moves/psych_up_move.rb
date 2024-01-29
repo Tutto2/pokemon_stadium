@@ -13,7 +13,7 @@ class PsychUpMove < Move
   end
 
   def status_effect
-    puts "#{pokemon.name} copied #{pokemon_target.name}'s stat changes"
+    BattleLog.instance.log(MessagesPool.psych_up_msg(pokemon.name, pokemon_target.name))
     migrate_stat_stages
   end
 end

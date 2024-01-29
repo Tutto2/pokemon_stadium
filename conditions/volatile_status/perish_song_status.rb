@@ -1,6 +1,6 @@
 require_relative "volatile_status"
 
-class PerishSongStatus < VolatileConditions
+class PerishSongStatus < VolatileStatus
   def self.perish_song
     new(
       name: :perish_song,
@@ -10,6 +10,6 @@ class PerishSongStatus < VolatileConditions
 
   def perish_song_effect(pokemon)
     pokemon.hp.decrease(pokemon.hp_total)
-    puts "#{pokemon.name} has lost all its HP due to Perish Song"
+    BattleLog.instance.log(MessagesPool.perish_song_effect_msg(pokemon.name))
   end
 end

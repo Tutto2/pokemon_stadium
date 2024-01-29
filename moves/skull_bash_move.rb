@@ -18,9 +18,8 @@ class SkullBashMove < Move
   private
 
   def first_turn_action
-    puts "#{pokemon.name} lowered his head"
+    BattleLog.instance.log(MessagesPool.skull_bash_msg(pokemon.name))
     stat_changes
-    puts
   end
 
   def stat

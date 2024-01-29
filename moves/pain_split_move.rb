@@ -15,8 +15,7 @@ class PainSplitMove < Move
 
   private
   def status_effect
-    puts "The battlers shared their pain"
-    puts
+    BattleLog.instance.log(MessagesPool.pain_split_msg)
     difference = (( pokemon_target.hp_value - pokemon.hp_value ) / 2).to_i
 
     if pokemon.hp_value < pokemon_target.hp_value
@@ -26,7 +25,7 @@ class PainSplitMove < Move
       lose_hp(pokemon, difference)
       gain_hp(pokemon_target, difference)
     else
-      puts "It hasn't effect"
+      BattleLog.instance.log(MessagesPool.has_no_effect_msg)
     end
   end
 end

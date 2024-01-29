@@ -18,7 +18,7 @@ class FutureSightMove < Move
   end
 
   def additional_action(pokemon)
-    puts "#{pokemon.name} has foreseen an attack."
+    BattleLog.instance.log(MessagesPool.future_sight_msg(pokemon.name))
   end
 
   def handle_in_other_turn

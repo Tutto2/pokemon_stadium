@@ -13,7 +13,6 @@ class BatonPassMove < Move
   end
 
   def switch_effect
-    puts
     Menu.pokemon_selection_index(pokemon.trainer, pokemon, source: :baton_pass).perform
   end
 end

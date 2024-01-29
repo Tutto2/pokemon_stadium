@@ -16,7 +16,7 @@ class PhantomForceMove < Move
   end
 
   def first_turn_action
-    puts "#{pokemon.name} vanished"
+    BattleLog.instance.log(MessagesPool.phantom_force_msg(pokemon.name))
     pokemon.make_invulnerable(self.attack_name)
   end
 

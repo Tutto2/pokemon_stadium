@@ -2,6 +2,8 @@ curr_dir = File.dirname(__FILE__)
 file_paths = Dir.glob(File.join(curr_dir, '*.rb'))
 
 require_relative "../move"
+require_relative "../../messages_pool"
+require_relative "../../battle_log"
 require_relative "../../pokemon/stats"
 require_relative "../../pokemon/pokemon"
 file_paths.each do |file_path|
@@ -21,16 +23,17 @@ module DamageFormula
     target_initial_hp = pokemon_target.hp.curr_value
 
     return protected_itself if protected?
-    return puts "#{pokemon_target.name} has not recieved any damage" if dmg <= 0 && category != :status
+    return BattleLog.instance.log(MessagesPool.no_dmg_msg(pokemon_target.name)) if dmg <= 0 && category != :status
     return substitute_take_dmg(dmg) if !pokemon_target.volatile_status[:substitute].nil? && !sound_based?
 
     pokemon_target.hp.decrease(dmg)
     if !pokemon_target.metadata[:will_survive].nil? && pokemon_target.hp.curr_value <= 0
       pokemon_target.hp.endured_the_hit
-      puts "#{pokemon_target.name} endured the hit!"
+      BattleLog.instance.log(MessagesPool.endure_msg(pokemon_target.name))
     end
 
-    puts "#{pokemon_target.name} has recieved #{target_initial_hp - pokemon_target.hp.curr_value} damage"
+    dmg_value = target_initial_hp - pokemon_target.hp.curr_value
+    BattleLog.instance.log(MessagesPool.dmg_recieved_msg(pokemon_target.name, dmg_value))
     pokemon_target.harm_recieved(dmg)
     drain_calculation(dmg)
     recoil_calculation(dmg)
@@ -40,11 +43,11 @@ module DamageFormula
   def substitute_take_dmg(dmg)
     substitute_status = pokemon_target.volatile_status[:substitute]
 
-    puts "#{pokemon_target.name}'s substitute has recieved #{dmg} damage"
+    BattleLog.instance.log(MessagesPool.substitute_dmg_recieved_msg(pokemon_target.name, dmg))
     substitute_status.data -= dmg
 
     if substitute_status.data <= 0
-      puts "#{pokemon_target.name}'s substitute broke!"
+      BattleLog.instance.log(MessagesPool.substitute_broke_msg(pokemon_target.name))
       pokemon_target.volatile_status.delete(:substitute)
     end
   end
@@ -57,8 +60,8 @@ module DamageFormula
     crit_value = crit || 1
     vulnerability = calc_vulnerability
     burn = burn_condition
-
-    puts "Power: #{attack.power}"
+    
+    BattleLog.instance.log(MessagesPool.attack_power_msg(power))
     (0.01*bonus*effect*variation*vulnerability*burn*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*attack.power*attk/defn)/50.0 )).to_i
   end
 
@@ -68,10 +71,9 @@ module DamageFormula
     chance_by_stage = { 0 => 0.0417, 1 => 0.125, 2 => 0.5 }
 
     chance = chance_by_stage[pok_stage + move_stage] || 1
-    puts "Chance of crit: #{chance}"
     return false if rand > chance
 
-    puts "It's a critical hit!" 
+    BattleLog.instance.log(MessagesPool.critical_hit_msg)
     1.5
   end
 
@@ -107,21 +109,21 @@ module DamageFormula
     initial_hp = pokemon.hp_value
     pokemon.hp.increase(drain)
 
-    puts "#{pokemon.name} restored #{drain} HP" if pokemon.hp_value != initial_hp
+    BattleLog.instance.log(MessagesPool.hp_restored_msg(pokemon.name, drain)) if pokemon.hp_value != initial_hp
   end
 
   def recoil_calculation(dmg)
     return unless recoil
 
     recoil_dmg = calc_recoil(dmg, pokemon.hp_total).to_i
-    puts "#{pokemon.name} has recieved #{recoil_dmg} of recoil damage"
+    BattleLog.instance.log(MessagesPool.recoil_msg(pokemon.name, recoil_dmg))
     pokemon.hp.decrease(recoil_dmg)
   end
 
   def defrost_evaluation
     if pokemon_target.health_condition == :frozen
       if attack.type == Types::FIRE || attack.can_defrost?(attack.attack_name)
-        puts "#{pokemon_target.name} got thawed out"
+        BattleLog.instance.log(MessagesPool.thawed_out_msg(pokemon_target.name))
         pokemon_target.health_condition = nil
       end
     end

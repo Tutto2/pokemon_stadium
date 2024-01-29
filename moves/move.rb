@@ -17,13 +17,14 @@ end
 status_paths.each do |status_path|
   require_relative status_path
 end
+require_relative "../messages_pool"
+require_relative "../battle_log"
 require_relative "../pokemon/pokemon"
 require_relative "../types/type_factory"
 require_relative "../actions/menu"
 require_relative "../trainer"
 
 class Move
-  include Messages
   include DamageFormula
   include SpecialFeatures
 
@@ -46,7 +47,7 @@ class Move
   def perform_attack(*pokemons)
     @pokemon, @pokemon_target = pokemons
     @target = determine_target
-    return puts "#{pokemon.name} used #{attack_name} but it has no remaining PP" if pp <= 0
+    return BattleLog.instance.log(MessagesPool.no_pp_during_attack(pokemon.name, attack_name)) if pp <= 0
 
     if return_dmg?
       return_dmg_effect
@@ -69,11 +70,11 @@ class Move
   end
 
   def return_dmg_effect
-    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
-    return puts "But it failed." unless triggered?
+    BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
+    return BattleLog.instance.log(MessagesPool.attack_failed_msg) unless triggered?
 
     if type == Types::FIGHTING && pokemon_target.types.any? { |type| type == Types::GHOST }
-      puts "#{pokemon_target.name} it's immune" 
+      BattleLog.instance.log(MessagesPool.immunity_msg(pokemon_target.name))
       pokemon.reinit_metadata(self)
     else
       perform_dmg(dmg)
@@ -85,7 +86,6 @@ class Move
     if pokemon.metadata[:waiting].nil?
       additional_action(pokemon)
       @pokemon.init_whole_turn_action
-      puts
     else
       trigger_perform
     end
@@ -101,7 +101,7 @@ class Move
 
   def execute
     atk_performed
-    return puts "#{pokemon.name} failed." if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
+    return BattleLog.instance.log(MessagesPool.failed_attack_msg) if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
 
     effectiveness_message if !protected?
     if effect != 0 || category == :status
@@ -125,7 +125,7 @@ class Move
   def additional_action(pokemon); end
 
   def atk_performed
-    puts "#{pokemon.name} used #{attack_name} (#{category}, type: #{type})"
+    BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
   end
   
   def trigger_perform
@@ -133,7 +133,7 @@ class Move
       @pp -= 1
       execute
     else
-      puts "But it failed."
+      BattleLog.instance.log(MessagesPool.attack_failed_msg)
       pokemon.reinit_metadata(self)
     end
   end
@@ -164,12 +164,32 @@ class Move
 
     chance = rand(0..100)
     if (@category == :status && precision < chance) || (@category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance)
-      failed_attack_message
+      failed_attack_messages
       pokemon.reinit_metadata(self) if !pokemon.metadata.nil?
     else
       return true
     end
-    puts
+  end
+
+  def failed_attack_messages
+    BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
+    BattleLog.instance.log(MessagesPool.attack_failed_msg)
+  end
+
+  def effectiveness_message
+    effectiveness = effect
+
+    unless self.category == :status
+      if effectiveness < 1 && effectiveness > 0
+        BattleLog.instance.log(MessagesPool.ineffective_msg)
+      elsif effectiveness == 0
+        BattleLog.instance.log(MessagesPool.immunity_msg(pokemon_target.name))
+      elsif effectiveness > 1
+        BattleLog.instance.log(MessagesPool.super_effective_msg)
+      else
+        BattleLog.instance.log(MessagesPool.effective_msg)
+      end
+    end
   end
 
   def effect
@@ -184,7 +204,7 @@ class Move
   end
 
   def protected_itself
-    puts "#{pokemon_target.name} protected itself."
+    BattleLog.instance.log(MessagesPool.was_protected_msg(pokemon_target.name))
     protection_harm
   end
 
@@ -193,7 +213,7 @@ class Move
   
     damage = (pokemon.hp_total / 8).to_i
     pokemon.hp.decrease(damage)
-    puts "#{pokemon.name} has lost #{damage} HP due to Spiky Shield"
+    BattleLog.instance.log(MessagesPool.spiky_shield_msg(pokemon.name, damage))
   end
 
   def strikes_count
@@ -208,7 +228,7 @@ class Move
       hits += 1
       break if pokemon_target.fainted?
     end
-    multihit_message(hits)
+    BattleLog.instance.log(MessagesPool.multi_hit_msg(pokemon_target.name, strikes_count))
   end
 
   def action
@@ -217,13 +237,12 @@ class Move
       pokemon_target.made_contact if category == :physical
       cast_additional_effect
     end
-    puts
   end
   
   def main_effect
     if status? 
       return protected_itself if !(target == pokemon) && protected?
-      return puts "#{attack_name} does not affect #{pokemon_target.name}'s Substitute" if !pokemon_target.volatile_status[:substitute].nil? && !(pokemon == target)
+      return BattleLog.instance.log(MessagesPool.substitute_immune_msg(pokemon_target.name, attack_name)) if !pokemon_target.volatile_status[:substitute].nil? && !(pokemon == target)
       status_effect
     else
       damage_effect
@@ -239,23 +258,37 @@ class Move
   def health_condition_apply(target, condition)
     target.types.each do |target_type|
       condition.immune_type.each do |immune_type|
-        return "#{target.name} cannot get #{condition.name}" if target_type == immune_type
+        return BattleLog.instance.log(MessagesPool.condition_apply_fail_msg(target.name, condition.name)) if target_type == immune_type
       end
     end
     if target == pokemon || target.health_condition.nil?
       target.health_condition = condition
-      puts "#{target.name} got #{condition.name}!"
+      BattleLog.instance.log(MessagesPool.condition_apply_msg(target.name, condition.name))
     else
-      puts "But it failed!" if category == :status
+      BattleLog.instance.log(MessagesPool.attack_failed_msg) if category == :status
     end
   end
 
   def volatile_status_apply(target, status)
     if target.volatile_status[status.name].nil?
-      volatile_status_apply_msg(status.name)
+      status_apply_msg(status.name)
       target.volatile_status[status.name] = status
     else
-      puts "But it failed." if category == :status
+      BattleLog.instance.log(MessagesPool.attack_failed_msg) if category == :status
+    end
+  end
+
+  def status_apply_msg(status)
+    case status
+    when :confused 
+      target = attack_name == :outrage ? pokemon.name : pokemon_target.name
+      BattleLog.instance.log(MessagesPool.confusion_apply(target))
+    when :cursed then BattleLog.instance.log(MessagesPool.curse_apply(pokemon.name, pokemon_target.name)) 
+    when :infatuated then BattleLog.instance.log(MessagesPool.infatuation_apply(target.name)) 
+    when :seeded then BattleLog.instance.log(MessagesPool.seed_apply(target.name))
+    when :substitute then BattleLog.instance.log(MessagesPool.substitute_apply(pokemon.name))
+    when :bound then BattleLog.instance.log(MessagesPool.bound_apply(pokemon.name))
+    when :transformed then BattleLog.instance.log(MessagesPool.transform_apply(pokemon.name, pokemon_target.name))
     end
   end
   
@@ -283,5 +316,11 @@ class Move
 
   def crit_ratio
     0
+  end
+
+  def end_of_action_message
+    BattleLog.instance.log(MessagesPool.pok_fainted_msg(pokemon.name)) if pokemon.fainted?
+    BattleLog.instance.log(MessagesPool.pok_fainted_msg(pokemon_target.name)) if pokemon_target.fainted?
+    BattleLog.instance.log(MessagesPool.final_hp_msg(pokemon_target.name, pokemon_target.hp_value)) if category != :status && !pokemon_target.fainted?
   end
 end

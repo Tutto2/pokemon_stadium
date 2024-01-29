@@ -11,7 +11,7 @@ class PerishSongMove < Move
   end
 
   def status_effect
-    puts "All pokemon hearing the song will faint in three turns"
+    BattleLog.instance.log(MessagesPool.perish_song_apply_msg)
     volatile_status_apply(pokemon_target, PerishSongStatus.perish_song)
     volatile_status_apply(pokemon, PerishSongStatus.perish_song)
   end

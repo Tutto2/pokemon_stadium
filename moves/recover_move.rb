@@ -15,7 +15,7 @@ class RecoverMove < Move
 
   private
   def status_effect
-    gain_hp
+    gain_hp(value)
   end
 
   def value

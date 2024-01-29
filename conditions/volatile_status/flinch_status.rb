@@ -1,6 +1,6 @@
 require_relative "volatile_status"
 
-class FlinchStatus < VolatileConditions
+class FlinchStatus < VolatileStatus
   def self.get_flinched
     new(
       name: :flinched,

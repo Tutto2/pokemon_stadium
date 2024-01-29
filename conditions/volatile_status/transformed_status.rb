@@ -1,6 +1,6 @@
 require_relative "volatile_status"
 
-class TransformedStatus < VolatileConditions
+class TransformedStatus < VolatileStatus
   def self.get_transformed(pokemon)
     new(
       name: :transformed,

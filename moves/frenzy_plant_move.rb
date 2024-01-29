@@ -20,7 +20,7 @@ class FrenzyPlantMove < Move
   end
 
   def second_turn_action
-    puts "#{pokemon.name} is recharging after using #{attack_name}"
+    BattleLog.instance.log(MessagesPool.recharge_msg(pokemon.name, attack_name))
     end_turn_action
   end
 end
