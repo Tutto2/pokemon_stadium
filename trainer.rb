@@ -2,14 +2,14 @@ require_relative "messages_pool"
 require_relative "actions/menu"
 
 class Trainer
-  attr_accessor :name, :team, :current_pokemon, :action, :opponents, :data, :battlefield
+  attr_accessor :name, :team, :current_pokemons, :action, :opponents, :data, :battlefield
 
   def initialize(name:)
     @name = name
     @team = []
-    @current_pokemon = nil
-    @action = nil
-    @opponents = nil
+    @current_pokemons = []
+    @action = []
+    @opponents = []
     @battlefield = nil
     @data = {}
   end
@@ -25,9 +25,9 @@ class Trainer
 
   def team_build(pokemons, players, battlefield)
     puts
-    MessagesPool.pokemon_selection(name)
     @team.clear
     @opponents = players.reject { |player| player == self }
+    MessagesPool.pokemon_selection(name)
     selection = gets.chomp.split.map(&:to_i)
 
     if selection.all? { |pick| (1..pokemons.size).include?(pick) } && (1..6).include?(selection.size)
@@ -40,41 +40,52 @@ class Trainer
     end
   end
 
-  def select_action
-    @action = Menu.select_action(self)
+  def select_action(user_pok)
+    @action << Menu.select_action(self, user_pok)
   end
 
   def view_pokemons
     team.each.with_index(1) do |pok, index|
-      next if pok == current_pokemon
+      next if current_pokemons.include?(pok)
       puts "#{index}- #{pok.to_s}" if !pok.fainted?
     end
   end
   
-  def select_pokemon(index, source)
+  def select_pokemon(user_pokemon, index, source)
     next_pokemon = team[index]
 
     if source == :baton_pass
-      baton_pass_stats(next_pokemon)
-      baton_pass_volatile_status(next_pokemon)
+      baton_pass_stats(user_pokemon, next_pokemon)
+      baton_pass_volatile_status(user_pokemon, next_pokemon)
     end
 
-    current_pokemon.stats.each do |stat|
+    user_pokemon.stats.each do |stat|
       stat.reset_stat
     end
-    current_pokemon.reinit_all_metadata
-    current_pokemon.reinit_volatile_condition
+    user_pokemon.reinit_all_metadata
+    user_pokemon.reinit_volatile_condition
 
     SwitchAction.new(
-      speed: current_pokemon.actual_speed,
+      speed: user_pokemon.actual_speed,
       behaviour: next_pokemon,
-      trainer: self
+      trainer: self,
+      user_pokemon: user_pokemon
     )
   end
 
-  def baton_pass_stats(next_pokemon)
+  def only_one_poke_remaining_on_doubles
+    pok = current_pokemons.find { |pok| pok.fainted? }
+
+    @current_pokemons.each.with_index do |position, index|
+      if position == pok
+        current_pokemons.delete_at(index)
+      end
+    end
+  end
+
+  def baton_pass_stats(user_pokemon, next_pokemon)
     stages = []
-    current_pokemon.stats.each do |stat|
+    user_pokemon.stats.each do |stat|
       stages << stat.stage unless stat.hp?
     end
     next_pokemon.stats.each do |stat|
@@ -82,11 +93,11 @@ class Trainer
     end
 
     next_pokemon.stats.each { |stat| stat.in_game_stat_calc }
-    next_pokemon.metadata[:crit_stage] = current_pokemon.metadata[:crit_stage]
+    next_pokemon.metadata[:crit_stage] = user_pokemon.metadata[:crit_stage]
   end
 
-  def baton_pass_volatile_status(next_pokemon)
-    status = current_pokemon.volatile_status
+  def baton_pass_volatile_status(user_pokemon, next_pokemon)
+    status = user_pokemon.volatile_status
     return if status.empty?
 
     it_passes = %i[

@@ -45,7 +45,7 @@ module SpecialFeatures
     sound_attacks.include?(attack_name)
   end
 
-  def goes_through_protection?(attack_name)
+  def goes_through_protection?
     ignore_protection_attacks = %i[
       curse
       future_sight

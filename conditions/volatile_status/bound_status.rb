@@ -20,6 +20,6 @@ class BoundStatus < VolatileStatus
   end
 
   def wear_off?
-    turn == duration || data.user != data.opponent.current_pokemon
+    turn == duration || data.user != data.opponent.current_pokemons
   end
 end

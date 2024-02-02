@@ -26,12 +26,20 @@ class FutureSightMove < Move
   end
 
   def wrap_in_action
-    AttackAction.new(
+    [
+      AttackAction.new(
       speed: pokemon.actual_speed,
       behaviour: self,
       trainer: pokemon.trainer,
       user_pokemon: pokemon,
-      target: pokemon_target.trainer
-    )
+      target: pokemon_target_index
+      )
+    ]
+  end
+
+  def pokemon_target_index
+    return 0 if pokemon.trainer.opponents.size == 1 && pokemon.trainer.opponents.current_pokemons.size == 1
+    
+    pokemon.trainer.opponents[0].current_pokemons[0] == pokemon_target ? 1 : 2
   end
 end

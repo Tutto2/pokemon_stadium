@@ -12,7 +12,11 @@ class SpiteMove < Move
 
   private
   def status_effect
-    previous_action = pokemon_target.trainer.action.behaviour
+    if pokemon_target.trainer.action[0].user_pokemon == pokemon_target
+      previous_action = pokemon_target.trainer.action[0].behaviour
+    else
+      previous_action = pokemon_target.trainer.action[1].behaviour
+    end
 
     if previous_action.is_a?(Move)
       BattleLog.instance.log(MessagesPool.spite_msg(pokemon_target.name, previous_action.attack_name))

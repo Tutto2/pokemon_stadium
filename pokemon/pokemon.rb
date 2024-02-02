@@ -58,8 +58,8 @@ class Pokemon
 
   def attack!(action)
     attack = action.behaviour
-    target = action.target.current_pokemon
-
+    target = assing_target(action.target)
+    
     evaluate_mute_turn
     return BattleLog.instance.log(MessagesPool.sound_based_blocked_msg(name)) if sound_based_attack_blocked?(attack)
 
@@ -68,6 +68,18 @@ class Pokemon
 
     trainer.battlefield.attack_list << attack.dup
     attack.perform_attack(self, target)
+  end
+
+  def assing_target(target_index)
+    if target_index != 0
+      if trainer.opponents.size == 1
+        trainer.opponents[0].current_pokemons[target_index - 1]
+      else
+        trainer.opponents[target_index - 1].current_pokemons[0]
+      end
+    else
+      trainer.opponents[0].current_pokemons[0]
+    end
   end
 
   def condition_disappear?

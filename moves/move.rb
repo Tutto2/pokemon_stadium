@@ -71,7 +71,7 @@ class Move
 
   def return_dmg_effect
     BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
-    return BattleLog.instance.log(MessagesPool.attack_failed_msg) unless triggered?
+    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if target.fainted? || !triggered?
 
     if type == Types::FIGHTING && pokemon_target.types.any? { |type| type == Types::GHOST }
       BattleLog.instance.log(MessagesPool.immunity_msg(pokemon_target.name))
@@ -101,6 +101,7 @@ class Move
 
   def execute
     atk_performed
+    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if target.fainted?
     return BattleLog.instance.log(MessagesPool.failed_attack_msg) if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
 
     effectiveness_message if !protected?
@@ -166,6 +167,7 @@ class Move
     if (@category == :status && precision < chance) || (@category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance)
       failed_attack_messages
       pokemon.reinit_metadata(self) if !pokemon.metadata.nil?
+      return false
     else
       return true
     end

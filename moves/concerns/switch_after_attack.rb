@@ -19,7 +19,8 @@ module SwitchAfterAttack
 
   def switch_effect
     return BattleLog.instance.log(MessagesPool.unable_to_switch_msg(pokemon.trainer.name, pokemon.name)) if unable_to_switch?
-
+    
+    BattleLog.instance.display_messages
     Menu.pokemon_selection_index(pokemon.trainer, pokemon, source: :move).perform
   end
 end

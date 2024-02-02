@@ -17,7 +17,7 @@ module MakesTargetSwitch
     pokemon_target.reinit_all_metadata
     pokemon_target.reinit_volatile_condition
 
-    pokemon_target.trainer.current_pokemon = target_team.sample
-    BattleLog.instance.log(MessagesPool.switch_action_msg(pokemon_target.trainer.current_pokemon.name))
+    pokemon_target.trainer.current_pokemons = target_team.sample
+    BattleLog.instance.log(MessagesPool.switch_action_msg(pokemon_target.trainer.current_pokemons.name))
   end
 end

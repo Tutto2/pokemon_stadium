@@ -21,8 +21,16 @@ class MessagesPool
     puts
   end
 
-  def self.select_pokemon(name)
-    print "#{name} select your pokemon: "
+  def self.select_pokemon(name, battle_type)
+    if battle_type == 'single'
+      print "#{name} select your pokemon: "
+    else
+      print "#{name} select two pokemons to battle: "
+    end
+  end
+
+  def self.invalid_option_on_doubles
+    puts "Please select two pokemon, providing two different valid indices. Try again:"
   end
 
   def self.invalid_option
@@ -36,8 +44,20 @@ class MessagesPool
     puts
   end
 
-  def self.player_current_pokemon(name)
-    puts "#{name}'s pokemon:"
+  def self.player_current_pokemons(name, battle_type)
+    if battle_type == 'single'
+      puts "#{name}'s pokemon:"
+    else
+      puts "#{name}'s pokemons:"
+    end
+  end
+
+  def self.opponents_index
+    print "Pick a target: "
+  end
+
+  def self.posible_targets(pok, index)
+    puts "#{index}- #{pok.to_s}  #{pok.hp_value} / #{pok.hp_total} hp"
   end
 
   def self.substitute_state(name, hp)
@@ -49,19 +69,19 @@ class MessagesPool
     puts "#{pok.name} - #{pok.hp_value} / #{pok.hp_total} hp (#{pok.types.map(&:to_s).join("/")}) #{pok.health_condition&.name}"
     pok.volatile_status.each { |k, v| puts "#{k}"}
 
-    pok.stats.each do |stat|
-      next if stat == :hp || stat == :spd
-      puts "#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}"
-    end
-    puts "spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}"
+    # pok.stats.each do |stat|
+    #   next if stat == :hp || stat == :spd
+    #   puts "#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}"
+    # end
+    # puts "spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}"
     puts
   end
 
-  def self.display_action_index(trainer)
+  def self.display_action_index(trainer, user_pokemon)
     puts "1- Attack"
     puts "2- Change pokemon"
     puts
-    print "#{trainer.name}, what do you want to do with #{trainer.current_pokemon}?: "
+    print "#{trainer.name}, what do you want to do with #{user_pokemon.to_s}?: "
   end
 
   def self.unable_to_escape_alert(pok_name)
