@@ -2,7 +2,7 @@ require_relative "messages_pool"
 require_relative "actions/menu"
 
 class Trainer
-  attr_accessor :name, :team, :current_pokemons, :action, :opponents, :data, :battlefield
+  attr_accessor :name, :team, :current_pokemons, :action, :opponents, :teammate, :data, :battlefield
 
   def initialize(name:)
     @name = name
@@ -10,40 +10,51 @@ class Trainer
     @current_pokemons = []
     @action = []
     @opponents = []
+    @teammate = nil
     @battlefield = nil
     @data = {}
   end
 
-  def self.select_name(index)
-    MessagesPool.select_player_name(index)
+  def self.select_name(index, players_num, battle_type)
+    battle_type == 'double' && players.size == 4 ? MessagesPool.select_teammate_name(index) : MessagesPool.select_player_name(index)
     name = gets.chomp
 
     return Trainer.new(name: name) if !name.empty? && name.length < 10
     MessagesPool.invalid_name_input
-    select_name(index)
+    select_name(index, players_num, battle_type)
   end
 
-  def team_build(pokemons, players, battlefield)
+  def team_build(pokemons)
     puts
     @team.clear
-    @opponents = players.reject { |player| player == self }
     MessagesPool.pokemon_selection(name)
     selection = gets.chomp.split.map(&:to_i)
 
     if selection.all? { |pick| (1..pokemons.size).include?(pick) } && (1..6).include?(selection.size)
       @team = selection.map { |pick| pokemons[pick-1] }
       @team.each { |pok| pok.trainer = self }
-      @battlefield = battlefield
     else
       MessagesPool.invalid_pokemon_selection
-      return team_build(pokemons, players, battlefield)
+      return team_build(pokemons)
     end
   end
 
-  def select_action(user_pok)
-    @action << Menu.select_action(self, user_pok)
-  end
+  def assing_player_team(index, players, battlefield)
+    if battle_type == 'double' && players.size == 4
+      teammate_mapping = {
+        0 => 1,
+        1 => 0,
+        2 => 3,
+        3 => 2
+      }
 
+      @teammate = players[teammate_mapping[index]]
+    end
+
+    @opponents = players.reject { |player| player == self || player == teammate}
+    @battlefield = battlefield
+  end
+  
   def view_pokemons
     team.each.with_index(1) do |pok, index|
       next if current_pokemons.include?(pok)
@@ -51,6 +62,10 @@ class Trainer
     end
   end
   
+  def select_action(user_pok)
+    @action << Menu.select_action(self, user_pok)
+  end
+
   def select_pokemon(user_pokemon, index, source)
     next_pokemon = team[index]
 

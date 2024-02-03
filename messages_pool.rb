@@ -3,7 +3,26 @@ require_relative 'pokemon/pokemon'
 require_relative 'trainer'
 
 class MessagesPool
+  def invalid_game_settings(players_num, battle_type)
+    if battle_type == 'double' && players_num == 3
+      puts "Invalid game settings, if battle type is set to 'double', then the number of players must be even"
+    else
+      puts "Invalid game settings, must select only 2 - 4 players"
+    end
+  end
+
   def self.select_player_name(index)
+    print "Player #{index}, select your name: "
+  end
+
+  def self.select_teammate_name(index)
+    case index  
+    when 1
+      puts "Which are the members of the first team?"
+    when 3
+      puts "Which are the members of the second team?"
+    end
+
     print "Player #{index}, select your name: "
   end
 
@@ -21,11 +40,12 @@ class MessagesPool
     puts
   end
 
-  def self.select_pokemon(name, battle_type)
-    if battle_type == 'single'
+  def self.select_pokemon(name, battle_type, players)
+    if battle_type == 'double' && players.size == 2
+      print "#{name} select two pokemons to battle: "
+    else
       print "#{name} select your pokemon: "
     else
-      print "#{name} select two pokemons to battle: "
     end
   end
 
@@ -422,5 +442,9 @@ class MessagesPool
   
   def self.declare_winner(player)
     "*-*-*-*-* #{player.upcase} HAS WON!! *-*-*-*-*"
+  end
+
+  def self.declare_two_winners(winners)
+    "*-*-*-* #{winners[0].name.upcase} AND #{winners[1].name.upcase} HAS WON!! *-*-*-*"
   end
 end

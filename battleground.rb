@@ -8,10 +8,11 @@ require "pry"
 # binding.pry
 
 class PokemonBattleField
-  attr_accessor :attack_list #:field_positions
+  attr_accessor :attack_list
   attr_reader :players, :battle_type, :all_pokes, :turn, :battle_type
 
   def self.init_game(players_num, battle_type, pokemons)
+    return MessagesPool.invalid_game_settings(players_num, battle_type) if !(2..4).include?(players_num.size) || battle_type == 'double' && players_num == 3
     players = select_players_names(players_num)
 
     battlefield = PokemonBattleField.new(
@@ -23,16 +24,15 @@ class PokemonBattleField
     battlefield.choose_pokemons
   end
 
-  def self.select_players_names(players_num)
+  def self.select_players_names(players_num, battle_type)
     (1..players_num).map do |index|
-      Trainer.select_name(index.to_s)
+      Trainer.select_name(index, players_num, battle_type)
     end
   end
 
   def initialize(players: [], battle_type:, all_pokes: [], attack_list: [])
     @players = players
     @battle_type = battle_type
-    # @field_positions = field_positions
     @all_pokes = all_pokes
     @attack_list = attack_list
   end
@@ -40,8 +40,9 @@ class PokemonBattleField
 
   def choose_pokemons
     view_pokemons(all_pokes)
-    players.each do |player|
-      player.team_build(all_pokes, players, self)
+    players.each.with_index do |player, index|
+      player.team_build(all_pokes)
+      player.assing_player_team(index, players, self)
     end
     start_battle
   end
@@ -49,78 +50,34 @@ class PokemonBattleField
   def start_battle
     @turn = 1
     select_initial_pok(players)
-    # assing_initial_position
     puts
     loop do
-      break if players.any? { |player| team_fainted?(player) }
-      MessagesPool.turn(turn)
-      players.each { |player| clear_actions(player) }
-      players.each do |player| 
-        if player.current_pokemons.any?(&:fainted?)
-          if player.team.count { |pok| !pok.fainted? } == 1 && battle_type == 'double'
-            player.only_one_poke_remaining_on_doubles
-          else
-            Menu.pokemon_selection_index(player, player.current_pokemons.find { |pok| pok.fainted? }).perform
-          end
-        end
-      end
-
+      break if game_over?
+      init_turn_actions
       display_pokemons
+
       players.each do |player|
         player.current_pokemons.each { |pok| pok.trainer.select_action(pok) }
       end
 
       queue = ActionQueue.new
-      players.each do |player|
-        player.action.each do |action|
-          queue << action
-        end
-        queue << player.pending_action if action_count_complete?(player)
-      end
+      enqeue_actions(queue)
       queue.perform_actions
-      reinit_protections_and_harm
-      players.each { |player| player.regressive_count unless player.data[:remaining_turns].nil? }
-      condition_effects if players.any? { |player| player.current_pokemons.any? { |pok| pok.health_condition != nil }}
-      status_effects
-      BattleLog.instance.display_messages
-      @turn += 1
+      
+      end_turn_actions
     end
 
     declare_winner
   end
 
   private
-
-  def clear_actions(player)
-    player.action = []
-  end
-
-  # def assing_initial_position
-  #   if players.size == 2 && battle_type == 'double'
-  #     index = 1
-  #     players.each do |player|
-  #       player.current_pokemons.each.with_index do |pok, i|
-  #         field_positions[index] = player.current_pokemons[i]
-  #         index += 1
-  #       end
-  #     end
-  #   else
-  #     players.each.with_index(1) do |player, index|
-  #       field_positions[index] = player.current_pokemons[0]
-  #     end
-  #   end
-  # end
-
-  def action_count_complete?(trainer)
-    trainer.data[:remaining_turns] == 0
-  end
-
+  
   def view_pokemons(pokemons)
     pokemons.each.with_index(1) do |pok, index|
       puts "#{index}- #{pok.to_s}" if !pok.fainted?
     end
   end
-
+  
   def select_initial_pok(players)
     players.each do |player|
       view_pokemons(player.team)
@@ -138,27 +95,48 @@ class PokemonBattleField
   end
 
   def select_initial_index(player)
-    MessagesPool.select_pokemon(player.name, battle_type)
+    MessagesPool.select_pokemon(player.name, battle_type, players)
     index = gets.chomp.split.map(&:to_i)
 
     return index if valid_index?(player, index)
 
-    battle_type == 'single' ? MessagesPool.invalid_option : MessagesPool.invalid_option_on_doubles
+    battle_type == 'double' && players.size == 2 ? MessagesPool.invalid_option_on_doubles : MessagesPool.invalid_option
     return select_initial_index(player)
   end
 
   def valid_index?(player, index)
-    case battle_type
-    when 'single'
-      index.size == 1 && (1..player.team.size).include?(index[0])
-    when 'double'
+    if battle_type == 'double' && players.size == 2
       index.size == 2 && index.all? { |pick| (1..player.team.size).include?(pick) } && index[0] != index[1]
+    else
+      index.size == 1 && (1..player.team.size).include?(index[0])
     end
+  end
+
+  def game_over?
+    players.any? { |player| player.opponents.all?(&:team_fainted?) }
   end
 
   def team_fainted?(player)
     player.team.all?(&:fainted?)
-  end
+  end    
+
+  def init_turn_actions
+    MessagesPool.turn(turn)
+    players.each { |player| clear_actions(player) }
+    players.each do |player| 
+      if player.current_pokemons.any?(&:fainted?)
+        if player.team.count { |pok| !pok.fainted? } == 1 && battle_type == 'double'
+          player.only_one_poke_remaining_on_doubles
+        else
+          Menu.pokemon_selection_index(player, player.current_pokemons.find { |pok| pok.fainted? }).perform
+        end    
+      end    
+    end    
+  end    
+  
+  def clear_actions(player)
+    player.action = []
+  end    
 
   def display_pokemons
     players.each do |player|
@@ -167,6 +145,31 @@ class PokemonBattleField
     end
   end
 
+  def enqeue_actions(queue)
+    players.each do |player|
+      player.action.each do |action|
+        queue << action
+      end
+
+      queue << player.pending_action if action_count_complete?(player)
+    end
+  end
+
+  def action_count_complete?(trainer)
+    trainer.data[:remaining_turns] == 0
+  end
+
+  def end_turn_actions
+    reinit_protections_and_harm
+
+    players.each { |player| player.regressive_count unless player.data[:remaining_turns].nil? }
+    condition_effects
+    status_effects
+
+    BattleLog.instance.display_messages
+    @turn += 1
+  end
+  
   def reinit_protections_and_harm
     players.each do |player|
       player.current_pokemons.each do |pok|
@@ -205,10 +208,12 @@ class PokemonBattleField
   end
 
   def declare_winner
+    winners = []
     players.each do |player|
-      next if team_fainted?(player)
-      MessagesPool.declare_winner(player.name)
+      winners << player if player.opponents.all?(&:team_fainted?)      
     end
+
+    winners.size == 1 ? MessagesPool.declare_winner(winners[0].name) : MessagesPool.declare_two_winners(winners)
   end
 end
 
