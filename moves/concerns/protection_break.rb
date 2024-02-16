@@ -8,10 +8,9 @@ module ProtectionBreak
   end
 
   def protect_evaluation
-    return execute unless pokemon_target.is_protected?
-
-    BattleLog.instance.log(MessagesPool.broke_protection_msg(pokemon.name, pokemon_target.name))
-    pokemon_target.protection_delete
-    execute
+    if pokemon_target.is_protected?
+      BattleLog.instance.log(MessagesPool.broke_protection_msg(pokemon.name, pokemon_target.name))
+      pokemon_target.protection_delete
+    end
   end
 end

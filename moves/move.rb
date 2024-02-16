@@ -42,11 +42,16 @@ class Move
     @pp = pp
     @metadata = metadata
     @target = target
+
+    assing_target if target.nil?
+  end
+  
+  def assing_target
+    @target = category == :status ? 'self' : 'one_opp'
   end
 
   def perform_attack(*pokemons)
     @pokemon, @pokemon_target = pokemons
-    @target = determine_target
     return BattleLog.instance.log(MessagesPool.no_pp_during_attack(pokemon.name, attack_name)) if pp <= 0
 
     if return_dmg?
@@ -58,17 +63,9 @@ class Move
       handle_in_other_turn
     else 
       perform_normal_attack
-    end
-  end
+    end  
+  end  
   
-  def determine_target
-    if category == :status && target.nil?
-      pokemon
-    elsif category != :status || target == :pokemon_target
-      pokemon_target
-    end
-  end
-
   def return_dmg_effect
     BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
     return BattleLog.instance.log(MessagesPool.attack_failed_msg) if target.fainted? || !triggered?
@@ -102,7 +99,7 @@ class Move
   def execute
     atk_performed
     return BattleLog.instance.log(MessagesPool.attack_failed_msg) if target.fainted?
-    return BattleLog.instance.log(MessagesPool.failed_attack_msg) if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
+    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
 
     effectiveness_message if !protected?
     if effect != 0 || category == :status
@@ -111,6 +108,7 @@ class Move
 
       pokemon.reinit_metadata(self)
       post_effect(pokemon) if has_post_effect?
+      pokemon.trainer.battlefield.attack_list["#{pokemon.name}"] = self.dup
     end
   end
 
@@ -119,9 +117,6 @@ class Move
   def no_remaining_pp?
     pp <= 0
   end
-
-  private
-  attr_reader :pokemon, :pokemon_target, :target
 
   def additional_action(pokemon); end
 
@@ -153,7 +148,7 @@ class Move
     when 5 then fifth_turn_action
     end
 
-    pokemon.count_attack_turns if !pokemon.metadata[:turn].nil?
+    pokemon.count_attack_turns
   end
 
   def hit_chance
@@ -286,8 +281,8 @@ class Move
       target = attack_name == :outrage ? pokemon.name : pokemon_target.name
       BattleLog.instance.log(MessagesPool.confusion_apply(target))
     when :cursed then BattleLog.instance.log(MessagesPool.curse_apply(pokemon.name, pokemon_target.name)) 
-    when :infatuated then BattleLog.instance.log(MessagesPool.infatuation_apply(target.name)) 
-    when :seeded then BattleLog.instance.log(MessagesPool.seed_apply(target.name))
+    when :infatuated then BattleLog.instance.log(MessagesPool.infatuation_apply(pokemon_target.name)) 
+    when :seeded then BattleLog.instance.log(MessagesPool.seed_apply(pokemon_target.name))
     when :substitute then BattleLog.instance.log(MessagesPool.substitute_apply(pokemon.name))
     when :bound then BattleLog.instance.log(MessagesPool.bound_apply(pokemon.name))
     when :transformed then BattleLog.instance.log(MessagesPool.transform_apply(pokemon.name, pokemon_target.name))

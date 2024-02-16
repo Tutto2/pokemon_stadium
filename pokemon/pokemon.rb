@@ -32,8 +32,6 @@ class Pokemon
     @teratype = teratype || types.sample
   end
 
-  # metronomo quedo en loop despues de usar ice ball
-
   def status
     display_substitute_message
     MessagesPool.pokemon_state(self)
@@ -52,10 +50,11 @@ class Pokemon
 
   def view_attacks
     attacks.each.with_index(1) do |atk, index|
-      puts "#{index}- #{atk.attack_name} / #{atk.pp.to_i} PP"
+      BattleLog.instance.log(MessagesPool.atk_index(atk, index))
     end
+    BattleLog.instance.display_messages
   end
-
+  
   def attack!(action)
     attack = action.behaviour
     target = assing_target(action.target)
@@ -66,20 +65,75 @@ class Pokemon
     condition_disappear?
     return if is_unable_to_move?
 
-    trainer.battlefield.attack_list << attack.dup
+    if target.fainted? && trainer.battlefield.battle_type == 'double' && trainer.battlefield.players.size == 2
+      target = trainer.current_pokemons.reject { |pok| pok == target }
+      target = target[0]
+    end
+  
     attack.perform_attack(self, target)
   end
 
   def assing_target(target_index)
-    if target_index != 0
+    case target_index 
+    when 0 then [self]
+    when 1..2 then assing_opp(target_index)
+    when 3..4 then assing_allies(target_index)
+    when 5 then trainer.opponents
+    when 6 then assing_rand_opp
+    when 7 then trainer.teammate.current_pokemons
+    when 8 then trainer.current_pokemons + trainer.teammate.current_pokemons
+    when 9 then assing_all_pok
+    end
+  end
+
+  def assing_opp(target_index)
+    target = nil
+    if trainer.battlefield.battle_type == 'double'
+      possible_targets = []
+      selected_pok = nil
+
       if trainer.opponents.size == 1
-        trainer.opponents[0].current_pokemons[target_index - 1]
+        possible_targets = trainer.opponents[0].current_pokemons
+        selected_pok = possible_targets[target_index - 1]
       else
-        trainer.opponents[target_index - 1].current_pokemons[0]
+        possible_targets = trainer.opponents[0].current_pokemons + trainer.opponents[1].current_pokemons
+        selected_pok = trainer.opponents[target_index - 1].current_pokemons[0]
+      end
+
+      target = selected_pok.fainted? ? possible_targets.reject { |i| i == selected_pok } : [selected_pok]
+    else
+      target = [trainer.opponents[target_index - 1].current_pokemons[0]]
+    end
+    target
+  end
+
+  def assing_rand_opp
+    r = rand(0..1)
+    pok = trainer.opponents[r].current_pokemons 
+
+  end
+
+  def assing_allies(target_index)
+    return [trainer.current_pokemons[target_index - 3]] if trainer.teammate.nil?
+
+    target_index == 3 ? trainer.current_pokemons : trainer.teammate.current_pokemons
+  end
+
+  def assing_all_pok
+    all = []
+    if trainer.teammate.nil?
+      trainer.current_pokemons.each do |pok|
+        next if pok == self
+        all << pok
       end
     else
-      trainer.opponents[0].current_pokemons[0]
+      all << trainer.teammate.current_pokemons
     end
+
+    trainer.opponents.each do |opp|
+      all << opp.current_pokemons
+    end
+    all.flatten
   end
 
   def condition_disappear?

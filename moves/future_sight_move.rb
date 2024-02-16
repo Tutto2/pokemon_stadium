@@ -26,7 +26,6 @@ class FutureSightMove < Move
   end
 
   def wrap_in_action
-    [
       AttackAction.new(
       speed: pokemon.actual_speed,
       behaviour: self,
@@ -34,7 +33,6 @@ class FutureSightMove < Move
       user_pokemon: pokemon,
       target: pokemon_target_index
       )
-    ]
   end
 
   def pokemon_target_index

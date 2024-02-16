@@ -1,7 +1,6 @@
 require_relative "move"
 
 class PollenPuffMove < Move
-  include CanSelectTarget
   include BasicSpecialAtk
   include EffectDependsTarget
   include HpChange
@@ -22,7 +21,7 @@ class PollenPuffMove < Move
 
   def alter_effect
     atk_performed
-    gain_hp(pokemon)
+    gain_hp
   end
 
   def value

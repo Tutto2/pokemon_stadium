@@ -12,6 +12,9 @@ class SeededStatus < VolatileStatus
     value = (pokemon.hp_total) * ( 1.0 / 8.0 )
     BattleLog.instance.log(MessagesPool.seeded_dmg_msg(pokemon.name, value.to_i))
     pokemon.hp.decrease(value.to_i)
-    data.current_pokemons.hp.increase(value.to_i)
+
+    index = 0
+    pokemon.trainer.current_pokemons.each.with_index { |pok, i| index = i if pok == pokemon }
+    data.current_pokemons[index].hp.increase(value.to_i)
   end
 end

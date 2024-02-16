@@ -9,10 +9,6 @@ module SpecialFeatures
     false
   end
 
-  def can_select_target?
-    false
-  end
-
   def action_for_other_turn?
     false
   end

@@ -10,14 +10,9 @@ class SwitchAction < Action
     next_pokemon = behaviour
     BattleLog.instance.log(MessagesPool.switch_action_msg(next_pokemon.name))
     
-    @trainer.current_pokemons.map! do |pok|
-      pok == user_pokemon ? next_pokemon : pok
-    end
+    field_positions = trainer.battleground.field.positions
+    user = field_positions.find { |i, pok| pok == user_pokemon }
 
-    # @trainer.battlefield.field_positions.map! do |position, pok|
-    #   if pok == user_pokemon
-    #     field_positions[position] = next_pokemon
-    #   end
-    # end
+    field_positions[user[0]] = next_pokemon
   end
 end

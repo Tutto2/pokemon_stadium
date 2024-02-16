@@ -2,7 +2,7 @@ require_relative "messages_pool"
 require_relative "actions/menu"
 
 class Trainer
-  attr_accessor :name, :team, :current_pokemons, :action, :opponents, :teammate, :data, :battlefield
+  attr_accessor :name, :team, :current_pokemons, :action, :opponents, :teammate, :data, :battleground
 
   def initialize(name:)
     @name = name
@@ -11,12 +11,12 @@ class Trainer
     @action = []
     @opponents = []
     @teammate = nil
-    @battlefield = nil
+    @battleground = nil
     @data = {}
   end
 
   def self.select_name(index, players_num, battle_type)
-    battle_type == 'double' && players.size == 4 ? MessagesPool.select_teammate_name(index) : MessagesPool.select_player_name(index)
+    battle_type == 'double' && players_num == 4 ? MessagesPool.select_teammate_name(index) : MessagesPool.select_player_name(index)
     name = gets.chomp
 
     return Trainer.new(name: name) if !name.empty? && name.length < 10
@@ -24,23 +24,30 @@ class Trainer
     select_name(index, players_num, battle_type)
   end
 
-  def team_build(pokemons)
-    puts
+  def team_build(pokemons, players_num)
+    MessagesPool.menu_leap
     @team.clear
     MessagesPool.pokemon_selection(name)
     selection = gets.chomp.split.map(&:to_i)
 
-    if selection.all? { |pick| (1..pokemons.size).include?(pick) } && (1..6).include?(selection.size)
+    if team_verification(selection, pokemons, players_num)
       @team = selection.map { |pick| pokemons[pick-1] }
       @team.each { |pok| pok.trainer = self }
     else
       MessagesPool.invalid_pokemon_selection
       return team_build(pokemons)
-    end
+    end 
   end
 
-  def assing_player_team(index, players, battlefield)
-    if battle_type == 'double' && players.size == 4
+  def team_verification(selection, pokemons, players_num)
+    selection.all? { |pick| (1..pokemons.size).include?(pick) } && (( players_num == 2 && (1..6).include?(selection.size)) || (players_num > 2 && (1..3).include?(selection.size)))
+  end
+
+  def assing_player_team(index, players, battleground)
+    @battleground = battleground
+    @opponents = players.reject { |player| player == self }
+
+    if battleground.battle_type == 'double' && players.size == 4
       teammate_mapping = {
         0 => 1,
         1 => 0,
@@ -49,21 +56,22 @@ class Trainer
       }
 
       @teammate = players[teammate_mapping[index]]
+      @opponents -= [teammate]
     end
-
-    @opponents = players.reject { |player| player == self || player == teammate}
-    @battlefield = battlefield
   end
   
   def view_pokemons
     team.each.with_index(1) do |pok, index|
-      next if current_pokemons.include?(pok)
-      puts "#{index}- #{pok.to_s}" if !pok.fainted?
+      next if battleground.field.positions.values.include?(pok)
+      BattleLog.instance.log(MessagesPool.poke_index(pok, index)) if !pok.fainted?
     end
+    BattleLog.instance.display_messages
   end
   
   def select_action(user_pok)
-    @action << Menu.select_action(self, user_pok)
+    selected_action = Menu.select_action(self, user_pok)
+    @battleground.action_list[user_pok.name] = selected_action
+    @action << selected_action
   end
 
   def select_pokemon(user_pokemon, index, source)
@@ -86,16 +94,6 @@ class Trainer
       trainer: self,
       user_pokemon: user_pokemon
     )
-  end
-
-  def only_one_poke_remaining_on_doubles
-    pok = current_pokemons.find { |pok| pok.fainted? }
-
-    @current_pokemons.each.with_index do |position, index|
-      if position == pok
-        current_pokemons.delete_at(index)
-      end
-    end
   end
 
   def baton_pass_stats(user_pokemon, next_pokemon)
@@ -140,11 +138,16 @@ class Trainer
     end
 
     @data[:remaining_turns] -= 1
-    puts "Turns remaining #{data[:remaining_turns]} for #{data[:pending_action].behaviour.attack_name} to execute"
+    act = data[:pending_action]
+    BattleLog.instance.log(MessagesPool.remaining_turns_msg(data[:remaining_turns], act.behaviour.attack_name))
   end
 
   def pending_action
     data[:pending_action]
+  end
+
+  def team_fainted?
+    team.all?(&:fainted?)
   end
 
   def ==(other)

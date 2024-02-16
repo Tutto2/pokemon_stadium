@@ -1,145 +1,202 @@
 require_relative 'moves/move'
 require_relative 'pokemon/pokemon'
 require_relative 'trainer'
+require_relative 'battle_log'
 
 class MessagesPool
   def invalid_game_settings(players_num, battle_type)
     if battle_type == 'double' && players_num == 3
-      puts "Invalid game settings, if battle type is set to 'double', then the number of players must be even"
+      BattleLog.instance.log("Invalid game settings, when 'double' battle is set the number of players must be even")
+    elsif battle_type == 'royale' && players_num == 2
+      BattleLog.instance.log("Invalid game settings, when 'royale' battle is set the number of players must more than 2")
     else
-      puts "Invalid game settings, must select only 2 - 4 players"
+      BattleLog.instance.log("Invalid game settings, must select only 2 - 4 players")
     end
+    BattleLog.instance.display_messages
   end
 
   def self.select_player_name(index)
-    print "Player #{index}, select your name: "
+    BattleLog.instance.log("Player #{index}, select your name: ", :fillable)
+    BattleLog.instance.display_messages
   end
 
   def self.select_teammate_name(index)
     case index  
     when 1
-      puts "Which are the members of the first team?"
+      BattleLog.instance.log("Which are the members of the first team?")
     when 3
-      puts "Which are the members of the second team?"
+      BattleLog.instance.log("Which are the members of the second team?")
     end
 
-    print "Player #{index}, select your name: "
+    BattleLog.instance.log("Player #{index}, select your name: ", :fillable)
+    BattleLog.instance.display_messages
   end
 
   def self.invalid_name_input
-    puts "Invalid input, the name must be less than 10 characters"
-    puts
+    BattleLog.instance.log("Invalid input, the name must be less than 10 characters")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.pokemon_selection(name)
-    print "#{name} select a set of pokemon to battle: "
+    BattleLog.instance.log("#{name} select a set of pokemon to battle: ", :fillable)
+    BattleLog.instance.display_messages
   end
 
   def self.invalid_pokemon_selection
-    puts "Pick 1 to 6 pokemons, and provide valid indices. Try again."
-    puts
+    BattleLog.instance.log("Pick 1 to 6 pokemons, and provide valid indices. Try again.")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.select_pokemon(name, battle_type, players)
     if battle_type == 'double' && players.size == 2
-      print "#{name} select two pokemons to battle: "
+      BattleLog.instance.log("#{name} select two pokemons to battle: ", :fillable)
     else
-      print "#{name} select your pokemon: "
-    else
+      BattleLog.instance.log("#{name} select your pokemon: ", :fillable)
     end
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.invalid_option_on_doubles
-    puts "Please select two pokemon, providing two different valid indices. Try again:"
+    BattleLog.instance.log("Please select two pokemon, providing two different valid indices. Try again:")
+    BattleLog.instance.display_messages
   end
 
   def self.invalid_option
-    puts "Invalid option. Try again"
-    puts
+    BattleLog.instance.log("Invalid option. Try again")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.turn(n)
-    puts
-    puts "############ turn #{n} ############"
-    puts
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("############ turn #{n} ############")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
-  def self.player_current_pokemons(name, battle_type)
-    if battle_type == 'single'
-      puts "#{name}'s pokemon:"
+  def self.first_team_msg
+    BattleLog.instance.log("First team pokemons:")
+  end
+
+  def self.second_team_msg
+    BattleLog.instance.log("Second team pokemons:")
+  end
+
+  def self.player_current_pokemons(name, battle_type, players_num)
+    if battle_type == 'double' && players_num == 2
+      BattleLog.instance.log("#{name}'s pokemons:")
     else
-      puts "#{name}'s pokemons:"
+      BattleLog.instance.log("#{name}'s pokemon:")
     end
+    BattleLog.instance.display_messages
   end
 
-  def self.opponents_index
-    print "Pick a target: "
+  def self.has_no_remaining_poks(player)
+    BattleLog.instance.log("#{player.name} has no remaining pokemons")
+    BattleLog.instance.display_messages
+  end
+
+  def self.targets_index
+    BattleLog.instance.log("Pick a target: ", :fillable)
+    BattleLog.instance.display_messages
   end
 
   def self.posible_targets(pok, index)
-    puts "#{index}- #{pok.to_s}  #{pok.hp_value} / #{pok.hp_total} hp"
+    BattleLog.instance.log("#{index}- #{pok.to_s}  #{pok.hp_value} / #{pok.hp_total} hp")
+    BattleLog.instance.display_messages
   end
 
   def self.substitute_state(name, hp)
-    puts "#{name}'s Substitute has #{hp} hp"
-    puts
+    BattleLog.instance.log("#{name}'s Substitute has #{hp} hp")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
+  end
+
+  def self.trainer_name(pok)
+    BattleLog.instance.log("#{pok.trainer.name}'s pokemon:")
   end
 
   def self.pokemon_state(pok)
-    puts "#{pok.name} - #{pok.hp_value} / #{pok.hp_total} hp (#{pok.types.map(&:to_s).join("/")}) #{pok.health_condition&.name}"
-    pok.volatile_status.each { |k, v| puts "#{k}"}
+    BattleLog.instance.log("#{pok.name} - #{pok.hp_value} / #{pok.hp_total} hp (#{pok.types.map(&:to_s).join("/")}) #{pok.health_condition&.name}")
+    pok.volatile_status.each { |k, v| BattleLog.instance.log("#{k}")}
 
     # pok.stats.each do |stat|
     #   next if stat == :hp || stat == :spd
-    #   puts "#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}"
+    #   BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
     # end
-    # puts "spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}"
-    puts
+    # BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.display_action_index(trainer, user_pokemon)
-    puts "1- Attack"
-    puts "2- Change pokemon"
-    puts
-    print "#{trainer.name}, what do you want to do with #{user_pokemon.to_s}?: "
+    BattleLog.instance.log("1- Attack")
+    BattleLog.instance.log("2- Change pokemon")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("#{trainer.name}, what do you want to do with #{user_pokemon.to_s}?: ", :fillable)
+    BattleLog.instance.display_messages
   end
 
   def self.unable_to_escape_alert(pok_name)
-    puts "#{pok_name} can't escape of his bound"
-    puts
+    BattleLog.instance.log("#{pok_name} can't escape of his bound")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.no_remaining_moves_alert(pok_name)
-    puts "#{pok_name} has no left moves."
-    puts
+    BattleLog.instance.log("#{pok_name} has no left moves.")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.go_back_index(list)
-    puts "#{ (list.length) + 1 }- Go back"
-    puts
+    BattleLog.instance.log("#{ (list.length) + 1 }- Go back")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.select_attack_index
-    print 'Enter the attack number: '
+    BattleLog.instance.log('Enter the attack number: ', :fillable)
+    BattleLog.instance.display_messages
   end
 
   def self.banned_attack_alert
-    puts "This move can't be used twice in a row"
-    puts
+    BattleLog.instance.log("This move can't be used twice in a row")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.unable_to_use_attack_alert
-    puts "Can't use that attack"
-    puts
+    BattleLog.instance.log("Can't use that attack")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.no_remaining_pp_alert(attack_name)
-    puts "#{attack_name} has no remaining PP"
-    puts
+    BattleLog.instance.log("#{attack_name} has no remaining PP")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.select_pokemon_index(trainer_name)
-    print "#{trainer_name} select your pokemon: "
+    BattleLog.instance.log("#{trainer_name} select your pokemon: ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.poke_index(pok, index)
+    "#{index}- #{pok.to_s}"
+  end
+
+  def self.atk_index(atk, index)
+    "#{index}- #{atk.attack_name} / #{atk.pp.to_i} PP"
+  end
+
+  def self.menu_leap
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
   end
 
   def self.switch_action_msg(next_pok_name)
@@ -156,6 +213,10 @@ class MessagesPool
 
   def self.future_sight_msg(pok_name)
     "#{pok_name} has foreseen an attack."
+  end
+
+  def self.remaining_turns_msg(turns, atk_name)
+    "Turns remaining #{turns} for #{atk_name} to execute"
   end
 
   def self.sound_based_blocked_msg(pok_name)
@@ -360,8 +421,7 @@ class MessagesPool
   end
 
   def self.condition_apply_fail_msg(pok_name, condition)
-    "#{pok_name} cannot get #{condition}"
-    puts
+    "#{pok_name} cannot get #{condition}\n"
   end
 
   def self.condition_apply_msg(pok_name, condition)
@@ -437,14 +497,16 @@ class MessagesPool
   end
 
   def self.leap
-    puts
+    "\n"
   end
   
   def self.declare_winner(player)
-    "*-*-*-*-* #{player.upcase} HAS WON!! *-*-*-*-*"
+    BattleLog.instance.log("*-*-*-*-* #{player.upcase} HAS WON!! *-*-*-*-*")
+    BattleLog.instance.display_messages
   end
 
   def self.declare_two_winners(winners)
-    "*-*-*-* #{winners[0].name.upcase} AND #{winners[1].name.upcase} HAS WON!! *-*-*-*"
+    BattleLog.instance.log("*-*-*-* #{winners[0].name.upcase} AND #{winners[1].name.upcase} HAS WON!! *-*-*-*")
+    BattleLog.instance.display_messages
   end
 end
