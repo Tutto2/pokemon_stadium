@@ -54,10 +54,10 @@ class Pokemon
     end
     BattleLog.instance.display_messages
   end
-  
+
   def attack!(action)
     attack = action.behaviour
-    target = assing_target(action.target)
+    targets = assing_target(action.target)
     
     evaluate_mute_turn
     return BattleLog.instance.log(MessagesPool.sound_based_blocked_msg(name)) if sound_based_attack_blocked?(attack)
@@ -65,75 +65,19 @@ class Pokemon
     condition_disappear?
     return if is_unable_to_move?
 
-    if target.fainted? && trainer.battlefield.battle_type == 'double' && trainer.battlefield.players.size == 2
-      target = trainer.current_pokemons.reject { |pok| pok == target }
-      target = target[0]
-    end
-  
-    attack.perform_attack(self, target)
+    attack.perform_attack(self, targets)
   end
 
-  def assing_target(target_index)
-    case target_index 
-    when 0 then [self]
-    when 1..2 then assing_opp(target_index)
-    when 3..4 then assing_allies(target_index)
-    when 5 then trainer.opponents
-    when 6 then assing_rand_opp
-    when 7 then trainer.teammate.current_pokemons
-    when 8 then trainer.current_pokemons + trainer.teammate.current_pokemons
-    when 9 then assing_all_pok
-    end
-  end
-
-  def assing_opp(target_index)
-    target = nil
-    if trainer.battlefield.battle_type == 'double'
-      possible_targets = []
-      selected_pok = nil
-
-      if trainer.opponents.size == 1
-        possible_targets = trainer.opponents[0].current_pokemons
-        selected_pok = possible_targets[target_index - 1]
-      else
-        possible_targets = trainer.opponents[0].current_pokemons + trainer.opponents[1].current_pokemons
-        selected_pok = trainer.opponents[target_index - 1].current_pokemons[0]
-      end
-
-      target = selected_pok.fainted? ? possible_targets.reject { |i| i == selected_pok } : [selected_pok]
-    else
-      target = [trainer.opponents[target_index - 1].current_pokemons[0]]
-    end
-    target
-  end
-
-  def assing_rand_opp
-    r = rand(0..1)
-    pok = trainer.opponents[r].current_pokemons 
-
-  end
-
-  def assing_allies(target_index)
-    return [trainer.current_pokemons[target_index - 3]] if trainer.teammate.nil?
-
-    target_index == 3 ? trainer.current_pokemons : trainer.teammate.current_pokemons
-  end
-
-  def assing_all_pok
-    all = []
-    if trainer.teammate.nil?
-      trainer.current_pokemons.each do |pok|
-        next if pok == self
-        all << pok
+  def assing_target(positions)
+    targets = []
+    if positions.size > 1
+      positions.each do |pos|
+        targets << trainer.battleground.field.positions[pos]
       end
     else
-      all << trainer.teammate.current_pokemons
+      targets << trainer.battleground.field.positions[positions[0]]
     end
-
-    trainer.opponents.each do |opp|
-      all << opp.current_pokemons
-    end
-    all.flatten
+    targets
   end
 
   def condition_disappear?

@@ -19,6 +19,10 @@ class FocusPunchMove < Move
     FocusPunchCharge.learn
   end
 
+  def trigger_perform_fail_msg
+    BattleLog.instance.log(MessagesPool.focus_punch_fail_msg(pokemon.name))
+  end
+
   private
 
   def trigger(pokemon)

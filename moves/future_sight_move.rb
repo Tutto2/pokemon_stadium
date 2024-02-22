@@ -22,10 +22,10 @@ class FutureSightMove < Move
   end
 
   def handle_in_other_turn
-    pokemon.trainer.keep_action(wrap_in_action, 2)
+    pokemon.trainer.keep_action(wrapped_action, 2)
   end
 
-  def wrap_in_action
+  def wrapped_action
       AttackAction.new(
       speed: pokemon.actual_speed,
       behaviour: self,

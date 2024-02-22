@@ -356,6 +356,10 @@ class MessagesPool
     "#{pok_name} set a shell trap."
   end
 
+  def self.shell_trap_fail_msg(pok_name)
+    "The trap didn't trigger, #{pok_name} couldn't move"
+  end
+
   def self.skull_bash_msg(pok_name)
     "#{pok_name} lowered his head"
   end
@@ -402,6 +406,10 @@ class MessagesPool
 
   def self.focus_punch_msg(pok_name) 
     "#{pok_name} is focusing."
+  end
+
+  def self.focus_punch_fail_msg(pok_name) 
+    "#{pok_name} lost its focus and couldn't move"
   end
 
   def self.ineffective_msg

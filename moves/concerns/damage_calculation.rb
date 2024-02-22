@@ -11,10 +11,8 @@ file_paths.each do |file_path|
 end
 
 module DamageFormula
-  attr_reader :attack, :pokemon, :pokemon_target, :effect
-
-  def damage_calculation(attack, pokemon, pokemon_target, effect)
-    @attack, @pokemon, @pokemon_target, @effect = attack, pokemon, pokemon_target, effect
+  def damage_calculation(effect)
+    @effect = effect
     perform_dmg(damage_formula(crit_chance))
   end 
 

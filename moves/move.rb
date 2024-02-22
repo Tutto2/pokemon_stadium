@@ -28,7 +28,7 @@ class Move
   include DamageFormula
   include SpecialFeatures
 
-  attr_reader :attack_name, :precision, :power, :priority, :pokemon, :pokemon_target, :target
+  attr_reader :attack_name, :precision, :power, :priority, :pokemon, :targets, :target
   attr_accessor :category, :type, :secondary_type, :pp, :metadata
 
   def initialize(attack_name: nil, type: nil, secondary_type: nil, category: nil, precision: 100, power: 0, priority: 0, pp: nil, metadata: nil, target: nil)
@@ -50,66 +50,103 @@ class Move
     @target = category == :status ? 'self' : 'one_opp'
   end
 
-  def perform_attack(*pokemons)
-    @pokemon, @pokemon_target = pokemons
+  def perform_attack(user, targets)
+    @pokemon = user
+    @targets = targets
+
     return BattleLog.instance.log(MessagesPool.no_pp_during_attack(pokemon.name, attack_name)) if pp <= 0
+    return perform_attack_with_trigger if has_trigger?
 
-    if return_dmg?
-      return_dmg_effect
-    elsif has_trigger?
-      perform_attack_with_trigger
-    elsif action_for_other_turn? && pokemon.trainer.data[:pending_action].nil?
-      additional_action(pokemon)
-      handle_in_other_turn
-    else 
-      perform_normal_attack
-    end  
-  end  
-  
-  def return_dmg_effect
     BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
-    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if target.fainted? || !triggered?
+    return attack_failed! if targets.all?(&:fainted?)
 
-    if type == Types::FIGHTING && pokemon_target.types.any? { |type| type == Types::GHOST }
-      BattleLog.instance.log(MessagesPool.immunity_msg(pokemon_target.name))
-      pokemon.reinit_metadata(self)
-    else
-      perform_dmg(dmg)
-      pokemon.reinit_metadata(self)
-    end
+    reassing_fainted_target
+    atk_performed
+    evaluate_special_perform
   end
 
   def perform_attack_with_trigger
-    if pokemon.metadata[:waiting].nil?
-      additional_action(pokemon)
-      @pokemon.init_whole_turn_action
-    else
-      trigger_perform
-    end
+    return trigger_perform unless pokemon.metadata[:waiting].nil?
+
+    additional_action(pokemon)
+    @pokemon.init_whole_turn_action
   end
-  
-  def perform_normal_attack
+
+  def additional_action(pokemon); end
+
+  def trigger_perform
+    return trigger_perform_fail_msg unless trigger(pokemon)
+    
+    BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
+    atk_performed
+    execute
+  end
+
+  def reassing_fainted_target
+    return if targets.size == 1
+    @targets.delete_if { |tar| tar.fainted? }
+  end
+
+  def atk_performed
+    @pp -= 1 if pokemon.metadata[:turn].nil?
+  end
+
+  def evaluate_special_perform
     if has_several_turns?
       action_per_turn 
-    elsif hit_chance
+    elsif return_dmg?
+      return_dmg_effect
+    elsif action_for_other_turn? && no_pending_action?
+      handle_additional_action
+    else 
       execute
     end
   end
 
+  def no_pending_action?
+    pokemon.trainer.data[:pending_action].nil?
+  end
+  
+  def handle_additional_action
+    additional_action(pokemon)
+    handle_in_other_turn
+  end
+
+  def return_dmg_effect
+    return unless triggered?
+    
+    # CONTINUE...
+    if type == Types::FIGHTING && pokemon_target.types.any? { |type| type == Types::GHOST }
+      BattleLog.instance.log(MessagesPool.immunity_msg(pokemon_target.name))
+    else
+      perform_dmg(dmg)
+    end
+    pokemon.reinit_metadata(self)
+  end
+
   def execute
-    atk_performed
-    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if target.fainted?
-    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
+    return attack_failed! if !pokemon_target.metadata[:invulnerable].nil? && pokemon_target == target
+    return attack_failed! unless hit_chance
 
     effectiveness_message if !protected?
-    if effect != 0 || category == :status
-      strikes_count ? perform_multistrike : action
-      end_of_action_message
 
-      pokemon.reinit_metadata(self)
-      post_effect(pokemon) if has_post_effect?
-      pokemon.trainer.battlefield.attack_list["#{pokemon.name}"] = self.dup
-    end
+    (strikes_count ? perform_multistrike : action) if effect != 0 || category == :status
+
+    end_of_execution
+    pokemon.trainer.battlefield.attack_list["#{pokemon.name}"] = self.dup
+  end
+
+  def attack_failed!
+    BattleLog.instance.log(MessagesPool.attack_failed_msg)
+    pokemon.reinit_metadata(self)
+  end
+  
+  def end_of_execution
+    pokemon.reinit_metadata(self)
+    return if effect == 0 && category != :status
+
+    end_of_action_message
+    post_effect(pokemon) if has_post_effect?
   end
 
   def additional_move; end
@@ -118,27 +155,8 @@ class Move
     pp <= 0
   end
 
-  def additional_action(pokemon); end
-
-  def atk_performed
-    BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
-  end
-  
-  def trigger_perform
-    if trigger(pokemon)
-      @pp -= 1
-      execute
-    else
-      BattleLog.instance.log(MessagesPool.attack_failed_msg)
-      pokemon.reinit_metadata(self)
-    end
-  end
-
   def action_per_turn
-    if pokemon.metadata[:turn].nil?
-      @pp -= 1
-      pokemon.init_several_turn_attack 
-    end
+    pokemon.init_several_turn_attack 
 
     case pokemon.metadata[:turn]
     when 1 then first_turn_action
@@ -152,7 +170,6 @@ class Move
   end
 
   def hit_chance
-    @pp -= 1
     return true if precision.nil?
     if !pokemon_target.metadata.nil?
       return true if pokemon_target.metadata[:post_effect] == "vulnerable"
@@ -160,17 +177,11 @@ class Move
 
     chance = rand(0..100)
     if (@category == :status && precision < chance) || (@category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance)
-      failed_attack_messages
-      pokemon.reinit_metadata(self) if !pokemon.metadata.nil?
-      return false
+      attack_failed!
+      false
     else
-      return true
+      true
     end
-  end
-
-  def failed_attack_messages
-    BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
-    BattleLog.instance.log(MessagesPool.attack_failed_msg)
   end
 
   def effectiveness_message
@@ -238,7 +249,7 @@ class Move
   
   def main_effect
     if status? 
-      return protected_itself if !(target == pokemon) && protected?
+      return protected_itself if !(target == 'self') && protected?
       return BattleLog.instance.log(MessagesPool.substitute_immune_msg(pokemon_target.name, attack_name)) if !pokemon_target.volatile_status[:substitute].nil? && !(pokemon == target)
       status_effect
     else
@@ -249,7 +260,7 @@ class Move
   def status_effect; end
 
   def damage_effect
-    damage_calculation(self, pokemon, pokemon_target, effect)
+    damage_calculation(effect)
   end
 
   def health_condition_apply(target, condition)
@@ -258,11 +269,11 @@ class Move
         return BattleLog.instance.log(MessagesPool.condition_apply_fail_msg(target.name, condition.name)) if target_type == immune_type
       end
     end
-    if target == pokemon || target.health_condition.nil?
+    if target == 'self' || target.health_condition.nil?
       target.health_condition = condition
       BattleLog.instance.log(MessagesPool.condition_apply_msg(target.name, condition.name))
     else
-      BattleLog.instance.log(MessagesPool.attack_failed_msg) if category == :status
+      attack_failed! if category == :status
     end
   end
 
@@ -271,15 +282,15 @@ class Move
       status_apply_msg(status.name)
       target.volatile_status[status.name] = status
     else
-      BattleLog.instance.log(MessagesPool.attack_failed_msg) if category == :status
+      attack_failed! if category == :status
     end
   end
 
   def status_apply_msg(status)
     case status
     when :confused 
-      target = attack_name == :outrage ? pokemon.name : pokemon_target.name
-      BattleLog.instance.log(MessagesPool.confusion_apply(target))
+      tar = attack_name == :outrage ? pokemon.name : pokemon_target.name
+      BattleLog.instance.log(MessagesPool.confusion_apply(tar))
     when :cursed then BattleLog.instance.log(MessagesPool.curse_apply(pokemon.name, pokemon_target.name)) 
     when :infatuated then BattleLog.instance.log(MessagesPool.infatuation_apply(pokemon_target.name)) 
     when :seeded then BattleLog.instance.log(MessagesPool.seed_apply(pokemon_target.name))

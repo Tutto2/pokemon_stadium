@@ -19,6 +19,10 @@ class ShellTrapMove < Move
     ShellTrapCharge.learn
   end
 
+  def trigger_perform_fail_msg
+    BattleLog.instance.log(MessagesPool.shell_trap_fail_msg(pokemon.name))
+  end
+
   private
 
   def trigger(pokemon)

@@ -9,6 +9,7 @@ module MetadataHandling
   end
 
   def init_several_turn_attack
+    return if !metadata[:turn].nil?
     @metadata[:turn] = 1
   end
 
