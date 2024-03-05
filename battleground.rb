@@ -125,8 +125,11 @@ class PokemonBattleField
 
   def assing_position(pok_selection, index)
     if battle_type == 'double' && players.size == 2
-      field.positions[index] = pok_selection.shift
-      field.positions[index + 2] = pok_selection.shift
+      pok_selection.each_with_index do |pok, i|
+        field_position = index + (i * 2)
+        pok.field_position = field_position
+        field.positions[field_position] = pok
+      end
     elsif battle_type == 'double' && players.size == 4
       case index
       when 2
@@ -233,40 +236,34 @@ class PokemonBattleField
   end
   
   def reinit_protections_and_harm
-    players.each do |player|
-      player.current_pokemons.each do |pok|
-        pok.protection_delete if pok.is_protected?
-        pok.reinit_endure if pok.will_survive
-        pok.harm_reinit
-      end
+    field.positions.each do |_, pok|
+      pok.protection_delete if pok.is_protected?
+      pok.reinit_endure if pok.will_survive
+      pok.harm_reinit
     end
   end
 
   def condition_effects
-    players.each do |player|
-      player.current_pokemons.each do |pok|
-        next if pok.fainted? || pok.health_condition.nil?
-    
-        condition = pok.health_condition
-        condition&.dmg_effect(pok)
-        condition&.turn_count if !condition&.turn.nil?
-        BattleLog.instance.log(MessagesPool.pok_fainted_msg(pok.name)) if pok.fainted? && !condition.dmg_effect(pok).nil?
-      end
+    field.positions.each do |_, pok|
+      next if pok.fainted? || pok.health_condition.nil?
+  
+      condition = pok.health_condition
+      condition&.dmg_effect(pok)
+      condition&.turn_count if !condition&.turn.nil?
+      BattleLog.instance.log(MessagesPool.pok_fainted_msg(pok.name)) if pok.fainted? && !condition.dmg_effect(pok).nil?
     end
   end
 
   def status_effects
-    players.each do |player|
-      player.current_pokemons.each do |pok|
-        next if pok.fainted? || pok.volatile_status.empty?
+    field.positions.each do |_, pok|
+      next if pok.fainted? || pok.volatile_status.empty?
 
-        pok.volatile_status.each do |name, status|
-          next if pok.fainted?
-          status&.dmg_effect(pok)
-          status.turn_count
-          status.perish_song_effect(pok) if name == :perish_song && status.turn == 4
-          BattleLog.instance.log(MessagesPool.pok_fainted_msg(pok.name)) if pok.fainted? && !status.dmg_effect(pok).nil?
-        end
+      pok.volatile_status.each do |name, status|
+        next if pok.fainted?
+        status&.dmg_effect(pok)
+        status.turn_count
+        status.perish_song_effect(pok) if name == :perish_song && status.turn == 4
+        BattleLog.instance.log(MessagesPool.pok_fainted_msg(pok.name)) if pok.fainted? && !status.dmg_effect(pok).nil?
       end
     end
   end

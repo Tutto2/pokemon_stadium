@@ -9,7 +9,8 @@ class EarthquakeMove < Move
       type: Types::GROUND,
       pp: 10,
       category: :physical,
-      power: 100
+      power: 100,
+      target: 'all_except_self'
       )
   end
 end

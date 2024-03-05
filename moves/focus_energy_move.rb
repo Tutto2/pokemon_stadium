@@ -10,7 +10,7 @@ class FocusEnergyMove < Move
       )
   end
 
-  def status_effect
+  def status_effect(pokemon_target)
     pokemon.increase_crit_stage(2)
   end
 end

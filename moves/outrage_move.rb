@@ -10,7 +10,8 @@ class OutrageMove < Move
       type: Types::DRAGON,
       pp: 10,
       category: :physical,
-      power: 120
+      power: 120,
+      target: 'random_opp'
       )
   end
 

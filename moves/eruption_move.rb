@@ -8,7 +8,8 @@ class EruptionMove < Move
       attack_name: :eruption,
       type: Types::FIRE,
       pp: 5,
-      category: :special
+      category: :special,
+      target: 'all_opps'
       )
   end
 

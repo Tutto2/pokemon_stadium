@@ -10,7 +10,8 @@ class CurseMove < Move
       attack_name: :curse,
       type: Types::GHOST,
       pp: 10,
-      category: :status
+      category: :status,
+      target: 'one_opp'
       )
   end
 
@@ -18,7 +19,7 @@ class CurseMove < Move
     !pokemon.types.include?(Types::GHOST)
   end
 
-  def status_effect
+  def status_effect(pokemon_target)
     return BattleLog.instance.log(MessagesPool.attack_failed_msg) if pokemon.hp_value < (pokemon.hp_total / 2.0)
     lose_hp
     volatile_status_apply(pokemon_target, CurseStatus.get_cursed) if pokemon.hp_value >= (pokemon.hp_total / 2.0)

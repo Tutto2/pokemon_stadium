@@ -11,8 +11,8 @@ class Pokemon
   include MetadataHandling
 
   attr_reader :name, :lvl
-  attr_accessor :stats, :types, :attacks, :gender, :weight, :condition, :trainer, :metadata, :health_condition, :volatile_status
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, gender: nil, trainer: nil, health_condition: nil, volatile_status: {}, teratype: nil)
+  attr_accessor :stats, :types, :attacks, :gender, :weight, :condition, :trainer, :field_position, :metadata, :health_condition, :volatile_status
+  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, gender: nil, trainer: nil, field_position: nil, health_condition: nil, volatile_status: {}, teratype: nil)
     @name = name
     @types = types
     @stats = stats
@@ -21,6 +21,7 @@ class Pokemon
     @lvl = lvl
     @gender = gender
     @trainer = trainer
+    @field_position = field_position
     @metadata = {crit_stage: 0, harm: 0, actions: 0}
     @stats.push(
       Stats.new(name: :evs, base_value: 1),
@@ -57,7 +58,7 @@ class Pokemon
 
   def attack!(action)
     attack = action.behaviour
-    targets = assing_target(action.target)
+    targets = assing_target(attack, action.target)
     
     evaluate_mute_turn
     return BattleLog.instance.log(MessagesPool.sound_based_blocked_msg(name)) if sound_based_attack_blocked?(attack)
@@ -68,15 +69,56 @@ class Pokemon
     attack.perform_attack(self, targets)
   end
 
-  def assing_target(positions)
+  def assing_target(attack, target_positions)
     targets = []
-    if positions.size > 1
-      positions.each do |pos|
-        targets << trainer.battleground.field.positions[pos]
+    battle_type = trainer.battleground.battle_type
+    field_positions = trainer.battleground.field.positions
+    self_position = field_positions.find { |i, pok| pok == self }
+    self_position_index = self_position[0]
+
+    if attack.target == 'self'
+      targets << self
+    elsif attack.target == 'all_opps'
+      if self_position_index.odd?
+        targets << field_positions[2]
+        targets << field_positions[4]
+      else
+        targets << field_positions[1]
+        targets << field_positions[3]
       end
-    else
-      targets << trainer.battleground.field.positions[positions[0]]
+    elsif attack.target == 'random_opp'
+      x = rand(1..2)
+      if self_position_index.odd?
+        targets << field_positions[x * 2]
+      else
+        targets << field_positions[(x * 2) - 1]
+      end
+    elsif attack.target == 'all_except_self'
+      field_positions.each do |index, pok|
+        next if index == self_position_index
+        targets << pok
+      end
+    elsif attack.target == 'teammate'
+      teammate_mapping = {
+        0 => 1,
+        1 => 0,
+        2 => 3,
+        3 => 2
+      }
+      
+      targets << field_positions[teammate_mapping[self_position_index]]
+    elsif battle_type == 'single'
+      self_position_index.odd? ? targets << field_positions[2] : targets << field_positions[1]
+    elsif battle_type == 'double'
+      target_positions.each do |pos|
+        if self_position_index.odd?
+          targets << field_positions[pos * 2]
+        else
+          targets << field_positions[(pos * 2) - 1]
+        end
+      end
     end
+
     targets
   end
 
@@ -148,7 +190,7 @@ class Pokemon
     dmg = confusion_damage
     BattleLog.instance.log(MessagesPool.confusion_dmg_msg(name, dmg))
     self.hp.decrease(dmg)
-    self.harm_recieved(dmg)
+    self.harm_recieved(dmg, self)
   end
 
   def confusion_damage
@@ -185,6 +227,15 @@ class Pokemon
 
   def allied?(other)
     trainer == other.trainer
+  end
+
+  def got_out_of_battle
+    stats.each do |stat|
+      stat.reset_stat
+    end
+    reinit_all_metadata
+    reinit_volatile_condition
+    field_position = nil
   end
 
   def reinit_volatile_condition

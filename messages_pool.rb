@@ -288,6 +288,10 @@ class MessagesPool
     "But it failed."
   end
 
+  def self.attack_missed_msg(pok)
+    "#{pok.name} has missed"
+  end
+
   def self.switch_failed_alert(player, attack_name)
     "#{player} has no remaining pokemon, #{attack_name} failed."
   end

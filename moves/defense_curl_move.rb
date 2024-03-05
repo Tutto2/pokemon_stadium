@@ -13,7 +13,7 @@ class DefenseCurlMove < Move
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     stat_changes
     pokemon.defense_curl_power_up
   end

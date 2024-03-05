@@ -9,12 +9,12 @@ class HypnosisMove < Move
       pp: 20,
       category: :status,
       precision: 60,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     health_condition_apply(pokemon_target, SleepCondition.get_asleep)
   end
 end

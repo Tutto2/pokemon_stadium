@@ -10,7 +10,8 @@ class DischargeMove < Move
       type: Types::ELECTRIC,
       pp: 15,
       category: :special,
-      power: 80
+      power: 80,
+      target: 'all_except_self'
       )
   end
 

@@ -11,7 +11,8 @@ class BlizzardMove < Move
       pp: 5,
       category: :special,
       power: 110,
-      precision: 70
+      precision: 70,
+      target: 'all_opps'
       )
   end
 

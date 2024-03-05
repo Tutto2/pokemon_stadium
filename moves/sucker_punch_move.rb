@@ -15,16 +15,14 @@ class SuckerPunchMove < Move
   end
 
   def precision
-    index = 0
-    pokemon_target.trainer.current_pokemons.each.with_index do |curr_pok, i|
-      index = i if curr_pok == pokemon_target
-    end
+    pokemon_target = targets[0]
+    index = pokemon_target.field_position > 2 ? 1 : 0
     atk = pokemon_target.trainer.action[index]
 
-    atk.behaviour.category != :status && target_slower?(atk) ? 100 : 0
+    atk.behaviour.category != :status && target_slower?(pokemon_target, atk) ? 100 : 0
   end
 
-  def target_slower?(atk)
+  def target_slower?(pokemon_target, atk)
     atk.priority < self.priority || (atk.priority == self.priority && pokemon_target.actual_speed < pokemon.actual_speed)
   end
 end

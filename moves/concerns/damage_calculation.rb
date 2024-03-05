@@ -11,16 +11,19 @@ file_paths.each do |file_path|
 end
 
 module DamageFormula
-  def damage_calculation(effect)
-    @effect = effect
+  attr_accessor :pokemon_target, :effectiveness
+
+  def damage_calculation(pokemon_target)
+    @pokemon_target = pokemon_target
+    @effectiveness = effect(pokemon_target)
+    
     perform_dmg(damage_formula(crit_chance))
   end 
 
   def perform_dmg(dmg)
-    pokemon.successful_perform
     target_initial_hp = pokemon_target.hp.curr_value
 
-    return protected_itself if protected?
+    return protected_itself if protected?(pokemon_target)
     return BattleLog.instance.log(MessagesPool.no_dmg_msg(pokemon_target.name)) if dmg <= 0 && category != :status
     return substitute_take_dmg(dmg) if !pokemon_target.volatile_status[:substitute].nil? && !sound_based?
 
@@ -32,7 +35,8 @@ module DamageFormula
 
     dmg_value = target_initial_hp - pokemon_target.hp.curr_value
     BattleLog.instance.log(MessagesPool.dmg_recieved_msg(pokemon_target.name, dmg_value))
-    pokemon_target.harm_recieved(dmg)
+    pokemon_target.harm_recieved(dmg, pokemon)
+    pokemon.successful_perform
     drain_calculation(dmg)
     recoil_calculation(dmg)
     defrost_evaluation
@@ -60,7 +64,7 @@ module DamageFormula
     burn = burn_condition
     
     BattleLog.instance.log(MessagesPool.attack_power_msg(power))
-    (0.01*bonus*effect*variation*vulnerability*burn*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*attack.power*attk/defn)/50.0 )).to_i
+    (0.01*bonus*effectiveness*variation*vulnerability*burn*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*power*attk/defn)/50.0 )).to_i
   end
 
   def crit_chance

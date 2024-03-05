@@ -2,12 +2,11 @@ require_relative "messages_pool"
 require_relative "actions/menu"
 
 class Trainer
-  attr_accessor :name, :team, :current_pokemons, :action, :opponents, :teammate, :data, :battleground
+  attr_accessor :name, :team, :action, :opponents, :teammate, :data, :battleground
 
   def initialize(name:)
     @name = name
     @team = []
-    @current_pokemons = []
     @action = []
     @opponents = []
     @teammate = nil
@@ -76,17 +75,15 @@ class Trainer
 
   def select_pokemon(user_pokemon, index, source)
     next_pokemon = team[index]
+    position = user_pokemon.field_position
+    next_pokemon.field_position = position
 
     if source == :baton_pass
       baton_pass_stats(user_pokemon, next_pokemon)
       baton_pass_volatile_status(user_pokemon, next_pokemon)
     end
 
-    user_pokemon.stats.each do |stat|
-      stat.reset_stat
-    end
-    user_pokemon.reinit_all_metadata
-    user_pokemon.reinit_volatile_condition
+    user_pokemon.got_out_of_battle
 
     SwitchAction.new(
       speed: user_pokemon.actual_speed,

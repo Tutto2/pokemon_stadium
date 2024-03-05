@@ -1,14 +1,13 @@
 require_relative "volatile_status"
 
 class BoundStatus < VolatileStatus
-  def self.get_bound(name, user, opponent)
+  def self.get_bound(name, user)
     new(
       name: :bound,
       duration: rand(4..5),
       data: {
         name: name,
-        user: user,
-        opponent: opponent
+        user: user
       }
     )
   end
@@ -20,6 +19,7 @@ class BoundStatus < VolatileStatus
   end
 
   def wear_off?
-    turn == duration || data.user != data.opponent.current_pokemons
+    pokemon = data.user
+    turn == duration || !(pokemon.trainer.battleground.field.positions.any? { |_, pok| pok == pokemon })
   end
 end

@@ -9,7 +9,8 @@ class HyperVoiceMove < Move
       type: Types::NORMAL,
       pp: 10,
       category: :special,
-      power: 90
+      power: 90,
+      target: 'all_opps'
       )
   end
 end

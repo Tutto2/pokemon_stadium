@@ -12,7 +12,7 @@ class EndureMove < Move
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     BattleLog.instance.log(MessagesPool.endure_msg(pokemon.name))
     pokemon.will_survive
   end

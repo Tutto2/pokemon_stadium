@@ -11,7 +11,7 @@ class LeechSeedMove < Move
       )
   end
   
-  def status_effect
-    volatile_status_apply(pokemon_target, SeededStatus.get_seeded(pokemon.trainer))
+  def status_effect(pokemon_target)
+    volatile_status_apply(pokemon_target, SeededStatus.get_seeded(pokemon))
   end
 end

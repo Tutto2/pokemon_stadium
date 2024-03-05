@@ -9,7 +9,8 @@ class RoarMove < Move
       type: Types::NORMAL,
       pp: 20,
       category: :status,
-      priority: -6
+      priority: -6,
+      target: 'one_opp'
       )
   end
 end

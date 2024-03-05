@@ -9,12 +9,12 @@ class SingMove < Move
       pp: 15,
       category: :status,
       precision: 55,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     health_condition_apply(pokemon_target, SleepCondition.get_asleep)
   end
 end

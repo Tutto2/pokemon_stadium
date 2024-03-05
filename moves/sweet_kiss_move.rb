@@ -8,12 +8,12 @@ class SweetKissMove < Move
       pp: 10,
       category: :status,
       precision: 75,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
   
   private
-  def status_effect
+  def status_effect(pokemon_target)
     volatile_status_apply(pokemon_target, ConfusionStatus.get_confused)
   end
 end

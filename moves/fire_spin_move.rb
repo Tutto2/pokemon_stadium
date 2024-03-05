@@ -16,6 +16,6 @@ class FireSpinMove < Move
   end
 
   def secondary_effect
-    volatile_status_apply(pokemon_target, BoundStatus.get_bound(attack_name, pokemon, pokemon.trainer))
+    volatile_status_apply(pokemon_target, BoundStatus.get_bound(attack_name, pokemon))
   end
 end

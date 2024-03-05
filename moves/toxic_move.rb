@@ -9,12 +9,12 @@ class ToxicMove < Move
       pp: 10,
       category: :status,
       precision: 90,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     health_condition_apply(pokemon_target, BadlyPoisonCondition.get_badly_poisoned)
   end
 end

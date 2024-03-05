@@ -21,7 +21,7 @@ class PhantomForceMove < Move
   end
 
   def second_turn_action
-    protect_evaluation
+    protect_evaluation(targets[0])
     execute
     pokemon.vulnerable_again
     end_turn_action

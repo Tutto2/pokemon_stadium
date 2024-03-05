@@ -9,7 +9,7 @@ module SwitchAfterAttack
     team.all?(&:fainted?)
   end
 
-  def status_effect
+  def status_effect(pokemon_target)
     switch_effect
   end
 

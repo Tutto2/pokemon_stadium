@@ -6,11 +6,12 @@ class PerishSongMove < Move
       attack_name: :perish_song,
       type: Types::NORMAL,
       pp: 5,
-      category: :status
+      category: :status,
+      target: 'one_opp'
       )
   end
 
-  def status_effect
+  def status_effect(pokemon_target)
     BattleLog.instance.log(MessagesPool.perish_song_apply_msg)
     volatile_status_apply(pokemon_target, PerishSongStatus.perish_song)
     volatile_status_apply(pokemon, PerishSongStatus.perish_song)

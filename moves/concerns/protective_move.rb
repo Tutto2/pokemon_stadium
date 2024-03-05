@@ -9,7 +9,7 @@ module ProtectiveMove
     (1.0 / 3.0) ** count
   end
 
-  def status_effect
+  def status_effect(pokemon_target)
     if rand < chance_of_succeed
       pokemon.is_protected(attack_name)
       @successful = true

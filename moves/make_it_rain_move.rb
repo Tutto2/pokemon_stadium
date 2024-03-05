@@ -11,7 +11,8 @@ class MakeItRainMove < Move
       type: Types::STEEL,
       pp: 5,
       category: :special,
-      power: 120
+      power: 120,
+      target: 'all_opps'
       )
   end
 

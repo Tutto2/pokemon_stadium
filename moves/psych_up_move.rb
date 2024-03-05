@@ -8,12 +8,13 @@ class PsychUpMove < Move
       attack_name: :psych_up,
       type: Types::NORMAL,
       pp: 10,
-      category: :status
+      category: :status,
+      target: 'one_opp'
       )
   end
 
-  def status_effect
+  def status_effect(pokemon_target)
     BattleLog.instance.log(MessagesPool.psych_up_msg(pokemon.name, pokemon_target.name))
-    migrate_stat_stages
+    migrate_stat_stages(pokemon_target)
   end
 end

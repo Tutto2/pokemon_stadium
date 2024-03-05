@@ -14,7 +14,7 @@ class RecoverMove < Move
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     gain_hp
   end
 

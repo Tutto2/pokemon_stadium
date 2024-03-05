@@ -15,6 +15,6 @@ class SappySeedMove < Move
   end
   
   def secondary_effect
-    volatile_status_apply(pokemon_target, SeededStatus.get_seeded(pokemon.trainer))
+    volatile_status_apply(pokemon_target, SeededStatus.get_seeded(pokemon))
   end
 end

@@ -13,7 +13,7 @@ class AmnesiaMove < Move
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     stat_changes
   end
 

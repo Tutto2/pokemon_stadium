@@ -9,7 +9,8 @@ class BoomburstMove < Move
       type: Types::NORMAL,
       pp: 10,
       category: :special,
-      power: 140
+      power: 140,
+      target: 'all_except_self'
       )
   end
 end

@@ -11,8 +11,8 @@ class SwitchAction < Action
     BattleLog.instance.log(MessagesPool.switch_action_msg(next_pokemon.name))
     
     field_positions = trainer.battleground.field.positions
-    user = field_positions.find { |i, pok| pok == user_pokemon }
+    user = user_pokemon.field_position
 
-    field_positions[user[0]] = next_pokemon
+    field_positions[user] = next_pokemon
   end
 end

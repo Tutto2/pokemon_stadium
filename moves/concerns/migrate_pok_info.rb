@@ -1,7 +1,7 @@
 require_relative "../move"
 
 module MigratePokInfo
-  def migrate_stat_stages
+  def migrate_stat_stages(pokemon_target)
     stages = []
     pokemon_target.stats.each do |stat|
       stages << stat.stage unless stat.hp?

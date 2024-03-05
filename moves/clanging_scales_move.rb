@@ -11,7 +11,8 @@ class ClangingScalesMove < Move
       type: Types::DRAGON,
       pp: 5,
       category: :special,
-      power: 110
+      power: 110,
+      target: 'all_opps'
       )
   end
 

@@ -10,7 +10,8 @@ class ClearSmogMove < Move
       type: Types::POISON,
       pp: 15,
       category: :special,
-      power: 50
+      power: 50,
+      target: 'one_opp'
       )
   end
 

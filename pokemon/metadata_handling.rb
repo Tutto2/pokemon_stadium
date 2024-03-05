@@ -33,8 +33,9 @@ module MetadataHandling
     @metadata[:waiting] = 0
   end
 
-  def harm_recieved(dmg)
+  def harm_recieved(dmg, pokemon)
     @metadata[:harm] = dmg
+    @metadata[:attacker] = pokemon
   end
 
   def got_harm?

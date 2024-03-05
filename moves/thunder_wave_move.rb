@@ -9,12 +9,12 @@ class ThunderWaveMove < Move
       pp: 20,
       category: :status,
       precision: 90,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     if pokemon_target.types.any? { |type| type == Types::ELECTRIC || type == Types::GROUND }
       BattleLog.instance.log(MessagesPool.no_affect_target_msg(pokemon_target.name))
     else

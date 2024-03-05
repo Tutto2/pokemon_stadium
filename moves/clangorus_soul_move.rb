@@ -15,7 +15,7 @@ class ClangorusSoulMove < Move
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     return BattleLog.instance.log(MessagesPool.attack_failed_msg) if pokemon.hp_value <= (pokemon.hp_total / 3.0)
     stat_changes
   end

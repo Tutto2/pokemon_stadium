@@ -7,12 +7,12 @@ class ConfuseRayMove < Move
       type: Types::GHOST,
       pp: 10,
       category: :status,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
   
   private
-  def status_effect
+  def status_effect(pokemon_target)
     volatile_status_apply(pokemon_target, ConfusionStatus.get_confused)
   end
 end

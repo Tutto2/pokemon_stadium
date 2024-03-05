@@ -48,7 +48,7 @@ class Menu
       next_attack = user_pokemon.attacks[attk_num - 1]
 
       if next_attack.attack_name == :baton_pass
-        back_up_team = trainer.team.reject { |pok| trainer.battleground.field.positions.values.include?(pok) }
+        back_up_team = trainer.team.reject { |pok| !pok.field_position.nil? }
 
         if back_up_team.all?(&:fainted?)
           MessagesPool.unable_to_use_attack_alert
@@ -108,15 +108,14 @@ class Menu
   end
 
   def self.target_selection(user_pokemon, target, battle_type)
-    target == 'one_opp' ? select_opp(user_pokemon, battle_type) : auto_target_select(user_pokemon, target, battle_type)
+    target == 'one_opp' ? select_opp(user_pokemon, battle_type) : nil
   end
 
   def self.select_opp(user_pokemon, battle_type)
     field_positions = user_pokemon.trainer.battleground.field.positions
+    opponents = field_positions.reject { |i, pok| pok == user_pokemon }
 
     if battle_type == 'single' || battle_type == 'royale'
-      opponents = field_positions.reject { |i, pok| pok == user_pokemon }
-
       opponents.size > 1 ? pick_a_target(opponents) : opponents.keys
     else
       user = field_positions.find { |i, pok| pok == user_pokemon }
@@ -126,6 +125,7 @@ class Menu
       else
         opponents = field_positions.reject { |i, pok| i.odd? }
       end
+      
       pick_a_target(opponents)
     end
   end
@@ -136,7 +136,7 @@ class Menu
     index = gets.chomp.to_i
 
     if target_index_validation?(targets, index)
-      [targets.keys[index]]
+      [index]
     else
       MessagesPool.invalid_option
       return pick_a_target(targets)
@@ -155,27 +155,27 @@ class Menu
   end
 
   def self.auto_target_select(user_pokemon, target, battle_type)
-    field_position = user_pokemon.trainer.battleground.field.positions
-    user_position = field_position.find { |i, pok| pok == user_pokemon }
+    field_positions = user_pokemon.trainer.battleground.field.positions
+    user_position = user_pokemon.field_position
 
     case target
     when 'self'
-      [user_position[0]]
+      [user_position]
     when 'all_opps'
-      both_opponents_selection(field_position, user_position)
+      both_opponents_selection(field_positions, user_position)
     when 'random_opp'
-      random_opponent_selection(user_pokemon, field_position, user_position, battle_type)
+      random_opponent_selection(user_pokemon, field_positions, user_position, battle_type)
     when 'teammate'
-      battle_type == 'double' ? teammate_selection(user_pokemon, field_position, user_position) : [nil]
+      battle_type == 'double' ? teammate_selection(user_pokemon, field_positions, user_position) : [nil]
     when 'all_except_self'
-      all_others = field_position.reject { |i, pok| pok == user_pokemon }
+      all_others = field_positions.reject { |i, pok| pok == user_pokemon }
       all_others.keys
     end
   end
 
-  def both_opponents_selection(field_position, user_position)
+  def both_opponents_selection(field_positions, user_position)
     opponents = {}
-    if user_position[0].even?
+    if user_position.even?
       opponents = field_positions.reject { |i, pok| i.even? }
     else
       opponents = field_positions.reject { |i, pok| i.odd? }
@@ -194,7 +194,7 @@ class Menu
 
   def teammate_selection(user_pokemon, field_position, user_position)
     allies = {}
-    if user_position[0].even?
+    if user_position.even?
       allies = field_positions.reject { |i, pok| i.odd? }
     else
       allies = field_positions.reject { |i, pok| i.even? }

@@ -11,12 +11,12 @@ class SwaggerMove < Move
       pp: 20,
       category: :status,
       precision: 85,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
   
   private
-  def status_effect
+  def status_effect(pokemon_target)
     stat_changes(pokemon_target)
   end
 

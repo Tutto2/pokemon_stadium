@@ -7,12 +7,12 @@ class AttractMove < Move
       type: Types::NORMAL,
       pp: 15,
       category: :status,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
   
   private
-  def status_effect
+  def status_effect(pokemon_target)
     if pokemon.opposite_gender(pokemon_target)
       volatile_status_apply(pokemon_target, InfatuationStatus.get_infatuated)
     end

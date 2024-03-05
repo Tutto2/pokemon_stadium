@@ -10,7 +10,8 @@ class ExplosionMove < Move
       type: Types::NORMAL,
       pp: 5,
       category: :physical,
-      power: 250
+      power: 250,
+      target: 'all_except_self'
       )
   end
 

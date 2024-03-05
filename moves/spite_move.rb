@@ -6,14 +6,15 @@ class SpiteMove < Move
       attack_name: :spite,
       type: Types::GHOST,
       pp: 10,
-      category: :status
+      category: :status,
+      target: 'one_opp'
       )
   end
 
   private
-  def status_effect
-    previous_atk = pokemon.trainer.battlefield.attack_list["#{pokemon_target.name}"].behaviour
-    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if previous_atk.nil? || previous_atk.pp <= 0
+  def status_effect(pokemon_target)
+    previous_atk = pokemon.trainer.battleground.attack_list["#{pokemon_target.name}"]
+    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if previous_atk.nil?
 
     BattleLog.instance.log(MessagesPool.spite_msg(pokemon_target.name, previous_atk.attack_name))
     (previous_atk.pp -= 4).clamp(0, 40)

@@ -9,12 +9,12 @@ class PainSplitMove < Move
       type: Types::NORMAL,
       pp: 20,
       category: :status,
-      target: :pokemon_target
+      target: 'one_opp'
       )
   end
 
   private
-  def status_effect
+  def status_effect(pokemon_target)
     BattleLog.instance.log(MessagesPool.pain_split_msg)
 
     if pokemon.hp_value < pokemon_target.hp_value
