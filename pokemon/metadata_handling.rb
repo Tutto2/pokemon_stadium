@@ -14,6 +14,7 @@ module MetadataHandling
   end
 
   def count_attack_turns
+    return if metadata[:turn].nil?
     @metadata[:turn] += 1
   end
 
@@ -110,7 +111,7 @@ module MetadataHandling
   end
 
   def was_successful?
-    @metadata[:perform] == "success"
+    metadata[:perform] == "success"
   end
 
   def reinit_metadata(move)

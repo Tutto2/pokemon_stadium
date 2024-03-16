@@ -67,14 +67,13 @@ class Menu
 
   def self.struggle_move(trainer, user_pokemon)
     MessagesPool.no_remaining_moves_alert(user_pokemon.name)
-    target_index = auto_target_select(user_pokemon, 'random_opp', battle_type)
-
+    
     AttackAction.new(
       speed: user_pokemon.actual_speed,
       behaviour: StruggleMove.learn,
       trainer: trainer,
       user_pokemon: user_pokemon,
-      target: target_index
+      target: nil
     )
   end
 
@@ -108,15 +107,19 @@ class Menu
   end
 
   def self.target_selection(user_pokemon, target, battle_type)
-    target == 'one_opp' ? select_opp(user_pokemon, battle_type) : nil
+    if target == 'one_opp' || target == 'anyone_except_self'
+      select_opp(user_pokemon, target, battle_type)
+    else
+      nil
+    end
   end
 
-  def self.select_opp(user_pokemon, battle_type)
+  def self.select_opp(user_pokemon, target, battle_type)
     field_positions = user_pokemon.trainer.battleground.field.positions
     opponents = field_positions.reject { |i, pok| pok == user_pokemon }
 
-    if battle_type == 'single' || battle_type == 'royale'
-      opponents.size > 1 ? pick_a_target(opponents) : opponents.keys
+    if battle_type == 'single' || battle_type == 'royale' || target == 'anyone_except_self'
+      opponents.size > 1 ? pick_a_target(user_pokemon, opponents, battle_type) : opponents.keys
     else
       user = field_positions.find { |i, pok| pok == user_pokemon }
       user_key = user[0]
@@ -126,12 +129,40 @@ class Menu
         opponents = field_positions.reject { |i, pok| i.odd? }
       end
       
-      pick_a_target(opponents)
+      pick_a_target(user_pokemon, opponents, battle_type)
     end
   end
 
-  def self.pick_a_target(targets)
-    show_posible_targets(targets.values)
+  def self.pick_a_target(user_pokemon, targets, battle_type)
+    teammate = []
+    if battle_type == 'double'
+      if user_pokemon.field_position.even?
+        targets.each do |i, pok|
+          next if i.odd?
+          teammate << pok
+        end
+      else
+        battle_type == 'double'
+        targets.each do |i, pok|
+          next if i.even?
+          teammate << pok
+        end
+      end
+    end
+
+    if !teammate.empty?
+      targets = targets.reject { |i, pok| pok == teammate[0] }
+
+      targets.each do |k, v|
+        BattleLog.instance.log("pos: #{k} - #{v.name}")
+      end
+    end
+
+    targets = targets.values
+    targets = targets + teammate
+    targets = targets.flatten
+
+    show_posible_targets(targets)
     MessagesPool.targets_index
     index = gets.chomp.to_i
 
@@ -152,56 +183,6 @@ class Menu
   def self.target_index_validation?(targets, index)
     return false if !((1..(targets.size)).include?(index))
     true
-  end
-
-  def self.auto_target_select(user_pokemon, target, battle_type)
-    field_positions = user_pokemon.trainer.battleground.field.positions
-    user_position = user_pokemon.field_position
-
-    case target
-    when 'self'
-      [user_position]
-    when 'all_opps'
-      both_opponents_selection(field_positions, user_position)
-    when 'random_opp'
-      random_opponent_selection(user_pokemon, field_positions, user_position, battle_type)
-    when 'teammate'
-      battle_type == 'double' ? teammate_selection(user_pokemon, field_positions, user_position) : [nil]
-    when 'all_except_self'
-      all_others = field_positions.reject { |i, pok| pok == user_pokemon }
-      all_others.keys
-    end
-  end
-
-  def both_opponents_selection(field_positions, user_position)
-    opponents = {}
-    if user_position.even?
-      opponents = field_positions.reject { |i, pok| i.even? }
-    else
-      opponents = field_positions.reject { |i, pok| i.odd? }
-    end
-    opponents.keys
-  end
-
-  def random_opponent_selection(user_pokemon, field_position, user_position, battle_type)
-    if battle_type == 'double'
-      [both_opponents_selection(field_position, user_position).sample]
-    else
-      opponents = field_position.reject { |i, pok| pok == user_pokemon }
-      [opponents.keys.sample]
-    end
-  end
-
-  def teammate_selection(user_pokemon, field_position, user_position)
-    allies = {}
-    if user_position.even?
-      allies = field_positions.reject { |i, pok| i.odd? }
-    else
-      allies = field_positions.reject { |i, pok| i.even? }
-    end
-
-    teammate = allies.reject { |i, pok| pok == user_pokemon }
-    teammate.keys
   end
   
   def self.pokemon_selection_index(trainer, user_pokemon, source: nil)

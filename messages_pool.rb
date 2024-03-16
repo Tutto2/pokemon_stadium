@@ -105,7 +105,8 @@ class MessagesPool
   end
 
   def self.posible_targets(pok, index)
-    BattleLog.instance.log("#{index}- #{pok.to_s}  #{pok.hp_value} / #{pok.hp_total} hp")
+    #  #{pok.hp_value} / #{pok.hp_total} hp
+    BattleLog.instance.log("#{index}- #{pok.to_s} ")
     BattleLog.instance.display_messages
   end
 
@@ -123,11 +124,12 @@ class MessagesPool
     BattleLog.instance.log("#{pok.name} - #{pok.hp_value} / #{pok.hp_total} hp (#{pok.types.map(&:to_s).join("/")}) #{pok.health_condition&.name}")
     pok.volatile_status.each { |k, v| BattleLog.instance.log("#{k}")}
 
-    # pok.stats.each do |stat|
-    #   next if stat == :hp || stat == :spd
-    #   BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
-    # end
-    # BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
+    pok.stats.each do |stat|
+      next if stat == :hp || stat == :spd
+      BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
+    end
+    BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
+    BattleLog.instance.log("position: #{pok.field_position}")
     BattleLog.instance.log("\n")
     BattleLog.instance.display_messages
   end

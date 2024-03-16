@@ -15,9 +15,8 @@ class CopycatMove < Move
 
   private
   def status_effect(pokemon_target)
-    atk_list = pokemon.trainer.battleground.attack_list
-    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if atk_list.size < 2 
-    last_attack = atk_list.values.last
+    last_attack = pokemon.trainer.battleground.attack_list["last_attack"]
+    return BattleLog.instance.log(MessagesPool.attack_failed_msg) if last_attack.attack_name == :copycat
     last_attack.perform_attack(pokemon, [pokemon_target])
   end
 end

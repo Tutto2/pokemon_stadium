@@ -19,6 +19,8 @@ class SuckerPunchMove < Move
     index = pokemon_target.field_position > 2 ? 1 : 0
     atk = pokemon_target.trainer.action[index]
 
+    return 0 if atk.behaviour.is_a?(Pokemon)
+
     atk.behaviour.category != :status && target_slower?(pokemon_target, atk) ? 100 : 0
   end
 

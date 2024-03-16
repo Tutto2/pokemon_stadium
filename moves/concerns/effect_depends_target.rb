@@ -1,8 +1,12 @@
 require_relative "../move"
 
 module EffectDependsTarget
-  def perform_normal_attack
-    alter_effect_activated? ? alter_effect : execute
+  def evaluate_special_perform
+    if alter_effect_activated?
+      alter_effect
+    else
+      execute
+    end
   end
   
   def alter_effect_activated?; end

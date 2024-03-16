@@ -11,17 +11,18 @@ class PollenPuffMove < Move
       type: Types::BUG,
       pp: 15,
       category: :special,
-      power: 90
+      power: 90,
+      target: 'teammate'
       )
   end
 
   def alter_effect_activated?
-    pokemon != pokemon_target
+    pokemon.allied?(targets[0])
   end
 
   def alter_effect
     atk_performed
-    gain_hp
+    gain_hp(targets[0])
   end
 
   def value

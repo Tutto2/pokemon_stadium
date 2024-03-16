@@ -25,9 +25,9 @@ class Pokedex < Pokemon
         gender: :female,
         weight: 6,
         attacks: [
-          ElectroBallMove.learn,
-          VoltSwitchMove.learn,
-          ThunderWaveMove.learn,
+          PollenPuffMove.learn,
+          DischargeMove.learn,
+          CurseMove.learn,
           AgilityMove.learn
         ]
       )
@@ -46,7 +46,7 @@ class Pokedex < Pokemon
         gender: :male,
         weight: 9,
         attacks: [
-          FakeOutMove.learn,
+          OutrageMove.learn,
           HydroPumpMove.learn,
           BlizzardMove.learn,
           ProtectMove.learn

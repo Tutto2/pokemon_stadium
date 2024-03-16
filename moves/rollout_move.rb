@@ -5,6 +5,8 @@ class RolloutMove < Move
   include HasSeveralTurns
 
   def self.learn
+    attr_reader :chain
+
     new(
       attack_name: :rollout,
       type: Types::ROCK,
@@ -22,9 +24,6 @@ class RolloutMove < Move
       pwr
     end
   end
-
-  private
-  attr_reader :chain
 
   def first_turn_action
     @chain = 0

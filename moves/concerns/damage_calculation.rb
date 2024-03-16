@@ -21,11 +21,19 @@ module DamageFormula
   end 
 
   def perform_dmg(dmg)
+    @pokemon_target = targets[0] if pokemon_target.nil?
+      
     target_initial_hp = pokemon_target.hp.curr_value
+    case targets.size
+    when 2
+      dmg = dmg * 0.75
+    when 3
+      dmg = dmg * 0.5
+    end
 
-    return protected_itself if protected?(pokemon_target)
+    return protected_itself(pokemon_target) if protected?(pokemon_target)
     return BattleLog.instance.log(MessagesPool.no_dmg_msg(pokemon_target.name)) if dmg <= 0 && category != :status
-    return substitute_take_dmg(dmg) if !pokemon_target.volatile_status[:substitute].nil? && !sound_based?
+    return substitute_take_dmg(dmg) if !pokemon_target&.volatile_status[:substitute].nil? && !sound_based?
 
     pokemon_target.hp.decrease(dmg)
     if !pokemon_target.metadata[:will_survive].nil? && pokemon_target.hp.curr_value <= 0

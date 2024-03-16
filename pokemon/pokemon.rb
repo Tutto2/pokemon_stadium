@@ -70,15 +70,35 @@ class Pokemon
   end
 
   def assing_target(attack, target_positions)
-    targets = []
+    tar = attack.target
     battle_type = trainer.battleground.battle_type
+
+    return [self] if tar == 'self' || attack.return_dmg?
+    return [] if tar == 'teammate' && battle_type != 'double'
+
     field_positions = trainer.battleground.field.positions
     self_position = field_positions.find { |i, pok| pok == self }
     self_position_index = self_position[0]
 
-    if attack.target == 'self'
-      targets << self
-    elsif attack.target == 'all_opps'
+    if battle_type == 'single'
+      self_position_index.odd? ? [field_positions[2]] : [field_positions[1]]
+    elsif battle_type == 'double' && target_positions != nil && target_positions.size == 1
+      pos = target_positions[0]
+      if pos == 3
+        special_targeting('teammate', field_positions, self_position_index)
+      else
+        self_position_index.odd? ? [field_positions[pos * 2]] : [field_positions[(pos * 2) - 1]]
+      end
+    else
+      special_targeting(tar, field_positions, self_position_index)
+    end
+  end
+
+  def special_targeting(tar, field_positions, self_position_index)
+    targets = []
+
+    case tar
+    when 'all_opps'
       if self_position_index.odd?
         targets << field_positions[2]
         targets << field_positions[4]
@@ -86,37 +106,29 @@ class Pokemon
         targets << field_positions[1]
         targets << field_positions[3]
       end
-    elsif attack.target == 'random_opp'
+    when 'random_opp'
       x = rand(1..2)
       if self_position_index.odd?
         targets << field_positions[x * 2]
       else
         targets << field_positions[(x * 2) - 1]
       end
-    elsif attack.target == 'all_except_self'
+    when 'all_except_self'
       field_positions.each do |index, pok|
         next if index == self_position_index
         targets << pok
       end
-    elsif attack.target == 'teammate'
+    when 'teammate'
       teammate_mapping = {
-        0 => 1,
-        1 => 0,
-        2 => 3,
-        3 => 2
+        1 => 3,
+        3 => 1,
+        2 => 4,
+        4 => 2
       }
       
-      targets << field_positions[teammate_mapping[self_position_index]]
-    elsif battle_type == 'single'
-      self_position_index.odd? ? targets << field_positions[2] : targets << field_positions[1]
-    elsif battle_type == 'double'
-      target_positions.each do |pos|
-        if self_position_index.odd?
-          targets << field_positions[pos * 2]
-        else
-          targets << field_positions[(pos * 2) - 1]
-        end
-      end
+      teammate_index = teammate_mapping[self_position_index]
+      pok = field_positions[teammate_index]
+      targets << pok
     end
 
     targets
@@ -226,7 +238,13 @@ class Pokemon
   end
 
   def allied?(other)
-    trainer == other.trainer
+    if field_position.even?
+      return true if other.field_position.even?
+      false
+    else
+      return true if other.field_position.odd?
+      false
+    end
   end
 
   def got_out_of_battle

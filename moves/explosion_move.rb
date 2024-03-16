@@ -2,7 +2,7 @@ require_relative "move"
 
 class ExplosionMove < Move
   include BasicPhysicalAtk
-  include HasSecondaryEffect
+  include PostEffect
 
   def self.learn
     new(
@@ -16,7 +16,8 @@ class ExplosionMove < Move
   end
 
   private
-  def secondary_effect
+  def post_effect(pokemon)
     pokemon.hp.decrease(pokemon.hp_total).to_i
+    BattleLog.instance.log(MessagesPool.pok_fainted_msg(pokemon.name))
   end
 end

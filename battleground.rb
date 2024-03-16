@@ -131,16 +131,22 @@ class PokemonBattleField
         field.positions[field_position] = pok
       end
     elsif battle_type == 'double' && players.size == 4
+      pok = pok_selection.shift
       case index
       when 2
-        field.positions[3] = pok_selection.shift
+        field.positions[3] = pok
+        pok.field_position = 3
       when 3
-        field.positions[2] = pok_selection.shift
+        field.positions[2] = pok
+        pok.field_position = 2
       else
-        field.positions[index] = pok_selection.shift
+        field.positions[index] = pok
+        pok.field_position = index
       end
     else
-      field.positions[index] = pok_selection.shift
+      pok = pok_selection.shift
+      field.positions[index] = pok
+      pok.field_position = index
     end
   end
 
@@ -161,7 +167,7 @@ class PokemonBattleField
   def init_turn_actions
     MessagesPool.turn(turn)
     players.each { |player| clear_actions(player) }
-
+    
     until !field.any_pokemon_fainted?
       change_fainted_pokemon
     end
@@ -186,7 +192,12 @@ class PokemonBattleField
   end
 
   def last_pok_remainig?(player)
-    player.team.count { |pok| !pok.fainted? } == 1
+    if player.team.count { |pok| !pok.fainted? } == 1
+      last_pok = player.team.find { |pok| !pok.fainted? }
+      last_pok.field_position != nil
+    else
+      false
+    end
   end
 
   def display_pokemons
@@ -303,7 +314,6 @@ pokemons = [
   Pokedex.catch("Gholdengo"),
   Pokedex.catch("Zoroark-hisui"),
   Pokedex.catch("Dracanfly")
-  # Pokedex.catch("Dracanfly")
 ]
 
 puts PokemonBattleField.init_game(2, 'double', pokemons)

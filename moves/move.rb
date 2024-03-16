@@ -62,12 +62,9 @@ class Move
 
     BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
     
-    reassing_fainted_target
-
-    unless return_dmg?
-      return attack_failed! if targets.all?(&:fainted?) || targets.empty?
-    end
+    return attack_failed! if targets.empty? || ( targets.all?(&:fainted?) && targets.size > 1 )
     
+    reassing_fainted_target
     atk_performed
     evaluate_special_perform
   end
@@ -86,8 +83,8 @@ class Move
   def reassing_fainted_target
     battle_type = targets[0].trainer.battleground.battle_type
 
-    if battle_type == 'double' && targets.size > 1
-      targets_trim if targets.any?(&:fainted?)
+    if targets.size > 1 && targets.any?(&:fainted?)
+      targets_trim
     elsif battle_type == 'double' && targets.size == 1
       assing_other_opp if targets[0].fainted?
     end
@@ -108,7 +105,7 @@ class Move
       4 => 2
     }
 
-    @targets = pok_positions[teams_mapping[index]]
+    @targets = [pok_positions[teams_mapping[index]]]
   end
 
   def attack_failed!
@@ -131,7 +128,7 @@ class Move
     elsif return_dmg?
       return_dmg_effect
     elsif action_for_other_turn? && no_pending_action?
-      handle_additional_action
+      handle_additional_action(targets[0])
     else 
       execute
     end
@@ -154,7 +151,7 @@ class Move
   def return_dmg_effect
     return attack_failed! unless triggered?
 
-    @targets = [metadata[:attacker]]
+    @targets = [pokemon.metadata[:attacker]]
     assing_other_opp if targets[0].fainted? && targets[0].trainer.battleground.battle_type == 'double'
 
     if type == Types::FIGHTING && targets[0].types.any? { |type| type == Types::GHOST }
@@ -169,9 +166,9 @@ class Move
     pokemon.trainer.data[:pending_action].nil?
   end
   
-  def handle_additional_action
+  def handle_additional_action(pokemon_target)
     additional_action(pokemon)
-    handle_in_other_turn
+    handle_in_other_turn(pokemon_target)
   end
 
   def execute
@@ -189,6 +186,8 @@ class Move
       BattleLog.instance.log(MessagesPool.multi_hit_msg(pokemon_target.name, strikes_count)) if strikes_count > 1
       end_of_execution(pokemon_target)
       pokemon.trainer.battleground.attack_list["#{pokemon.name}"] = self.dup
+      pokemon.trainer.battleground.attack_list["last_attack"] = self.dup
+      BattleLog.instance.log(MessagesPool.leap)
     end
   end
 
@@ -249,8 +248,8 @@ class Move
   end
 
   def protected?(pokemon_target)
-    return true if attack_name == :pain_split && pokemon_target.is_protected?
-    return false if !pokemon_target.is_protected? || goes_through_protection? || pokemon_target == pokemon
+    return true if attack_name == :pain_split && pokemon_target&.is_protected?
+    return false if !pokemon_target&.is_protected? || goes_through_protection? || pokemon_target == pokemon
     true
   end
 
@@ -276,6 +275,7 @@ class Move
   def cast_additional_effect; end
 
   def end_of_execution(pokemon_target)
+    end_turn_action if !pokemon.was_successful?
     pokemon.reinit_metadata(self)
     return if effect(pokemon_target) == 0 && category != :status
 
@@ -324,7 +324,7 @@ class Move
     when :seeded then BattleLog.instance.log(MessagesPool.seed_apply(pokemon_target.name))
     when :substitute then BattleLog.instance.log(MessagesPool.substitute_apply(pokemon.name))
     when :bound then BattleLog.instance.log(MessagesPool.bound_apply(pokemon.name))
-    when :transformed then BattleLog.instance.log(MessagesPool.transform_apply(pokemon.name, pokemon_target.name))
+    when :transformed then BattleLog.instance.log(MessagesPool.transform_apply(pokemon.name, targets[0].name))
     end
   end
   

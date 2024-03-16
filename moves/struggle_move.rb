@@ -10,7 +10,8 @@ class StruggleMove < Move
       type: Types::NORMAL,
       pp: 1,
       category: :physical,
-      power: 50
+      power: 50,
+      target: 'random_opp'
       )
   end
 
