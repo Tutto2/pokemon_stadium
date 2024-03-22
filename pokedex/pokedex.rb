@@ -25,9 +25,9 @@ class Pokedex < Pokemon
         gender: :female,
         weight: 6,
         attacks: [
-          PollenPuffMove.learn,
+          VoltTackleMove.learn,
           DischargeMove.learn,
-          CurseMove.learn,
+          ThunderWaveMove.learn,
           AgilityMove.learn
         ]
       )

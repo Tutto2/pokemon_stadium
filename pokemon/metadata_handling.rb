@@ -36,7 +36,6 @@ module MetadataHandling
 
   def harm_recieved(dmg, pokemon)
     @metadata[:harm] = dmg
-    @metadata[:attacker] = pokemon
   end
 
   def got_harm?
@@ -76,8 +75,9 @@ module MetadataHandling
     @metadata[:protection_consecutive_uses] += 1
   end
 
-  def made_contact
+  def made_contact(pokemon)
     @metadata[:touched] = 1
+    @metadata[:attacker] = pokemon
   end
 
   def was_touched?

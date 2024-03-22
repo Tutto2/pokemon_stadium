@@ -13,7 +13,7 @@ class SeededStatus < VolatileStatus
     BattleLog.instance.log(MessagesPool.seeded_dmg_msg(pokemon.name, value.to_i))
     pokemon.hp.decrease(value.to_i)
 
-    index = opponent.field_position
+    index = data.field_position
     pok_to_heal = pokemon.trainer.battleground.field.positions[index]
     pok_to_heal.hp.increase(value.to_i)
   end

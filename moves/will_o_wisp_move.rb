@@ -14,7 +14,7 @@ class WillOWispMove < Move
   
   private
   def status_effect(pokemon_target)
-    health_condition_apply(pokemon_target, BurnCondition.get_burned)
+    health_condition_apply(pokemon_target, BurnCondition.get_burn)
   end
 end
 

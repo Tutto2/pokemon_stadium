@@ -2,7 +2,7 @@ require_relative "move"
 
 class ClangingScalesMove < Move
   include BasicSpecialAtk
-  include HasSecondaryEffect
+  include PostEffect
   include StatChanges
 
   def self.learn
@@ -17,7 +17,7 @@ class ClangingScalesMove < Move
   end
 
   private
-  def secondary_effect
+  def post_effect(pokemon)
     stat_changes
   end
 

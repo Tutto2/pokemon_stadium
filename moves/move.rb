@@ -62,9 +62,10 @@ class Move
 
     BattleLog.instance.log(MessagesPool.attack_being_used_msg(pokemon.name, self))
     
-    return attack_failed! if targets.empty? || ( targets.all?(&:fainted?) && targets.size > 1 )
-    
+    return attack_failed! if targets.empty?
     reassing_fainted_target
+    return attack_failed! if targets.all?(&:fainted?) && targets.size > 1
+    
     atk_performed
     evaluate_special_perform
   end
@@ -86,7 +87,7 @@ class Move
     if targets.size > 1 && targets.any?(&:fainted?)
       targets_trim
     elsif battle_type == 'double' && targets.size == 1
-      assing_other_opp if targets[0].fainted?
+      assing_other_opp if targets[0].fainted? || targets[0].nil?
     end
   end
 
@@ -131,6 +132,7 @@ class Move
       handle_additional_action(targets[0])
     else 
       execute
+      post_effect(pokemon) if has_post_effect?
     end
   end
 
@@ -172,6 +174,8 @@ class Move
   end
 
   def execute
+    return attack_failed! if targets.all?(&:fainted?)
+    
     hits = 0
     targets.each do |pokemon_target|
       return attack_missed! unless hit_chance(pokemon_target)
@@ -186,7 +190,7 @@ class Move
       BattleLog.instance.log(MessagesPool.multi_hit_msg(pokemon_target.name, strikes_count)) if strikes_count > 1
       end_of_execution(pokemon_target)
       pokemon.trainer.battleground.attack_list["#{pokemon.name}"] = self.dup
-      pokemon.trainer.battleground.attack_list["last_attack"] = self.dup
+      pokemon.trainer.battleground.attack_list["last_attack"] = self.dup unless attack_name == :copycat
       BattleLog.instance.log(MessagesPool.leap)
     end
   end
@@ -232,7 +236,7 @@ class Move
   def action(pokemon_target)
     main_effect(pokemon_target)
     if pokemon.was_successful?
-      pokemon_target.made_contact if category == :physical
+      pokemon_target.made_contact(pokemon) if category == :physical
       cast_additional_effect
     end
   end
@@ -280,7 +284,6 @@ class Move
     return if effect(pokemon_target) == 0 && category != :status
 
     end_of_action_message(pokemon_target)
-    post_effect(pokemon) if has_post_effect?
   end
 
   def end_of_action_message(pokemon_target)

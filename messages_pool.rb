@@ -105,8 +105,7 @@ class MessagesPool
   end
 
   def self.posible_targets(pok, index)
-    #  #{pok.hp_value} / #{pok.hp_total} hp
-    BattleLog.instance.log("#{index}- #{pok.to_s} ")
+    BattleLog.instance.log("#{index}- #{pok.to_s} #{pok.hp_value} / #{pok.hp_total} hp")
     BattleLog.instance.display_messages
   end
 
@@ -124,12 +123,12 @@ class MessagesPool
     BattleLog.instance.log("#{pok.name} - #{pok.hp_value} / #{pok.hp_total} hp (#{pok.types.map(&:to_s).join("/")}) #{pok.health_condition&.name}")
     pok.volatile_status.each { |k, v| BattleLog.instance.log("#{k}")}
 
-    pok.stats.each do |stat|
-      next if stat == :hp || stat == :spd
-      BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
-    end
-    BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
-    BattleLog.instance.log("position: #{pok.field_position}")
+    # pok.stats.each do |stat|
+    #   next if stat == :hp || stat == :spd
+    #   BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
+    # end
+    # BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
+    # BattleLog.instance.log("position: #{pok.field_position}")
     BattleLog.instance.log("\n")
     BattleLog.instance.display_messages
   end
@@ -269,6 +268,10 @@ class MessagesPool
   def self.stat_variation_msg(target, stat, text)
     "#{target}'s #{stat} #{text}"
   end
+
+  def self.focus_energy_msg(pok_name)
+    "#{pok_name} is getting pumped"
+  end
   
   def self.stat_at_max_msg(stat_name)
     "#{stat_name} won't go any higher!"
@@ -394,7 +397,7 @@ class MessagesPool
     "#{pok_name}'s substitute broke!"
   end
 
-  def self.endure_msg(pok_name)
+  def self.endured_msg(pok_name)
     "#{pok_name} endured the hit!"
   end
 

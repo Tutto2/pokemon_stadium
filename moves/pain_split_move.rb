@@ -13,8 +13,8 @@ class PainSplitMove < Move
       )
   end
 
-  private
   def status_effect(pokemon_target)
+    @pokemon_target = pokemon_target
     BattleLog.instance.log(MessagesPool.pain_split_msg)
 
     if pokemon.hp_value < pokemon_target.hp_value

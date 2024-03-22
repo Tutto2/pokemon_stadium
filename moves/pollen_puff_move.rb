@@ -12,7 +12,7 @@ class PollenPuffMove < Move
       pp: 15,
       category: :special,
       power: 90,
-      target: 'teammate'
+      target: 'anyone_except_self'
       )
   end
 

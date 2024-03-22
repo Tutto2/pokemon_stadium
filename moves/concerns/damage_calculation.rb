@@ -35,11 +35,11 @@ module DamageFormula
     return BattleLog.instance.log(MessagesPool.no_dmg_msg(pokemon_target.name)) if dmg <= 0 && category != :status
     return substitute_take_dmg(dmg) if !pokemon_target&.volatile_status[:substitute].nil? && !sound_based?
 
-    pokemon_target.hp.decrease(dmg)
     if !pokemon_target.metadata[:will_survive].nil? && pokemon_target.hp.curr_value <= 0
       pokemon_target.hp.endured_the_hit
-      BattleLog.instance.log(MessagesPool.endure_msg(pokemon_target.name))
+      BattleLog.instance.log(MessagesPool.endured_msg(pokemon_target.name))
     end
+    pokemon_target.hp.decrease(dmg)
 
     dmg_value = target_initial_hp - pokemon_target.hp.curr_value
     BattleLog.instance.log(MessagesPool.dmg_recieved_msg(pokemon_target.name, dmg_value))

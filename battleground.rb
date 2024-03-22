@@ -182,12 +182,13 @@ class PokemonBattleField
   def change_fainted_pokemon
     fainted_pok = field.positions.find { |i, pok| pok.fainted? }
     index = fainted_pok[0]
-    trainer = fainted_pok[1].trainer
+    pok = fainted_pok[1]
+    trainer = pok.trainer
 
     if (battle_type == 'double' && players.size == 2 && last_pok_remainig?(trainer)) || team_fainted?(trainer)
       field.positions.delete(index)
     else
-      Menu.pokemon_selection_index(trainer, fainted_pok[1], source: :turn_init).perform
+      Menu.pokemon_selection_index(trainer, pok, source: :turn_init).perform
     end
   end
 

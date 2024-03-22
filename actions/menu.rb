@@ -83,7 +83,7 @@ class Menu
     MessagesPool.select_attack_index
     attk_num = gets.chomp.to_i
 
-    if user_pokemon.has_banned_attack? && user_pokemon.attacks[attk_num - 1] == previous_action
+    if user_pokemon.has_banned_attack? && user_pokemon.attacks[attk_num - 1] == previous_action.behaviour
       MessagesPool.banned_attack_alert
       return select_attack_index(user_pokemon, previous_action)
     end
@@ -150,14 +150,7 @@ class Menu
       end
     end
 
-    if !teammate.empty?
-      targets = targets.reject { |i, pok| pok == teammate[0] }
-
-      targets.each do |k, v|
-        BattleLog.instance.log("pos: #{k} - #{v.name}")
-      end
-    end
-
+    targets = targets.reject { |i, pok| pok == teammate[0] } if !teammate.empty?
     targets = targets.values
     targets = targets + teammate
     targets = targets.flatten

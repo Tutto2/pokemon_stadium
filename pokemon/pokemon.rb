@@ -238,13 +238,7 @@ class Pokemon
   end
 
   def allied?(other)
-    if field_position.even?
-      return true if other.field_position.even?
-      false
-    else
-      return true if other.field_position.odd?
-      false
-    end
+    field_position.even? && other.field_position.even? || field_position.odd? && other.field_position.odd?
   end
 
   def got_out_of_battle

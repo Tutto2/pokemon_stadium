@@ -49,6 +49,8 @@ module SpecialFeatures
       roar
       perish_song
       transform
+      copycat
+      metronome
     ]
     ignore_protection_attacks.include?(attack_name)
   end

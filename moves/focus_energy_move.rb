@@ -11,6 +11,7 @@ class FocusEnergyMove < Move
   end
 
   def status_effect(pokemon_target)
+    BattleLog.instance.log(MessagesPool.focus_energy_msg(pokemon.name))
     pokemon.increase_crit_stage(2)
   end
 end

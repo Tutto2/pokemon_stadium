@@ -26,13 +26,13 @@ class FutureSightMove < Move
   end
 
   def wrapped_action(pokemon_target)
-      AttackAction.new(
+    AttackAction.new(
       speed: pokemon.actual_speed,
       behaviour: self,
       trainer: pokemon.trainer,
       user_pokemon: pokemon,
       target: pokemon_target_index(pokemon_target)
-      )
+    )
   end
 
   def pokemon_target_index(pokemon_target)
