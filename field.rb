@@ -12,4 +12,8 @@ class Field
   def any_pokemon_fainted?
     positions.any? { |_, pok| pok.fainted? }
   end
+
+  def change_weather(new_weather)
+    @weather = new_weather
+  end
 end

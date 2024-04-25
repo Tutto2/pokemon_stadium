@@ -134,22 +134,8 @@ class Menu
   end
 
   def self.pick_a_target(user_pokemon, targets, battle_type)
-    teammate = []
-    if battle_type == 'double'
-      if user_pokemon.field_position.even?
-        targets.each do |i, pok|
-          next if i.odd?
-          teammate << pok
-        end
-      else
-        battle_type == 'double'
-        targets.each do |i, pok|
-          next if i.even?
-          teammate << pok
-        end
-      end
-    end
-
+    teammate = user_pokemon.assing_teammate(user_pokemon.trainer.battleground.field.positions, user_pokemon.field_position) if battle_type == 'double'
+    
     targets = targets.reject { |i, pok| pok == teammate[0] } if !teammate.empty?
     targets = targets.values
     targets = targets + teammate

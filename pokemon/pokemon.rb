@@ -4,11 +4,13 @@ require_relative "../actions/action"
 require_relative "../types/type_factory"
 require_relative "stats"
 require_relative "metadata_handling"
+require_relative "targeting_handling"
 require_relative "../conditions/health_conditions/health_conditions"
 require "pry"
 
 class Pokemon
   include MetadataHandling
+  include TargetingHandling
 
   attr_reader :name, :lvl
   attr_accessor :stats, :types, :attacks, :gender, :weight, :condition, :trainer, :field_position, :metadata, :health_condition, :volatile_status
@@ -67,71 +69,6 @@ class Pokemon
     return if is_unable_to_move?
 
     attack.perform_attack(self, targets)
-  end
-
-  def assing_target(attack, target_positions)
-    tar = attack.target
-    battle_type = trainer.battleground.battle_type
-
-    return [self] if tar == 'self' || attack.return_dmg?
-    return [] if tar == 'teammate' && battle_type != 'double'
-
-    field_positions = trainer.battleground.field.positions
-    self_position = field_positions.find { |i, pok| pok == self }
-    self_position_index = self_position[0]
-
-    if battle_type == 'single'
-      self_position_index.odd? ? [field_positions[2]] : [field_positions[1]]
-    elsif battle_type == 'double' && target_positions != nil && target_positions.size == 1
-      pos = target_positions[0]
-      if pos == 3
-        special_targeting('teammate', field_positions, self_position_index)
-      else
-        self_position_index.odd? ? [field_positions[pos * 2]] : [field_positions[(pos * 2) - 1]]
-      end
-    else
-      special_targeting(tar, field_positions, self_position_index)
-    end
-  end
-
-  def special_targeting(tar, field_positions, self_position_index)
-    targets = []
-
-    case tar
-    when 'all_opps'
-      if self_position_index.odd?
-        targets << field_positions[2]
-        targets << field_positions[4]
-      else
-        targets << field_positions[1]
-        targets << field_positions[3]
-      end
-    when 'random_opp'
-      x = rand(1..2)
-      if self_position_index.odd?
-        targets << field_positions[x * 2]
-      else
-        targets << field_positions[(x * 2) - 1]
-      end
-    when 'all_except_self'
-      field_positions.each do |index, pok|
-        next if index == self_position_index
-        targets << pok
-      end
-    when 'teammate'
-      teammate_mapping = {
-        1 => 3,
-        3 => 1,
-        2 => 4,
-        4 => 2
-      }
-      
-      teammate_index = teammate_mapping[self_position_index]
-      pok = field_positions[teammate_index]
-      targets << pok
-    end
-
-    targets
   end
 
   def condition_disappear?

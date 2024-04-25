@@ -5,7 +5,11 @@ require_relative "field"
 require_relative "actions/menu"
 require_relative "actions/action_queue"
 require_relative "pokedex/pokedex"
+require "httparty"
 require "pry"
+
+binding.pry
+# require "rim_job"
 
 class PokemonBattleField
   attr_accessor :action_list, :attack_list
@@ -26,12 +30,10 @@ class PokemonBattleField
 
   def self.game_settings_verification(players_num, battle_type)
     case players_num
-    when 2 
-      true if battle_type == 'single' || battle_type == 'double'
-    when 3
-      true if battle_type == 'royale'
-    when 4
-      true if battle_type == 'royale' || battle_type == 'double'
+    when 2
+      battle_type == 'single' || battle_type == 'double'
+    when 3, 4
+      battle_type == 'royale' || battle_type == 'double'
     else
       false
     end
@@ -43,7 +45,7 @@ class PokemonBattleField
     end
   end
 
-  def initialize(players: [], battle_type:, all_pokes: [], action_list: {}, attack_list: {})
+  def initialize(players:, battle_type:, all_pokes:, action_list: {}, attack_list: {})
     @players = players
     @battle_type = battle_type
     @all_pokes = all_pokes
@@ -317,4 +319,4 @@ pokemons = [
   Pokedex.catch("Dracanfly")
 ]
 
-puts PokemonBattleField.init_game(2, 'double', pokemons)
+puts PokemonBattleField.init_game(4, 'double', pokemons)

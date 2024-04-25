@@ -67,7 +67,7 @@ module DamageFormula
     level = pokemon.lvl
     attk = crit && atk.stage < 0 ? atk.initial_value : atk.curr_value
     defn = crit && dfn.stage > 0 ? dfn.initial_value : dfn.curr_value
-    crit_value = crit || 1
+    crit_value = crit
     vulnerability = calc_vulnerability
     burn = burn_condition
     
@@ -81,7 +81,7 @@ module DamageFormula
     chance_by_stage = { 0 => 0.0417, 1 => 0.125, 2 => 0.5 }
 
     chance = chance_by_stage[pok_stage + move_stage] || 1
-    return false if rand > chance
+    return 1 if rand > chance
 
     BattleLog.instance.log(MessagesPool.critical_hit_msg)
     1.5

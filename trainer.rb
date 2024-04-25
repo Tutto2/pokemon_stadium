@@ -2,13 +2,12 @@ require_relative "messages_pool"
 require_relative "actions/menu"
 
 class Trainer
-  attr_accessor :name, :team, :action, :opponents, :teammate, :data, :battleground
+  attr_accessor :name, :team, :action, :teammate, :data, :battleground
 
   def initialize(name:)
     @name = name
     @team = []
     @action = []
-    @opponents = []
     @teammate = nil
     @battleground = nil
     @data = {}
@@ -34,7 +33,7 @@ class Trainer
       @team.each { |pok| pok.trainer = self }
     else
       MessagesPool.invalid_pokemon_selection
-      return team_build(pokemons)
+      return team_build(pokemons, players_num)
     end 
   end
 
@@ -44,7 +43,6 @@ class Trainer
 
   def assing_player_team(index, players, battleground)
     @battleground = battleground
-    @opponents = players.reject { |player| player == self }
 
     if battleground.battle_type == 'double' && players.size == 4
       teammate_mapping = {
@@ -55,7 +53,6 @@ class Trainer
       }
 
       @teammate = players[teammate_mapping[index]]
-      @opponents -= [teammate]
     end
   end
   

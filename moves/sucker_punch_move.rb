@@ -16,7 +16,7 @@ class SuckerPunchMove < Move
 
   def precision
     pokemon_target = targets[0]
-    index = pokemon_target.field_position > 2 ? 1 : 0
+    index = pokemon_target.field_position > 2 && pokemon_target.trainer.teammate.nil? ? 1 : 0
     atk = pokemon_target.trainer.action[index]
 
     return 0 if atk.behaviour.is_a?(Pokemon)
