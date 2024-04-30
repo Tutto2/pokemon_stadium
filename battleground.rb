@@ -8,9 +8,6 @@ require_relative "pokedex/pokedex"
 require "httparty"
 require "pry"
 
-binding.pry
-# require "rim_job"
-
 class PokemonBattleField
   attr_accessor :action_list, :attack_list
   attr_reader :players, :battle_type, :all_pokes, :turn, :battle_type, :field
@@ -320,3 +317,10 @@ pokemons = [
 ]
 
 puts PokemonBattleField.init_game(4, 'double', pokemons)
+
+# Nueva interfaz:
+# Pantalla inicial CARGAR DATOS o JUGAR
+# Pantalla de CARGA DATOS = [ Cargar equipos, pokemons o ataques, back ]
+# Pantalla de JUGAR = [ Luego de elegir numero de jugadores y nombres, elegir equipo en vista detallada o simple ]
+# Cambiar los nombres de todos los ataques y luego listar todos los ataques disponibles
+# Integrar con la API

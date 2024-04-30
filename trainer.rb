@@ -25,16 +25,31 @@ class Trainer
   def team_build(pokemons, players_num)
     MessagesPool.menu_leap
     @team.clear
-    MessagesPool.pokemon_selection(name)
-    selection = gets.chomp.split.map(&:to_i)
+    MessagesPool.team_selection(name)
+    resp = gets.chomp.upcase
 
-    if team_verification(selection, pokemons, players_num)
-      @team = selection.map { |pick| pokemons[pick-1] }
-      @team.each { |pok| pok.trainer = self }
+    if ["Y", "YES"].include?(resp)
+      path = 'actions/inputs'
+      ext = '*.pkteam'
+      files = Dir.glob(File.join(path, ext))
+      complete_name = files[0].split("/")
+      clean_name = complete_name[-1].split(".")
+      output = clean_name[0].capitalize
+      puts output
+
+      # 
     else
-      MessagesPool.invalid_pokemon_selection
-      return team_build(pokemons, players_num)
-    end 
+      MessagesPool.pokemon_selection(name)
+      selection = gets.chomp.split.map(&:to_i)
+
+      if team_verification(selection, pokemons, players_num)
+        @team = selection.map { |pick| pokemons[pick-1] }
+        @team.each { |pok| pok.trainer = self }
+      else
+        MessagesPool.invalid_pokemon_selection
+        return team_build(pokemons, players_num)
+      end
+    end
   end
 
   def team_verification(selection, pokemons, players_num)

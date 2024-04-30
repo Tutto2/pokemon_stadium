@@ -38,6 +38,11 @@ class MessagesPool
     BattleLog.instance.display_messages
   end
 
+  def self.team_selection(name)
+    BattleLog.instance.log("#{name}, do you want to select a pre-set team? (Y/N): ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
   def self.pokemon_selection(name)
     BattleLog.instance.log("#{name} select a set of pokemon to battle: ", :fillable)
     BattleLog.instance.display_messages
