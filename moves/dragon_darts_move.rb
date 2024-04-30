@@ -7,7 +7,7 @@ class DragonDartsMove < Move
 
   def self.learn
     new(
-      attack_name: :dragon_darts,
+      attack_name: 'Dragon Darts',
       type: Types::DRAGON,
       pp: 10,
       category: :physical,

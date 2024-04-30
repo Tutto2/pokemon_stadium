@@ -6,7 +6,7 @@ class SubstituteMove < Move
 
   def self.learn
     new(
-      attack_name: :substitute,
+      attack_name: 'Substitute',
       type: Types::NORMAL,
       pp: 10,
       category: :status

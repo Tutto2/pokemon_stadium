@@ -5,7 +5,7 @@ class FacadeMove < Move
 
   def self.learn
     new(
-      attack_name: :facade,
+      attack_name: 'Facade',
       type: Types::NORMAL,
       pp: 20,
       category: :physical

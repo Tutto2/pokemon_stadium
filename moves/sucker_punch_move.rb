@@ -5,7 +5,7 @@ class SuckerPunchMove < Move
 
   def self.learn
     new(
-      attack_name: :sucker_punch,
+      attack_name: 'Sucker Punch',
       type: Types::DARK,
       pp: 5,
       category: :physical,

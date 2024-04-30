@@ -6,7 +6,7 @@ class SludgeBombMove < Move
 
   def self.learn
     new(
-      attack_name: :sludge_bomb,
+      attack_name: 'Sludge Bomb',
       type: Types::POISON,
       pp: 10,
       category: :special,

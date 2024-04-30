@@ -7,7 +7,7 @@ class CloseCombatMove < Move
 
   def self.learn
     new(
-      attack_name: :close_combat,
+      attack_name: 'Close Combat',
       type: Types::FIGHTING,
       pp: 5,
       category: :physical,

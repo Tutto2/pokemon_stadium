@@ -6,7 +6,7 @@ class HornLeechMove < Move
 
   def self.learn
     new(
-      attack_name: :horn_leech,
+      attack_name: 'Horn Leech',
       type: Types::GRASS,
       pp: 10,
       category: :physical,

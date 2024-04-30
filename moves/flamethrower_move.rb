@@ -6,7 +6,7 @@ class FlamethrowerMove < Move
 
   def self.learn
     new(
-      attack_name: :flamethrower,
+      attack_name: 'Flamethrower',
       type: Types::FIRE,
       pp: 15,
       category: :special,

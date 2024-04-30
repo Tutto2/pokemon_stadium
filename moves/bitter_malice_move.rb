@@ -7,7 +7,7 @@ class BitterMaliceMove < Move
 
   def self.learn
     new(
-      attack_name: :bitter_malice,
+      attack_name: 'Bitter Malice',
       type: Types::GHOST,
       pp: 10,
       category: :special,

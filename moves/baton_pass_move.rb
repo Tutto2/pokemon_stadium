@@ -5,7 +5,7 @@ class BatonPassMove < Move
 
   def self.learn
     new(
-      attack_name: :baton_pass,
+      attack_name: 'Baton Pass',
       type: Types::NORMAL,
       pp: 40,
       category: :status

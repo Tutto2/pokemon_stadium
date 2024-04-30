@@ -3,7 +3,7 @@ require_relative "move"
 class TransformMove < Move
   def self.learn
     new(
-      attack_name: :transform,
+      attack_name: 'Transform',
       type: Types::NORMAL,
       pp: 10,
       category: :status,

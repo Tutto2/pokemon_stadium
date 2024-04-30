@@ -7,7 +7,7 @@ class IvyCudgelMove < Move
 
   def self.learn
     new(
-      attack_name: :ivy_cudgel,
+      attack_name: 'Ivy Cudgel',
       pp: 10,
       category: :physical,
       type: Types::GRASS,

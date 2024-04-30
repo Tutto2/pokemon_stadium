@@ -5,7 +5,7 @@ class DefenseCurlMove < Move
 
   def self.learn
     new(
-      attack_name: :defense_curl,
+      attack_name: 'Defense Curl',
       type: Types::NORMAL,
       pp: 40,
       category: :status

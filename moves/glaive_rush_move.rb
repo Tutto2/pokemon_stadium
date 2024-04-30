@@ -6,7 +6,7 @@ class GlaiveRushMove < Move
 
   def self.learn
     new(
-      attack_name: :glaive_rush,
+      attack_name: 'Glaive Rush',
       type: Types::DRAGON,
       pp: 5,
       category: :physical,

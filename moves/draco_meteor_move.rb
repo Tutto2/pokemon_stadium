@@ -7,7 +7,7 @@ class DracoMeteorMove < Move
 
   def self.learn
     new(
-      attack_name: :draco_meteor,
+      attack_name: 'Draco Meteor',
       type: Types::DRAGON,
       pp: 5,
       category: :special,

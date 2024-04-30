@@ -6,7 +6,7 @@ class HurricaneMove < Move
 
   def self.learn
     new(
-      attack_name: :hurricane,
+      attack_name: 'Hurricane',
       type: Types::FLYING,
       pp: 10,
       category: :special,

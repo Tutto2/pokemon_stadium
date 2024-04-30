@@ -5,7 +5,7 @@ class BoomburstMove < Move
 
   def self.learn
     new(
-      attack_name: :boomburst,
+      attack_name: 'Boomburst',
       type: Types::NORMAL,
       pp: 10,
       category: :special,

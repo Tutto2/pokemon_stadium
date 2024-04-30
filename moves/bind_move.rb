@@ -6,7 +6,7 @@ class BindMove < Move
 
   def self.learn
     new(
-      attack_name: :bind,
+      attack_name: 'Bind',
       type: Types::NORMAL,
       pp: 15,
       category: :physical,

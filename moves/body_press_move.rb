@@ -5,7 +5,7 @@ class BodyPressMove < Move
 
   def self.learn
     new(
-      attack_name: :body_press,
+      attack_name: 'Body Press',
       type: Types::NORMAL,
       pp: 10,
       category: :physical,

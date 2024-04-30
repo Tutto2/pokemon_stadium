@@ -5,7 +5,7 @@ class AmnesiaMove < Move
 
   def self.learn
     new(
-      attack_name: :amnesia,
+      attack_name: 'Amnesia',
       type: Types::PSYCHIC,
       pp: 20,
       category: :status

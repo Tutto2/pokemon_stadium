@@ -5,7 +5,7 @@ class NastyPlotMove < Move
 
   def self.learn
     new(
-      attack_name: :nasty_plot,
+      attack_name: 'Nasty Plot',
       type: Types::DARK,
       pp: 20,
       category: :status

@@ -6,7 +6,7 @@ class SwaggerMove < Move
   
   def self.learn
     new(
-      attack_name: :swagger,
+      attack_name: 'Swagger',
       type: Types::NORMAL,
       pp: 20,
       category: :status,

@@ -8,7 +8,7 @@ class RolloutMove < Move
     attr_reader :chain
 
     new(
-      attack_name: :rollout,
+      attack_name: 'Rollout',
       type: Types::ROCK,
       pp: 20,
       category: :physical,

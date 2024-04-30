@@ -6,7 +6,7 @@ class ExplosionMove < Move
 
   def self.learn
     new(
-      attack_name: :explosion,
+      attack_name: 'Explosion',
       type: Types::NORMAL,
       pp: 5,
       category: :physical,

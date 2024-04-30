@@ -7,7 +7,7 @@ class PhantomForceMove < Move
 
   def self.learn
     new(
-      attack_name: :phantom_force,
+      attack_name: 'Phantom Force',
       type: Types::GHOST,
       pp: 10,
       category: :special,

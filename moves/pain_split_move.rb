@@ -5,7 +5,7 @@ class PainSplitMove < Move
 
   def self.learn
     new(
-      attack_name: :pain_split,
+      attack_name: 'Pain Split',
       type: Types::NORMAL,
       pp: 20,
       category: :status,

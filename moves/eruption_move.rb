@@ -5,7 +5,7 @@ class EruptionMove < Move
 
   def self.learn
     new(
-      attack_name: :eruption,
+      attack_name: 'Eruption',
       type: Types::FIRE,
       pp: 5,
       category: :special,

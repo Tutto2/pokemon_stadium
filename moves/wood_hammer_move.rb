@@ -6,7 +6,7 @@ class WoodHammerMove < Move
 
   def self.learn
     new(
-      attack_name: :wood_hammer,
+      attack_name: 'Wood Hammer',
       type: Types::GRASS,
       pp: 15,
       category: :physical,

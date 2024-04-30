@@ -6,7 +6,7 @@ class StruggleMove < Move
 
   def self.learn
     new(
-      attack_name: :struggle,
+      attack_name: 'Struggle',
       type: Types::NORMAL,
       pp: 1,
       category: :physical,

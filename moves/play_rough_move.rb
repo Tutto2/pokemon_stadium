@@ -7,7 +7,7 @@ class PlayRoughMove < Move
 
   def self.learn
     new(
-      attack_name: :play_rough,
+      attack_name: 'Play Rough',
       type: Types::FAIRY,
       pp: 10,
       category: :physical,

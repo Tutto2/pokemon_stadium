@@ -6,7 +6,7 @@ class BitterBladeMove < Move
 
   def self.learn
     new(
-      attack_name: :bitter_blade,
+      attack_name: 'Bitter Blade',
       type: Types::FIRE,
       pp: 10,
       category: :physical,

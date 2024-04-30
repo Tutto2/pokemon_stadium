@@ -4,7 +4,7 @@ class ThunderWaveMove < Move
 
   def self.learn
     new(
-      attack_name: :thunder_wave,
+      attack_name: 'Thunder Wave',
       type: Types::ELECTRIC,
       pp: 20,
       category: :status,

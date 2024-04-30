@@ -5,7 +5,7 @@ class CopycatMove < Move
 
   def self.learn
     new(
-      attack_name: :copycat,
+      attack_name: 'Copycat',
       type: Types::NORMAL,
       pp: 20,
       category: :status,

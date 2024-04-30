@@ -6,7 +6,7 @@ class SolarBladeMove < Move
 
   def self.learn
     new(
-      attack_name: :solar_blade,
+      attack_name: 'Solar Blade',
       type: Types::GRASS,
       pp: 10,
       category: :physical,

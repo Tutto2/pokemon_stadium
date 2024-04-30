@@ -6,7 +6,7 @@ class SparkMove < Move
 
   def self.learn
     new(
-      attack_name: :spark,
+      attack_name: 'Spark',
       type: Types::ELECTRIC,
       pp: 20,
       category: :special,

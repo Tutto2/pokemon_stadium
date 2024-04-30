@@ -7,7 +7,7 @@ class UTurnMove < Move
 
   def self.learn
     new(
-      attack_name: :u_turn,
+      attack_name: 'U Turn',
       type: Types::BUG,
       pp: 20,
       category: :physical,

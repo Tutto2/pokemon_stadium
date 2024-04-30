@@ -6,7 +6,7 @@ class GunkShotMove < Move
 
   def self.learn
     new(
-      attack_name: :gunk_shot,
+      attack_name: 'Gunk Shot',
       type: Types::POISON,
       pp: 5,
       category: :physical,

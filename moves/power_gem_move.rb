@@ -5,7 +5,7 @@ class PowerGemMove < Move
 
   def self.learn
     new(
-      attack_name: :power_gem,
+      attack_name: 'Power Gem',
       type: Types::ROCK,
       pp: 20,
       category: :special,

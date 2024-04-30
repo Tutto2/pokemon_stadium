@@ -5,7 +5,7 @@ class HyperVoiceMove < Move
 
   def self.learn
     new(
-      attack_name: :hyper_voice,
+      attack_name: 'Hyper Voice',
       type: Types::NORMAL,
       pp: 10,
       category: :special,

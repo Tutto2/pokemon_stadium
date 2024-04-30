@@ -6,7 +6,7 @@ class ThunderMove < Move
 
   def self.learn
     new(
-      attack_name: :thunder,
+      attack_name: 'Thunder',
       type: Types::ELECTRIC,
       pp: 10,
       category: :special,

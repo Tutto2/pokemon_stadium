@@ -5,7 +5,7 @@ class ExtremeSpeedMove < Move
 
   def self.learn
     new(
-      attack_name: :extreme_speed,
+      attack_name: 'Extreme Speed',
       type: Types::NORMAL,
       pp: 5,
       category: :physical,

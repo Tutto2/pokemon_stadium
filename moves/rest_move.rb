@@ -6,7 +6,7 @@ class RestMove < Move
 
   def self.learn
     new(
-      attack_name: :rest,
+      attack_name: 'Rest',
       type: Types::PSYCHIC,
       pp: 5,
       category: :status,

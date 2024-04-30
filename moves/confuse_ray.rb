@@ -3,7 +3,7 @@ require_relative "move"
 class ConfuseRayMove < Move
   def self.learn
     new(
-      attack_name: :confuse_ray,
+      attack_name: 'Confuse Ray',
       type: Types::GHOST,
       pp: 10,
       category: :status,

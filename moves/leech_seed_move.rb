@@ -3,7 +3,7 @@ require_relative "move"
 class LeechSeedMove < Move
   def self.learn
     new(
-      attack_name: :leech_seed,
+      attack_name: 'Leech Seed',
       type: Types::GRASS,
       pp: 10,
       category: :status,

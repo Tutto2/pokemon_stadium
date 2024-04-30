@@ -6,7 +6,7 @@ class MirrorCoatMove < Move
 
   def self.learn
     new(
-      attack_name: :mirror_coat,
+      attack_name: 'Mirror Coat',
       type: Types::PSYCHIC,
       pp: 20,
       category: :special,

@@ -6,7 +6,7 @@ class HeavySlamMove < Move
 
   def self.learn
     new(
-      attack_name: :heavy_slam,
+      attack_name: 'Heavy Slam',
       type: Types::STEEL,
       pp: 10,
       category: :physical,

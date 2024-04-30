@@ -4,7 +4,7 @@ class SingMove < Move
 
   def self.learn
     new(
-      attack_name: :sing,
+      attack_name: 'Sing',
       type: Types::NORMAL,
       pp: 15,
       category: :status,

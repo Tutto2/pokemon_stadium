@@ -7,7 +7,7 @@ class CurseMove < Move
 
   def self.learn
     new(
-      attack_name: :curse,
+      attack_name: 'Curse',
       type: Types::GHOST,
       pp: 10,
       category: :status,

@@ -7,7 +7,7 @@ class PollenPuffMove < Move
 
   def self.learn
     new(
-      attack_name: :pollen_puff,
+      attack_name: 'Pollen Puff',
       type: Types::BUG,
       pp: 15,
       category: :special,

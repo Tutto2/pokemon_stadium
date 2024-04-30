@@ -6,7 +6,7 @@ class GigaDrainMove < Move
 
   def self.learn
     new(
-      attack_name: :giga_drain,
+      attack_name: 'Giga Drain',
       type: Types::GRASS,
       pp: 10,
       category: :special,

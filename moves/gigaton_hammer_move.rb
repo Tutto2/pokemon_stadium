@@ -6,7 +6,7 @@ class GigatonHammerMove < Move
 
   def self.learn
     new(
-      attack_name: :gigaton_hammer,
+      attack_name: 'Gigaton Hammer',
       type: Types::STEEL,
       pp: 5,
       category: :physical,

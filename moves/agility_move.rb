@@ -5,7 +5,7 @@ class AgilityMove < Move
 
   def self.learn
     new(
-      attack_name: :agility,
+      attack_name: 'Agility',
       type: Types::NORMAL,
       pp: 30,
       category: :status,

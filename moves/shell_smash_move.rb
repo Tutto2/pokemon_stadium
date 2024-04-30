@@ -5,7 +5,7 @@ class ShellSmashMove < Move
 
   def self.learn
     new(
-      attack_name: :shell_smash,
+      attack_name: 'Shell Smash',
       type: Types::NORMAL,
       pp: 15,
       category: :status

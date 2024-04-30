@@ -6,7 +6,7 @@ class SacredFireMove < Move
 
   def self.learn
     new(
-      attack_name: :sacred_fire,
+      attack_name: 'Sacred Fire',
       type: Types::FIRE,
       pp: 5,
       category: :special,

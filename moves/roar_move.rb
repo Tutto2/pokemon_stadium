@@ -5,7 +5,7 @@ class RoarMove < Move
 
   def self.learn
     new(
-      attack_name: :roar,
+      attack_name: 'Roar',
       type: Types::NORMAL,
       pp: 20,
       category: :status,

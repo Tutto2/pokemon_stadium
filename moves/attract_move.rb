@@ -3,7 +3,7 @@ require_relative "move"
 class AttractMove < Move
   def self.learn
     new(
-      attack_name: :attract,
+      attack_name: 'Attract',
       type: Types::NORMAL,
       pp: 15,
       category: :status,

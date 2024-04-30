@@ -6,7 +6,7 @@ class LowKickMove < Move
 
   def self.learn
     new(
-      attack_name: :low_kick,
+      attack_name: 'Low Kick',
       type: Types::FIGHTING,
       pp: 20,
       category: :physical,

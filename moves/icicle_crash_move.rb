@@ -7,7 +7,7 @@ class IcicleCrashMove < Move
 
   def self.learn
     new(
-      attack_name: :icicle_crash,
+      attack_name: 'Icicle Crash',
       type: Types::ICE,
       pp: 10,
       category: :physical,

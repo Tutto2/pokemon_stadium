@@ -6,7 +6,7 @@ class ZapCannonMove < Move
 
   def self.learn
     new(
-      attack_name: :zap_cannon,
+      attack_name: 'Zap Cannon',
       type: Types::ELECTRIC,
       pp: 5,
       category: :special,

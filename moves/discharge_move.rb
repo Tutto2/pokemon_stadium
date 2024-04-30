@@ -6,7 +6,7 @@ class DischargeMove < Move
 
   def self.learn
     new(
-      attack_name: :discharge,
+      attack_name: 'Discharge',
       type: Types::ELECTRIC,
       pp: 15,
       category: :special,

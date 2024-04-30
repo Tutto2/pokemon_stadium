@@ -5,7 +5,7 @@ class FoulPlayMove < Move
 
   def self.learn
     new(
-      attack_name: :foul_play,
+      attack_name: 'Foul Play',
       type: Types::DARK,
       pp: 15,
       category: :physical,

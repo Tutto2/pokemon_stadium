@@ -6,7 +6,7 @@ class NightSlashMove < Move
 
   def self.learn
     new(
-      attack_name: :night_slash,
+      attack_name: 'Night Slash',
       type: Types::DARK,
       pp: 15,
       category: :physical,

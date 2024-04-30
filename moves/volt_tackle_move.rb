@@ -7,7 +7,7 @@ class VoltTackleMove < Move
 
   def self.learn
     new(
-      attack_name: :volt_tackle,
+      attack_name: 'Volt Tackle',
       type: Types::ELECTRIC,
       pp: 15,
       category: :physical,

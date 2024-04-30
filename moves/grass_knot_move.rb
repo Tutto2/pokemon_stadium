@@ -6,7 +6,7 @@ class GrassKnotMove < Move
 
   def self.learn
     new(
-      attack_name: :grass_knot,
+      attack_name: 'Grass Knot',
       type: Types::GRASS,
       pp: 20,
       category: :special,

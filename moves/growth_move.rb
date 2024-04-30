@@ -6,7 +6,7 @@ class GrowthMove < Move
 
   def self.learn
     new(
-      attack_name: :growth,
+      attack_name: 'Growth',
       type: Types::NORMAL,
       pp: 20,
       category: :status

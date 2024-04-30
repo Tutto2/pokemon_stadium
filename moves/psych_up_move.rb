@@ -5,7 +5,7 @@ class PsychUpMove < Move
 
   def self.learn
     new(
-      attack_name: :psych_up,
+      attack_name: 'Psych Up',
       type: Types::NORMAL,
       pp: 10,
       category: :status,

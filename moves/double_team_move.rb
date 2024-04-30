@@ -5,7 +5,7 @@ class DoubleTeamMove < Move
 
   def self.learn
     new(
-      attack_name: :double_team,
+      attack_name: 'Double Team',
       type: Types::NORMAL,
       pp: 15,
       category: :status

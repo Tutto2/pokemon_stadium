@@ -5,7 +5,7 @@ class HexMove < Move
 
   def self.learn
     new(
-      attack_name: :hex,
+      attack_name: 'Hex',
       type: Types::GHOST,
       pp: 10,
       category: :special

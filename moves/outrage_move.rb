@@ -6,7 +6,7 @@ class OutrageMove < Move
 
   def self.learn
     new(
-      attack_name: :outrage,
+      attack_name: 'Outrage',
       type: Types::DRAGON,
       pp: 10,
       category: :physical,

@@ -4,7 +4,7 @@ class HypnosisMove < Move
 
   def self.learn
     new(
-      attack_name: :hypnosis,
+      attack_name: 'Hypnosis',
       type: Types::PSYCHIC,
       pp: 20,
       category: :status,

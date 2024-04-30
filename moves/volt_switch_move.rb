@@ -7,7 +7,7 @@ class VoltSwitchMove < Move
 
   def self.learn
     new(
-      attack_name: :volt_switch,
+      attack_name: 'Volt Switch',
       type: Types::ELECTRIC,
       pp: 20,
       category: :special,

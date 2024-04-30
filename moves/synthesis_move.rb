@@ -6,7 +6,7 @@ class SynthesisMove < Move
 
   def self.learn
     new(
-      attack_name: :synthesis,
+      attack_name: 'Synthesis',
       type: Types::GRASS,
       pp: 5,
       category: :status,

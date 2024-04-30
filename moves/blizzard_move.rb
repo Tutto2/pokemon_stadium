@@ -6,7 +6,7 @@ class BlizzardMove < Move
 
   def self.learn
     new(
-      attack_name: :blizzard,
+      attack_name: 'Blizzard',
       type: Types::ICE,
       pp: 5,
       category: :special,

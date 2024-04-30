@@ -5,7 +5,7 @@ class FickleBeamMove < Move
 
   def self.learn
     new(
-      attack_name: :fickle_beam,
+      attack_name: 'Fickle Beam',
       type: Types::DRAGON,
       pp: 5,
       category: :special

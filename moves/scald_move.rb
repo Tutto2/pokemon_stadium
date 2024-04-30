@@ -6,7 +6,7 @@ class ScaldMove < Move
 
   def self.learn
     new(
-      attack_name: :scald,
+      attack_name: 'Scald',
       type: Types::WATER,
       pp: 15,
       category: :special,

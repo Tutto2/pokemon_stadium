@@ -5,7 +5,7 @@ class GyroBallMove < Move
 
   def self.learn
     new(
-      attack_name: :gyro_ball,
+      attack_name: 'Gyro Ball',
       type: Types::STEEL,
       pp: 5,
       category: :physical

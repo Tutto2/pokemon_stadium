@@ -5,7 +5,7 @@ class EarthquakeMove < Move
 
   def self.learn
     new(
-      attack_name: :earthquake,
+      attack_name: 'Earthquake',
       type: Types::GROUND,
       pp: 10,
       category: :physical,

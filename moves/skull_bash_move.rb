@@ -7,7 +7,7 @@ class SkullBashMove < Move
 
   def self.learn
     new(
-      attack_name: :skull_bash,
+      attack_name: 'Skull Bash',
       type: Types::NORMAL,
       pp: 10,
       category: :physical,

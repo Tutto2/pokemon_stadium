@@ -7,7 +7,7 @@ class TeraBlastMove < Move
 
   def self.learn
     new(
-      attack_name: :tera_blast,
+      attack_name: 'Tera Blast',
       type: Types::NORMAL,
       pp: 10,
       category: :special,

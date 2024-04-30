@@ -3,7 +3,7 @@ require_relative "move"
 class FocusEnergyMove < Move
   def self.learn
     new(
-      attack_name: :focus_energy,
+      attack_name: 'Focus Energy',
       type: Types::NORMAL,
       pp: 30,
       category: :status

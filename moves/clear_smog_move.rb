@@ -6,7 +6,7 @@ class ClearSmogMove < Move
 
   def self.learn
     new(
-      attack_name: :clear_smog,
+      attack_name: 'Clear Smog',
       type: Types::POISON,
       pp: 15,
       category: :special,

@@ -6,7 +6,7 @@ class ElectroBallMove < Move
 
   def self.learn
     new(
-      attack_name: :electro_ball,
+      attack_name: 'Electro Ball',
       type: Types::ELECTRIC,
       pp: 10,
       category: :special,

@@ -6,7 +6,7 @@ class FireSpinMove < Move
 
   def self.learn
     new(
-      attack_name: :fire_spin,
+      attack_name: 'Fire Spin',
       type: Types::FIRE,
       pp: 15,
       category: :special,

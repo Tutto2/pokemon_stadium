@@ -6,7 +6,7 @@ class FrenzyPlantMove < Move
 
   def self.learn
     new(
-      attack_name: :frenzy_plant,
+      attack_name: 'Frenzy Plant',
       type: Types::GRASS,
       pp: 5,
       category: :special,

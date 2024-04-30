@@ -5,7 +5,7 @@ class CalmMindMove < Move
 
   def self.learn
     new(
-      attack_name: :calm_mind,
+      attack_name: 'Calm Mind',
       type: Types::PSYCHIC,
       pp: 20,
       category: :status

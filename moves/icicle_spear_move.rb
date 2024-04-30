@@ -6,7 +6,7 @@ class IcicleSpearMove < Move
 
   def self.learn
     new(
-      attack_name: :icecicle_spear,
+      attack_name: 'Icecicle Spear',
       type: Types::ICE,
       pp: 30,
       category: :physical,

@@ -5,7 +5,7 @@ class IceShardMove < Move
 
   def self.learn
     new(
-      attack_name: :ice_shard,
+      attack_name: 'Ice Shard',
       type: Types::ICE,
       pp: 30,
       category: :physical,

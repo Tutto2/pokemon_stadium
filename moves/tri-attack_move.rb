@@ -6,7 +6,7 @@ class TriAttackMove < Move
 
   def self.learn
     new(
-      attack_name: :tri_attack,
+      attack_name: 'Tri Attack',
       type: Types::NORMAL,
       pp: 10,
       category: :special,

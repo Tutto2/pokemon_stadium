@@ -4,7 +4,7 @@ class ToxicMove < Move
 
   def self.learn
     new(
-      attack_name: :toxic,
+      attack_name: 'Toxic',
       type: Types::POISON,
       pp: 10,
       category: :status,

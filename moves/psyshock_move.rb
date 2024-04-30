@@ -5,7 +5,7 @@ class PsyshockMove < Move
 
   def self.learn
     new(
-      attack_name: :psyshock,
+      attack_name: 'Psyshock',
       type: Types::PSYCHIC,
       pp: 10,
       category: :special,

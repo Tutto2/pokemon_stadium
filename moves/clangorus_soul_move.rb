@@ -7,7 +7,7 @@ class ClangorusSoulMove < Move
 
   def self.learn
     new(
-      attack_name: :clangorus_soul,
+      attack_name: 'Clangorus Soul',
       type: Types::DRAGON,
       pp: 5,
       category: :status

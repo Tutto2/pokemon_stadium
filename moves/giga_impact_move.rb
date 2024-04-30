@@ -6,7 +6,7 @@ class GigaImpactMove < Move
 
   def self.learn
     new(
-      attack_name: :giga_impact,
+      attack_name: 'Giga Impact',
       type: Types::NORMAL,
       pp: 5,
       category: :physical,

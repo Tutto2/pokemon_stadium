@@ -5,7 +5,7 @@ class CharmMove < Move
 
   def self.learn
     new(
-      attack_name: :charm,
+      attack_name: 'Charm',
       type: Types::FAIRY,
       pp: 20,
       category: :status,

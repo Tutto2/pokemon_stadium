@@ -3,7 +3,7 @@ require_relative "move"
 class MetronomeMove < Move
   def self.learn
     new(
-      attack_name: :metronome,
+      attack_name: 'Metronome',
       type: Types::NORMAL,
       pp: 10,
       category: :status,

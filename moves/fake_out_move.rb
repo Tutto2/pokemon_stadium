@@ -7,7 +7,7 @@ class FakeOutMove < Move
 
   def self.learn
     new(
-      attack_name: :fake_out,
+      attack_name: 'Fake Out',
       type: Types::NORMAL,
       pp: 10,
       category: :physical,

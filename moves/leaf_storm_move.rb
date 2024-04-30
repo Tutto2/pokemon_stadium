@@ -8,7 +8,7 @@ class LeafStormMove < Move
 
   def self.learn
     new(
-      attack_name: :leaf_storm,
+      attack_name: 'Leaf Storm',
       type: Types::GRASS,
       pp: 5,
       category: :special,

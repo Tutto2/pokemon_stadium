@@ -3,7 +3,7 @@ require_relative "move"
 class PerishSongMove < Move
   def self.learn
     new(
-      attack_name: :perish_song,
+      attack_name: 'Perish Song',
       type: Types::NORMAL,
       pp: 5,
       category: :status,

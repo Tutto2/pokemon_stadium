@@ -3,7 +3,7 @@ require_relative "move"
 class SweetKissMove < Move
   def self.learn
     new(
-      attack_name: :sweet_kiss,
+      attack_name: 'Sweet Kiss',
       type: Types::FAIRY,
       pp: 10,
       category: :status,

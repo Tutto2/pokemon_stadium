@@ -5,7 +5,7 @@ class FlashMove < Move
 
   def self.learn
     new(
-      attack_name: :flash,
+      attack_name: 'Flash',
       type: Types::NORMAL,
       pp: 20,
       category: :status,

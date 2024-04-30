@@ -6,7 +6,7 @@ class ShellTrapMove < Move
 
   def self.learn
     new(
-      attack_name: :shell_trap,
+      attack_name: 'Shell Trap',
       type: Types::FIRE,
       pp: 5,
       category: :special,

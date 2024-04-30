@@ -7,7 +7,7 @@ class ProtectMove < Move
 
   def self.learn
     new(
-      attack_name: :protect,
+      attack_name: 'Protect',
       type: Types::NORMAL,
       pp: 10,
       category: :status,

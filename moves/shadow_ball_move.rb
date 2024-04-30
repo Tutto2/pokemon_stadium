@@ -7,7 +7,7 @@ class ShadowBallMove < Move
 
   def self.learn
     new(
-      attack_name: :shadow_ball,
+      attack_name: 'Shadow Ball',
       type: Types::GHOST,
       pp: 15,
       category: :special,

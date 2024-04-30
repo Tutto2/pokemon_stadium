@@ -7,7 +7,7 @@ class FlameChargeMove < Move
 
   def self.learn
     new(
-      attack_name: :flame_charge,
+      attack_name: 'Flame Charge',
       type: Types::FIRE,
       pp: 20,
       category: :physical,

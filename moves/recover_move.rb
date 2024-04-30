@@ -5,7 +5,7 @@ class RecoverMove < Move
 
   def self.learn
     new(
-      attack_name: :recover,
+      attack_name: 'Recover',
       type: Types::NORMAL,
       pp: 5,
       category: :status,

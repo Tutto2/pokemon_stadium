@@ -6,7 +6,7 @@ class DoubleEdgeMove < Move
 
   def self.learn
     new(
-      attack_name: :double_edge,
+      attack_name: 'Double Edge',
       type: Types::NORMAL,
       pp: 15,
       category: :physical,

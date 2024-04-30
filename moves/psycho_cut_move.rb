@@ -6,7 +6,7 @@ class PsychoCutMove < Move
 
   def self.learn
     new(
-      attack_name: :psycho_cut,
+      attack_name: 'Psycho Cut',
       type: Types::PSYCHIC,
       pp: 20,
       category: :physical,

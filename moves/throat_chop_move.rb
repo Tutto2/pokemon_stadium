@@ -6,7 +6,7 @@ class ThroatChopMove < Move
 
   def self.learn
     new(
-      attack_name: :throat_chop,
+      attack_name: 'Throat Chop',
       type: Types::DARK,
       pp: 15,
       category: :physical,

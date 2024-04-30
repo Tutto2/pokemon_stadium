@@ -6,7 +6,7 @@ class FocusPunchMove < Move
 
   def self.learn
     new(
-      attack_name: :focus_punch,
+      attack_name: 'Focus Punch',
       type: Types::FIGHTING,
       pp: 20,
       category: :physical,

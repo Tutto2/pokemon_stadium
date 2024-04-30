@@ -3,7 +3,7 @@ require_relative "move"
 class SpiteMove < Move
   def self.learn
     new(
-      attack_name: :spite,
+      attack_name: 'Spite',
       type: Types::GHOST,
       pp: 10,
       category: :status,

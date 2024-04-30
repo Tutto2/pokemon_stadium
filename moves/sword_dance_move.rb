@@ -5,7 +5,7 @@ class SwordDanceMove < Move
 
   def self.learn
     new(
-      attack_name: :sowrd_dance,
+      attack_name: 'Sowrd Dance',
       type: Types::NORMAL,
       pp: 20,
       category: :status

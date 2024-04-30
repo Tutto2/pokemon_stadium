@@ -7,7 +7,7 @@ class SpikyShieldMove < Move
 
   def self.learn
     new(
-      attack_name: :spiky_shield,
+      attack_name: 'Spiky Shield',
       type: Types::GRASS,
       pp: 10,
       category: :status,

@@ -3,7 +3,7 @@ require_relative "move"
 class EndureMove < Move
   def self.learn
     new(
-      attack_name: :endure,
+      attack_name: 'Endure',
       type: Types::NORMAL,
       pp: 10,
       category: :status,

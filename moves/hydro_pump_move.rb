@@ -5,7 +5,7 @@ class HydroPumpMove < Move
 
   def self.learn
     new(
-      attack_name: :hydro_pump,
+      attack_name: 'Hydro Pump',
       type: Types::WATER,
       pp: 5,
       category: :special,

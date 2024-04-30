@@ -5,7 +5,7 @@ class ShadowSneakMove < Move
 
   def self.learn
     new(
-      attack_name: :shadow_sneak,
+      attack_name: 'Shadow Sneak',
       type: Types::GHOST,
       pp: 30,
       category: :physical,

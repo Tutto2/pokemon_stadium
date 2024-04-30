@@ -5,7 +5,7 @@ class ScalePulseMove < Move
 
   def self.learn
     new(
-      attack_name: :scale_pulse,
+      attack_name: 'Scale Pulse',
       type: Types::BUG, 
       secondary_type: Types::DRAGON,
       pp: 5,

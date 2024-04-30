@@ -7,7 +7,7 @@ class ClangingScalesMove < Move
 
   def self.learn
     new(
-      attack_name: :clanging_scales,
+      attack_name: 'Clanging Scales',
       type: Types::DRAGON,
       pp: 5,
       category: :special,

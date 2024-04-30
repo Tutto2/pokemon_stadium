@@ -5,7 +5,7 @@ class MetalSoundMove < Move
 
   def self.learn
     new(
-      attack_name: :metal_sound,
+      attack_name: 'Metal Sound',
       type: Types::STEEL,
       pp: 40,
       category: :status,

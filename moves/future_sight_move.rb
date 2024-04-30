@@ -5,7 +5,7 @@ class FutureSightMove < Move
 
   def self.learn
     new(
-      attack_name: :future_sight,
+      attack_name: 'Future Sight',
       type: Types::PSYCHIC,
       pp: 10,
       category: :special,

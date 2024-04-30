@@ -7,7 +7,7 @@ class MakeItRainMove < Move
 
   def self.learn
     new(
-      attack_name: :make_it_rain,
+      attack_name: 'Make It Rain',
       type: Types::STEEL,
       pp: 5,
       category: :special,

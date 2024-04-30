@@ -6,7 +6,7 @@ class CounterMove < Move
 
   def self.learn
     new(
-      attack_name: :counter,
+      attack_name: 'Counter',
       type: Types::FIGHTING,
       pp: 20,
       category: :physical,

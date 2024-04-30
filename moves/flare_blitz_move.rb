@@ -7,7 +7,7 @@ class FlareBlitzMove < Move
 
   def self.learn
     new(
-      attack_name: :flare_blitz,
+      attack_name: 'Flare Blitz',
       type: Types::FIRE,
       pp: 15,
       category: :physical,

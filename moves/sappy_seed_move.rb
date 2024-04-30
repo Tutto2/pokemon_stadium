@@ -6,7 +6,7 @@ class SappySeedMove < Move
 
   def self.learn
     new(
-      attack_name: :sappy_seed,
+      attack_name: 'Sappy Seed',
       type: Types::GRASS,
       pp: 15,
       category: :physical,

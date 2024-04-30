@@ -5,7 +5,7 @@ class DragonDanceMove < Move
 
   def self.learn
     new(
-      attack_name: :dragon_dance,
+      attack_name: 'Dragon Dance',
       type: Types::DRAGON,
       pp: 20,
       category: :status
