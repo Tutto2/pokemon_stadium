@@ -1,6 +1,6 @@
 require 'json'
 
-class PokemonDeserializer
+class PokemonLoader
   attr_accessor :pokemons, :file_url
 
   def initialize(file_url)
@@ -35,6 +35,6 @@ class PokemonDeserializer
   end
 end
 
-file = PokemonDeserializer.new('pokemonlist.dat')
+file = PokemonLoader.new('pokemonlist.dat')
 file.process
 file.write

@@ -1,7 +1,7 @@
 require_relative "pokemon"
 require_relative "../moves/move"
 
-module TargetingHandling
+module TargetManagement
   def assing_target(attack, target_positions)
     tar = attack.target
     battle_type = trainer.battleground.battle_type

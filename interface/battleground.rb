@@ -322,5 +322,5 @@ puts PokemonBattleField.init_game(4, 'double', pokemons)
 # Pantalla inicial CARGAR DATOS o JUGAR
 # Pantalla de CARGA DATOS = [ Cargar equipos, pokemons o ataques, back ]
 # Pantalla de JUGAR = [ Luego de elegir numero de jugadores y nombres, elegir equipo en vista detallada o simple ]
-# Cambiar los nombres de todos los ataques y luego listar todos los ataques disponibles
+# Listar todos los ataques disponibles
 # Integrar con la API

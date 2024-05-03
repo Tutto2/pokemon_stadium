@@ -10,7 +10,7 @@ require "pry"
 
 class Pokemon
   include MetadataHandling
-  include TargetingHandling
+  include TargetManagement
 
   attr_reader :name, :lvl
   attr_accessor :stats, :types, :attacks, :gender, :weight, :condition, :trainer, :field_position, :metadata, :health_condition, :volatile_status

@@ -1,9 +1,9 @@
 path = "./moves"
 
-attack_files = Dir.glob(File.join(path, "*.rb"))
+move_files = Dir.glob(File.join(path, "*.rb"))
 
-attack_files.each do |attack|
-  data = File.read(attack)
+move_files.each do |move|
+  data = File.read(move)
   regex = /attack_name: :(\w+)/
   next if regex.match(data).nil?
   
@@ -11,5 +11,5 @@ attack_files.each do |attack|
   new_data = match.scan((/[a-z]+/)).map(&:capitalize).join(' ')
   modified_data = data.gsub!(regex, "attack_name: '#{new_data}'")
 
-  File.open(attack, "w") { |f| f.puts modified_data }
+  File.open(move, "w") { |f| f.puts modified_data }
 end

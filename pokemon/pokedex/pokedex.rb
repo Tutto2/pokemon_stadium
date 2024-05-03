@@ -28,7 +28,7 @@ class Pokedex < Pokemon
           VoltTackleMove.learn,
           DischargeMove.learn,
           ThunderWaveMove.learn,
-          AgilityMove.learn
+          MetronomeMove.learn
         ]
       )
     when "Squirtle"
