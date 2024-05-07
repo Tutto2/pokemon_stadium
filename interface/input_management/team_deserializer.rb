@@ -9,6 +9,7 @@ class TeamDeserializer
   end
 
   def process
+    puts file_url
     lines = File.readlines(file_url)
     pokemons = []
     pokemon_index = -1
@@ -45,7 +46,7 @@ class TeamDeserializer
   end
 
   def write
-    File.open('mancha_team.rb', 'w') do |file|
+    File.open("interface/input_management/#{team[:team]}.rb", 'w') do |file|
       file.puts JSON.pretty_generate(team)
     end
   end
@@ -62,7 +63,3 @@ class TeamDeserializer
     stats.values
   end
 end
-
-file = TeamDeserializer.new('mancha-team.pkteam')
-file.process
-file.write

@@ -21,20 +21,16 @@ class PokemonLoader
         end
         pokemon[:name] = line.capitalize
       elsif /^Types: (?<type1>\w+)( \/ (?<type2>\w+))?$/ =~ line
-        pokemon[:types] = [type1.upcase, type2.upcase].compact
+        pokemon[:types] = [type1, type2].compact.map(&:upcase)
       elsif /^(?<stat>\w+): (?<num>\d+)$/ =~ line
-        pokemon[stat.sym] = num
+        pokemon[stat.to_sym] = num
       end
     end
   end
 
   def write
-    File.open('all_pokemons.rb', 'w') do |file|
+    File.open('interface/input_management/all_pokemons.rb', 'w') do |file|
       file.puts JSON.pretty_generate(pokemons)
     end
   end
 end
-
-file = PokemonLoader.new('pokemonlist.dat')
-file.process
-file.write

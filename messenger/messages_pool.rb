@@ -16,6 +16,7 @@ class MessagesPool
   end
 
   def self.interface_index
+    BattleLog.instance.log("\n")
     BattleLog.instance.log("1- Battle")
     BattleLog.instance.log("2- Load data")
   end
@@ -23,6 +24,45 @@ class MessagesPool
   def self.select_first_action
     BattleLog.instance.log("\n")
     BattleLog.instance.log("Select an option: ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.loading_index
+    BattleLog.instance.log("1- Load Team")
+    BattleLog.instance.log("2- Load Pokemons")
+    BattleLog.instance.log("3- Go Back")
+  end
+
+  def self.load_team_msg
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Please, wirte the name of the file with your team info")
+    BattleLog.instance.log("(the file must be inside 'interface/input_management' directory): ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.load_pokemons_msg
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Please wirte the name of the file containing the Pokemon info:")
+    BattleLog.instance.log("(the file must be inside 'interface/input_management' directory): ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.loading_error(file_name)
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Error! File '#{file_name}' not found in the specified directory")
+    BattleLog.instance.log("Put a copy on the following path: 'root/interface/input_management/file.pkteam'")
+    BattleLog.instance.display_messages
+  end
+
+  def self.reading_error
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log('file contains unparsable characters')
+    BattleLog.instance.display_messages
+  end
+
+  def self.successful_load_msg
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Your data has been successfully saved.")
     BattleLog.instance.display_messages
   end
 

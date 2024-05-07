@@ -1,3 +1,6 @@
+require_relative 'input_management/team_deserializer'
+require_relative 'input_management/pokemon_loader'
+
 class GameOptions
   def self.game_settings_interface
     option = 0
@@ -45,7 +48,8 @@ class GameOptions
     loop do
       players_num = gets.chomp.to_i
 
-      break if [0, 2, 3, 4].include?(players_num)
+      break if [0, 2, 4].include?(players_num) && battle_format == 'double'
+      break if [0, 3, 4].include?(players_num) && battle_format == 'royale'
       MessagesPool.invalid_option
     end
 
@@ -55,6 +59,63 @@ class GameOptions
   end
 
   def self.load_interface
-    
+    index = 0
+    MessagesPool.loading_index
+
+    loop do
+      MessagesPool.select_first_action
+      index = gets.chomp.to_i
+
+      break if (1..3).include?(index)
+      MessagesPool.invalid_option
+    end
+
+    return game_settings_interface if index == 3
+
+    index == 1 ? load_team : load_pokemons
+  end
+
+  def self.load_team
+    file = nil
+    file_name = ''
+    MessagesPool.load_team_msg
+    file_name = gets.chomp
+
+    begin
+      file = TeamDeserializer.new("interface/input_management/#{file_name}.pkteam")
+      file.process
+    rescue Errno::ENOENT
+      MessagesPool.loading_error(file_name)
+      return game_settings_interface
+    rescue ArgumentError
+      MessagesPool.reading_error 
+      return game_settings_interface
+    end
+
+    file.write
+    MessagesPool.successful_load_msg
+    game_settings_interface
+  end
+
+  def self.load_pokemons
+    file = nil
+    file_name = ''
+    MessagesPool.load_pokemons_msg
+    file_name = gets.chomp
+
+    begin
+      file = PokemonLoader.new("interface/input_management/#{file_name}.dat")
+      file.process
+    rescue Errno::ENOENT
+      MessagesPool.loading_error(file_name)
+      return game_settings_interface
+    rescue ArgumentError
+      MessagesPool.reading_error
+      return game_settings_interface
+    end
+
+    file.write
+    MessagesPool.successful_load_msg
+    game_settings_interface
   end
 end
