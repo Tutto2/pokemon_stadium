@@ -1,4 +1,4 @@
-require_relative "move"
+require_relative "../move"
 
 class GigaDrainMove < Move
   include BasicSpecialAtk

@@ -1,4 +1,4 @@
-require_relative "move"
+require_relative "../move"
 
 class MetronomeMove < Move
   def self.learn

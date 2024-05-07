@@ -1,5 +1,5 @@
-require_relative "../messages_pool"
-require_relative "../battle_log"
+require_relative "../messenger/messages_pool"
+require_relative "../messenger/battle_log"
 
 class Stats
   POSSIBLE_STATS = [:hp, :atk, :def, :sp_atk, :sp_def, :spd, :evs, :acc]

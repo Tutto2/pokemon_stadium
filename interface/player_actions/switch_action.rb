@@ -1,3 +1,4 @@
+require_relative "action"
 require_relative "../trainer"
 
 class SwitchAction < Action

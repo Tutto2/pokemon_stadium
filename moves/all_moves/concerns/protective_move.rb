@@ -1,6 +1,6 @@
-require_relative "../move"
-require_relative "../../messages_pool"
-require_relative "../../battle_log"
+require_relative "../../move"
+require_relative "../../../messenger/messages_pool"
+require_relative "../../../messenger/battle_log"
 
 module ProtectiveMove
   def chance_of_succeed

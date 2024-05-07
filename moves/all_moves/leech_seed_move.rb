@@ -1,4 +1,4 @@
-require_relative "move"
+require_relative "../move"
 
 class LeechSeedMove < Move
   def self.learn

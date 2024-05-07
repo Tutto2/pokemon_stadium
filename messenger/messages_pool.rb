@@ -1,6 +1,6 @@
-require_relative 'moves/move'
-require_relative 'pokemon/pokemon'
-require_relative 'trainer'
+# require_relative 'moves/move'
+# require_relative 'pokemon/pokemon'
+# require_relative 'trainer'
 require_relative 'battle_log'
 
 class MessagesPool
@@ -13,6 +13,53 @@ class MessagesPool
       BattleLog.instance.log("Invalid game settings, must select only 2 - 4 players")
     end
     BattleLog.instance.display_messages
+  end
+
+  def self.interface_index
+    BattleLog.instance.log("1- Battle")
+    BattleLog.instance.log("2- Load data")
+  end
+  
+  def self.select_first_action
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Select an option: ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.battle_settings_options
+    BattleLog.instance.log("1- Single Battle")
+    BattleLog.instance.log("2- Double Battle")
+    BattleLog.instance.log("3- Battle Royale")
+    BattleLog.instance.log("4- Go Back")
+  end
+  
+  def self.select_battle_settings
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Select the index of a battle format: ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.select_players_num
+    BattleLog.instance.log("Please select how many players would participate (type 0 to go back): ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.team_index(team, index, view)
+    BattleLog.instance.log("\n")
+    if view == 'simple'
+      BattleLog.instance.log("#{index}- #{team["team"]}:")
+      team["pokemons"].map do |pok|
+        BattleLog.instance.log("   - #{pok["name"]}")
+      end
+      BattleLog.instance.log("\n")
+    else
+      BattleLog.instance.log("#{index}- #{team["team"]}:")
+      team["pokemons"].map do |pok|
+        BattleLog.instance.log(" - #{pok["name"]}, Nature: #{pok["nature"]}, IVs: #{pok["ivs"]}, EVs: #{pok["evs"]}")
+        BattleLog.instance.log("   - Moves: #{pok["moves"]}")
+        BattleLog.instance.log("\n")
+      end
+    end
   end
 
   def self.select_player_name(index)
@@ -38,9 +85,22 @@ class MessagesPool
     BattleLog.instance.display_messages
   end
 
-  def self.team_selection(name)
-    BattleLog.instance.log("#{name}, do you want to select a pre-set team? (Y/N): ", :fillable)
+  def self.team_selection_index
+    BattleLog.instance.log("1- Select a pre-set team")
+    BattleLog.instance.log("2- Build your own team")
+  end
+  
+  def self.action_selection(name)
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("#{name}, select an option: ", :fillable)
     BattleLog.instance.display_messages
+  end
+
+  def self.pre_set_team_selection_index
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("1- Select a team")
+    BattleLog.instance.log("2- Detailed view of the teams")
+    BattleLog.instance.log("3- Go back")
   end
 
   def self.pokemon_selection(name)

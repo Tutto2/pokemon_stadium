@@ -1,8 +1,8 @@
 curr_dir = File.dirname(__FILE__)
-moves_path = File.join(curr_dir, '..', 'moves')
+moves_path = File.join(curr_dir, '../..', 'moves/all_moves')
 file_paths = Dir.glob(File.join(moves_path, '*.rb'))
 
-require_relative "../pokemon/pokemon"
+require_relative "../pokemon"
 file_paths.each do |file_path|
   require_relative file_path
 end

@@ -1,4 +1,4 @@
-require_relative "move"
+require_relative "../move"
 
 class EruptionMove < Move
   include BasicSpecialAtk

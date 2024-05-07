@@ -1,4 +1,4 @@
-require_relative "../move"
+require_relative "../../move"
 
 module MigratePokInfo
   def migrate_stat_stages(pokemon_target)

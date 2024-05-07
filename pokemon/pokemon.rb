@@ -1,11 +1,11 @@
-require_relative "../messages_pool"
-require_relative "../battle_log"
-require_relative "../actions/action"
+require_relative "../messenger/messages_pool"
+require_relative "../messenger/battle_log"
+# require_relative "../actions/action"
 require_relative "../types/type_factory"
 require_relative "stats"
 require_relative "metadata_handling"
-require_relative "targeting_handling"
-require_relative "../conditions/health_conditions/health_conditions"
+require_relative "target_management"
+# require_relative "conditions/health_conditions/health_conditions"
 require "pry"
 
 class Pokemon

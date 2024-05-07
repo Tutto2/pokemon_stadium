@@ -1,4 +1,4 @@
-require_relative "../move"
+require_relative "../../move"
 
 module StatChanges
   def stat_changes(target = pokemon)

@@ -1,5 +1,6 @@
-require_relative "messages_pool"
-require_relative "actions/menu"
+require 'json'
+require_relative "../messenger/messages_pool"
+# require_relative "menu"
 
 class Trainer
   attr_accessor :name, :team, :action, :teammate, :data, :battleground
@@ -19,41 +20,25 @@ class Trainer
 
     return Trainer.new(name: name) if !name.empty? && name.length < 10
     MessagesPool.invalid_name_input
+
     select_name(index, players_num, battle_type)
   end
 
-  def team_build(pokemons, players_num)
+  def team_selection(pokemons, players_num)
     MessagesPool.menu_leap
     @team.clear
-    MessagesPool.team_selection(name)
-    resp = gets.chomp.upcase
+    MessagesPool.team_selection_index
+    index_selection = 0
+    
+    loop do
+      MessagesPool.action_selection(name)
+      index_selection = gets.chomp.to_i
 
-    if ["Y", "YES"].include?(resp)
-      path = 'actions/inputs'
-      ext = '*.pkteam'
-      files = Dir.glob(File.join(path, ext))
-      complete_name = files[0].split("/")
-      clean_name = complete_name[-1].split(".")
-      output = clean_name[0].capitalize
-      puts output
-
-      # 
-    else
-      MessagesPool.pokemon_selection(name)
-      selection = gets.chomp.split.map(&:to_i)
-
-      if team_verification(selection, pokemons, players_num)
-        @team = selection.map { |pick| pokemons[pick-1] }
-        @team.each { |pok| pok.trainer = self }
-      else
-        MessagesPool.invalid_pokemon_selection
-        return team_build(pokemons, players_num)
-      end
+      break if [1, 2].include?(index_selection)
+      MessagesPool.invalid_option
     end
-  end
 
-  def team_verification(selection, pokemons, players_num)
-    selection.all? { |pick| (1..pokemons.size).include?(pick) } && (( players_num == 2 && (1..6).include?(selection.size)) || (players_num > 2 && (1..3).include?(selection.size)))
+    index_selection == 1 ? pre_set_team_index(pokemons, players_num) : build_team(pokemons, players_num)
   end
 
   def assing_player_team(index, players, battleground)
@@ -161,5 +146,81 @@ class Trainer
 
   def ==(other)
     name == other.name
+  end
+
+  private
+
+  def pre_set_team_index(pokemons, players_num)
+    view_index = view_pre_set_teams
+    return team_selection(pokemons, players_num) if view_index == 3
+
+    path = 'interface/input_management'
+    ext = '*_team.rb'
+    files = Dir.glob(File.join(path, ext))
+    view = view_index == 1 ? 'simple' : 'detailed'
+
+    files.each.with_index(1) do |file, index|
+      read_file = File.read(file)
+      hash = JSON.parse(read_file)
+      BattleLog.instance.log(MessagesPool.team_index(hash, index, view))
+    end
+    BattleLog.instance.display_messages
+
+    select_pre_set_team(files, pokemons, players_num)
+  end
+
+  def view_pre_set_teams
+    MessagesPool.pre_set_team_selection_index
+    selection_index = 0
+    loop do
+      MessagesPool.action_selection(name)
+      selection_index = gets.chomp.to_i
+
+      break if (1..3).include?(selection_index)
+      MessagesPool.invalid_option
+    end
+
+    selection_index
+  end
+
+  def select_pre_set_team(files, pokemons, players_num)
+    team_index = 0
+    loop do
+      MessagesPool.action_selection(name)
+      team_index = gets.chomp.to_i
+
+      break if (1..(files.size + 1)).include?(team_index)
+      MessagesPool.invalid_option
+    end
+
+    return pre_set_team_index(pokemons, players_num) if team_index == files.size + 1
+
+    team_file = File.read(files[team_index - 1])
+    JSON.parse(team_file)
+  end
+
+  def build_team(pokemons, players_num)
+    view_all_pokes(pokemons)
+    MessagesPool.pokemon_selection(name)
+    selection = gets.chomp.split.map(&:to_i)
+
+    if team_verification(selection, pokemons, players_num)
+      @team = selection.map { |pick| pokemons[pick-1] }
+      @team.each { |pok| pok.trainer = self }
+    else
+      MessagesPool.invalid_pokemon_selection
+      return team_selection(pokemons, players_num)
+    end
+  end
+
+  def view_all_pokes(pokemons)
+    pokemons.each.with_index(1) do |pok, index|
+      BattleLog.instance.log(MessagesPool.poke_index(pok, index)) if !pok.fainted?
+    end
+    BattleLog.instance.display_messages
+  end
+
+  def team_verification(selection, pokemons, players_num)
+    selection.all? { |pick| (1..pokemons.size).include?(pick) } && (( players_num == 2 && (1..6).include?(selection.size)) || (players_num > 2 && (1..3).include?(selection.size)))
   end
 end

@@ -1,4 +1,4 @@
-require_relative "move"
+require_relative "../move"
 
 class BoomburstMove < Move
   include BasicSpecialAtk

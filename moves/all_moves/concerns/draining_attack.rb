@@ -1,4 +1,4 @@
-require_relative "../move"
+require_relative "../../move"
 
 module DrainingAttack
   def calc_drain(dmg)

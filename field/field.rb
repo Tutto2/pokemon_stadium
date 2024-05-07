@@ -1,5 +1,3 @@
-require_relative "pokemon/pokemon"
-
 class Field
   attr_accessor :positions, :weather, :field_conditions
 

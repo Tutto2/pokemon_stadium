@@ -1,6 +1,6 @@
-require_relative "../pokemon/pokemon"
-require_relative "../messages_pool"
-require_relative "../battle_log"
+# require_relative "../pokemon/pokemon"
+# require_relative "../messages_pool"
+# require_relative "../battle_log"
 
 class Action
   attr_accessor :behaviour

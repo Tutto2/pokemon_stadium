@@ -1,10 +1,11 @@
-require_relative "messages_pool"
-require_relative "battle_log"
-require_relative "trainer"
-require_relative "field"
-require_relative "actions/menu"
-require_relative "actions/action_queue"
-require_relative "pokedex/pokedex"
+require_relative "interface/game_options"
+require_relative "interface/trainer"
+# require_relative "interface/menu"
+require_relative "messenger/messages_pool"
+require_relative "messenger/battle_log"
+require_relative "field/field"
+# require_relative "action_queue"
+require_relative "pokemon/pokedex/pokedex"
 require "httparty"
 require "pry"
 
@@ -12,8 +13,8 @@ class PokemonBattleField
   attr_accessor :action_list, :attack_list
   attr_reader :players, :battle_type, :all_pokes, :turn, :battle_type, :field
 
-  def self.init_game(players_num, battle_type, pokemons)
-    return MessagesPool.invalid_game_settings(players_num, battle_type) unless game_settings_verification(players_num, battle_type)
+  def self.init_game(pokemons)
+    players_num, battle_type = GameOptions.game_settings_interface
     players = select_players_names(players_num, battle_type)
 
     battlefield = PokemonBattleField.new(
@@ -23,17 +24,6 @@ class PokemonBattleField
     )
 
     battlefield.choose_pokemons
-  end
-
-  def self.game_settings_verification(players_num, battle_type)
-    case players_num
-    when 2
-      battle_type == 'single' || battle_type == 'double'
-    when 3, 4
-      battle_type == 'royale' || battle_type == 'double'
-    else
-      false
-    end
   end
 
   def self.select_players_names(players_num, battle_type)
@@ -53,11 +43,11 @@ class PokemonBattleField
 
 
   def choose_pokemons
-    view_pokemons(all_pokes)
     players.each.with_index do |player, index|
-      player.team_build(all_pokes, players.size)
+      player.team_selection(all_pokes, players.size)
       player.assing_player_team(index, players, self)
     end
+
     start_battle
   end
 
@@ -83,25 +73,25 @@ class PokemonBattleField
 
   private
   
-  def view_pokemons(pokemons)
-    pokemons.each.with_index(1) do |pok, index|
-      BattleLog.instance.log(MessagesPool.poke_index(pok, index)) if !pok.fainted?
-    end
-    BattleLog.instance.display_messages
-  end
-  
   def select_initial_pok
     players.each.with_index(1) do |player, index|
       view_pokemons(player.team)
       index_selection = select_initial_index(player)
       pok_selection = []
-
+      
       index_selection.size.times do
         pok_selection << player.team[index_selection.shift - 1]
       end
-
+      
       assing_position(pok_selection, index)
     end
+  end
+
+  def view_pokemons(pokemons)
+    pokemons.each.with_index(1) do |pok, index|
+      BattleLog.instance.log(MessagesPool.poke_index(pok, index)) if !pok.fainted?
+    end
+    BattleLog.instance.display_messages
   end
 
   def select_initial_index(player)
@@ -316,7 +306,7 @@ pokemons = [
   Pokedex.catch("Dracanfly")
 ]
 
-puts PokemonBattleField.init_game(4, 'double', pokemons)
+puts PokemonBattleField.init_game(pokemons)
 
 # Nueva interfaz:
 # Pantalla inicial CARGAR DATOS o JUGAR
