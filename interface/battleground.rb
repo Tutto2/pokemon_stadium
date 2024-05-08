@@ -1,38 +1,41 @@
-require_relative "interface/game_options"
-require_relative "interface/trainer"
+require_relative "game_options"
+require_relative "trainer"
 # require_relative "interface/menu"
-require_relative "messenger/messages_pool"
-require_relative "messenger/battle_log"
-require_relative "field/field"
+require_relative "../messenger/messages_pool"
+require_relative "../messenger/battle_log"
+require_relative "../field/field"
 # require_relative "action_queue"
-require_relative "pokemon/pokedex/pokedex"
-require "httparty"
+require_relative "../pokemon/pokedex/pokedex"
 require "pry"
 
-class PokemonBattleField
+class Battleground
   attr_accessor :action_list, :attack_list
   attr_reader :players, :battle_type, :all_pokes, :turn, :battle_type, :field
-
-  def self.init_game(pokemons)
-    players_num, battle_type = GameOptions.game_settings_interface
-    players = select_players_names(players_num, battle_type)
-
-    battlefield = PokemonBattleField.new(
-      players: players,
-      battle_type: battle_type,
-      all_pokes: pokemons
-    )
-
-    battlefield.choose_pokemons
-  end
-
-  def self.select_players_names(players_num, battle_type)
-    (1..players_num).map do |index|
-      Trainer.select_name(index, players_num, battle_type)
-    end
-  end
-
-  def initialize(players:, battle_type:, all_pokes:, action_list: {}, attack_list: {})
+  
+  @@array = [
+    Pokedex.catch("Squirtle"),
+    Pokedex.catch("Pikachu"),
+    Pokedex.catch("Jigglypuff"),
+    Pokedex.catch("Golem"),
+    Pokedex.catch("Snorlax"),
+    Pokedex.catch("Gengar"),
+    Pokedex.catch("Ditto"),
+    Pokedex.catch("Mew"),
+    Pokedex.catch("Sceptile"),
+    Pokedex.catch("Milotic"),
+    Pokedex.catch("Kommo-o"),
+    Pokedex.catch("Dragapult"),
+    Pokedex.catch("Baxcalibur"),
+    Pokedex.catch("Ogerpon (Fire)"),
+    Pokedex.catch("Tinkaton"),
+    Pokedex.catch("Ceruledge"),
+    Pokedex.catch("Poltchageist"),
+    Pokedex.catch("Gholdengo"),
+    Pokedex.catch("Zoroark-hisui"),
+    Pokedex.catch("Dracanfly")
+  ]
+  
+  def initialize(players:, battle_type:, all_pokes: @@array, action_list: {}, attack_list: {})
     @players = players
     @battle_type = battle_type
     @all_pokes = all_pokes
@@ -41,14 +44,17 @@ class PokemonBattleField
     @field = Field.new
   end
 
+  def select_players_names
+    @players = (1..players).map do |index|
+      Trainer.select_name(index, players, battle_type)
+    end
+  end
 
   def choose_pokemons
     players.each.with_index do |player, index|
       player.team_selection(all_pokes, players.size)
       player.assing_player_team(index, players, self)
     end
-
-    start_battle
   end
 
   def start_battle
@@ -283,34 +289,11 @@ class PokemonBattleField
   end
 end
 
-pokemons = [
-  Pokedex.catch("Squirtle"),
-  Pokedex.catch("Pikachu"),
-  Pokedex.catch("Jigglypuff"),
-  Pokedex.catch("Golem"),
-  Pokedex.catch("Snorlax"),
-  Pokedex.catch("Gengar"),
-  Pokedex.catch("Ditto"),
-  Pokedex.catch("Mew"),
-  Pokedex.catch("Sceptile"),
-  Pokedex.catch("Milotic"),
-  Pokedex.catch("Kommo-o"),
-  Pokedex.catch("Dragapult"),
-  Pokedex.catch("Baxcalibur"),
-  Pokedex.catch("Ogerpon (Fire)"),
-  Pokedex.catch("Tinkaton"),
-  Pokedex.catch("Ceruledge"),
-  Pokedex.catch("Poltchageist"),
-  Pokedex.catch("Gholdengo"),
-  Pokedex.catch("Zoroark-hisui"),
-  Pokedex.catch("Dracanfly")
-]
-
-puts PokemonBattleField.init_game(pokemons)
-
 # Nueva interfaz:
 # Pantalla inicial CARGAR DATOS o JUGAR
 # Pantalla de CARGA DATOS = [ Cargar equipos, pokemons o ataques, back ]
 # Pantalla de JUGAR = [ Luego de elegir numero de jugadores y nombres, elegir equipo en vista detallada o simple ]
 # Listar todos los ataques disponibles
 # Integrar con la API
+
+# Class que funciona como controlador para hacer llamados a pokemon API

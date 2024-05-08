@@ -4,7 +4,13 @@
 require_relative 'battle_log'
 
 class MessagesPool
-  def invalid_game_settings(players_num, battle_type)
+  def self.interface_index
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("1- Start a battle")
+    BattleLog.instance.log("2- Load data")
+  end
+  
+  def self.invalid_game_settings(players_num, battle_type)
     if battle_type == 'double' && players_num == 3
       BattleLog.instance.log("Invalid game settings, when 'double' battle is set the number of players must be even")
     elsif battle_type == 'royale' && players_num == 2
@@ -15,12 +21,6 @@ class MessagesPool
     BattleLog.instance.display_messages
   end
 
-  def self.interface_index
-    BattleLog.instance.log("\n")
-    BattleLog.instance.log("1- Battle")
-    BattleLog.instance.log("2- Load data")
-  end
-  
   def self.select_first_action
     BattleLog.instance.log("\n")
     BattleLog.instance.log("Select an option: ", :fillable)
@@ -28,9 +28,10 @@ class MessagesPool
   end
 
   def self.loading_index
-    BattleLog.instance.log("1- Load Team")
-    BattleLog.instance.log("2- Load Pokemons")
-    BattleLog.instance.log("3- Go Back")
+    BattleLog.instance.log("1- Load team")
+    BattleLog.instance.log("2- View teams")
+    BattleLog.instance.log("3- Load pokemons")
+    BattleLog.instance.log("4- Go back")
   end
 
   def self.load_team_msg
@@ -66,6 +67,30 @@ class MessagesPool
     BattleLog.instance.display_messages
   end
 
+  def self.view_team_index
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Type the ID of a team to see more details (type any other key to go back): ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.team_id_error_msg(id)
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Team with the ID: #{id} not found")
+    BattleLog.instance.display_messages
+  end
+
+  def self.view_team_error
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Error, please verify the url at './interface/data_manager.rb'")
+    BattleLog.instance.display_messages
+  end
+
+  def self.invalid_input_msg
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Invalid inputs. Try again")
+    BattleLog.instance.display_messages
+  end
+
   def self.battle_settings_options
     BattleLog.instance.log("1- Single Battle")
     BattleLog.instance.log("2- Double Battle")
@@ -82,24 +107,6 @@ class MessagesPool
   def self.select_players_num
     BattleLog.instance.log("Please select how many players would participate (type 0 to go back): ", :fillable)
     BattleLog.instance.display_messages
-  end
-
-  def self.team_index(team, index, view)
-    BattleLog.instance.log("\n")
-    if view == 'simple'
-      BattleLog.instance.log("#{index}- #{team["team"]}:")
-      team["pokemons"].map do |pok|
-        BattleLog.instance.log("   - #{pok["name"]}")
-      end
-      BattleLog.instance.log("\n")
-    else
-      BattleLog.instance.log("#{index}- #{team["team"]}:")
-      team["pokemons"].map do |pok|
-        BattleLog.instance.log(" - #{pok["name"]}, Nature: #{pok["nature"]}, IVs: #{pok["ivs"]}, EVs: #{pok["evs"]}")
-        BattleLog.instance.log("   - Moves: #{pok["moves"]}")
-        BattleLog.instance.log("\n")
-      end
-    end
   end
 
   def self.select_player_name(index)
@@ -136,11 +143,17 @@ class MessagesPool
     BattleLog.instance.display_messages
   end
 
-  def self.pre_set_team_selection_index
+  def self.pre_set_team_index
     BattleLog.instance.log("\n")
-    BattleLog.instance.log("1- Select a team")
-    BattleLog.instance.log("2- Detailed view of the teams")
-    BattleLog.instance.log("3- Go back")
+    BattleLog.instance.log("Select a team by typing its ID number. To view more details, add a question mark (?) after the ID")
+    BattleLog.instance.log("For exmple, type '3' to choose a team or '3?' for more details. ('0' to go back): ", :fillable)
+    BattleLog.instance.display_messages
+  end
+
+  def self.select_detailed_team
+    BattleLog.instance.log("\n")
+    BattleLog.instance.log("Type 'select' to choose this team, type any other key to go back: ", :fillable)
+    BattleLog.instance.display_messages
   end
 
   def self.pokemon_selection(name)

@@ -1,4 +1,5 @@
 require 'json'
+require_relative 'data_manager'
 require_relative "../messenger/messages_pool"
 # require_relative "menu"
 
@@ -151,52 +152,41 @@ class Trainer
   private
 
   def pre_set_team_index(pokemons, players_num)
-    view_index = view_pre_set_teams
-    return team_selection(pokemons, players_num) if view_index == 3
+    data = DataManager.view_teams_simple
 
-    path = 'interface/input_management'
-    ext = '*_team.rb'
-    files = Dir.glob(File.join(path, ext))
-    view = view_index == 1 ? 'simple' : 'detailed'
+    unless data.empty?
+      MessagesPool.pre_set_team_index 
+      index = gets.chomp
 
-    files.each.with_index(1) do |file, index|
-      read_file = File.read(file)
-      hash = JSON.parse(read_file)
-      BattleLog.instance.log(MessagesPool.team_index(hash, index, view))
+      return team_selection(pokemons, players_num) if index == 0
+      return pre_set_team_index(pokemons, players_num) unless valid_selection(index.to_i)
+
+      if index.include?("?") && detailed_team_view(index.to_i) != 'select'
+        pre_set_team_index(pokemons, players_num)
+      else
+        puts "Im here"
+        @team = DataManager.team_converter(id)
+      end
+    else
+      MessagesPool.view_team_error
     end
-    BattleLog.instance.display_messages
-
-    select_pre_set_team(files, pokemons, players_num)
   end
 
-  def view_pre_set_teams
-    MessagesPool.pre_set_team_selection_index
-    selection_index = 0
-    loop do
-      MessagesPool.action_selection(name)
-      selection_index = gets.chomp.to_i
+  def valid_selection(index)
+    team = DataManager.get_team(index)
 
-      break if (1..3).include?(selection_index)
+    if team.empty?
       MessagesPool.invalid_option
+      false
+    else
+      true
     end
-
-    selection_index
   end
 
-  def select_pre_set_team(files, pokemons, players_num)
-    team_index = 0
-    loop do
-      MessagesPool.action_selection(name)
-      team_index = gets.chomp.to_i
-
-      break if (1..(files.size + 1)).include?(team_index)
-      MessagesPool.invalid_option
-    end
-
-    return pre_set_team_index(pokemons, players_num) if team_index == files.size + 1
-
-    team_file = File.read(files[team_index - 1])
-    JSON.parse(team_file)
+  def detailed_team_view(index)
+    DataManager.view_team_detailed(index)
+    MessagesPool.select_detailed_team
+    gets.chomp.downcase
   end
 
   def build_team(pokemons, players_num)

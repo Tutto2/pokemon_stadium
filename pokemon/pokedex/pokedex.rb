@@ -13,7 +13,9 @@ class Pokedex < Pokemon
     when "Pikachu"
       Pokemon.new(
         name: "Pikachu",
+        # nickname
         types: [Types::ELECTRIC],
+        # Investigar 'Constantize'
         stats: [
           Stats.new(name: :hp, base_value: 35 ),
           Stats.new(name: :atk, base_value: 55 ),
@@ -24,6 +26,8 @@ class Pokedex < Pokemon
         ],
         gender: :female,
         weight: 6,
+        # TAREA implementar nature, evs e ivs
+        # Asignar ataques por el nombre que llega como string
         attacks: [
           VoltTackleMove.learn,
           DischargeMove.learn,
