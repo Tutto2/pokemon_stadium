@@ -2,7 +2,9 @@ curr_dir = File.dirname(__FILE__)
 moves_path = File.join(curr_dir, '../..', 'moves/all_moves')
 file_paths = Dir.glob(File.join(moves_path, '*.rb'))
 
-require_relative "../pokemon"
+require 'active_support/all'
+require_relative '../pokemon'
+require_relative '../../types/type_factory'
 file_paths.each do |file_path|
   require_relative file_path
 end
@@ -13,9 +15,7 @@ class Pokedex < Pokemon
     when "Pikachu"
       Pokemon.new(
         name: "Pikachu",
-        # nickname
-        types: [Types::ELECTRIC],
-        # Investigar 'Constantize'
+        types: ["Types::ELECTRIC".constantize],
         stats: [
           Stats.new(name: :hp, base_value: 35 ),
           Stats.new(name: :atk, base_value: 55 ),
@@ -25,9 +25,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 90 )
         ],
         gender: :female,
-        weight: 6,
-        # TAREA implementar nature, evs e ivs
-        # Asignar ataques por el nombre que llega como string
+        # weight: 6,
         attacks: [
           VoltTackleMove.learn,
           DischargeMove.learn,
@@ -48,7 +46,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 43 )
         ],
         gender: :male,
-        weight: 9,
+        # weight: 9,
         attacks: [
           OutrageMove.learn,
           HydroPumpMove.learn,
@@ -69,7 +67,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 20 )
         ],
         gender: :female,
-        weight: 5.5,
+        # weight: 5.5,
         attacks: [
           HyperVoiceMove.learn,
           DoubleEdgeMove.learn,
@@ -90,7 +88,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 30 )
         ],
         gender: :male,
-        weight: 460,
+        # weight: 460,
         attacks: [
           FacadeMove.learn,
           PsychUpMove.learn,
@@ -111,7 +109,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 81 )
           ],
         gender: :female,
-        weight: 162,
+        # weight: 162,
         attacks: [
           HydroPumpMove.learn,
           ScaldMove.learn,
@@ -132,7 +130,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 45 )
         ],
         gender: :male,
-        weight: 300,
+        # weight: 300,
         attacks: [
           EarthquakeMove.learn,
           ExplosionMove.learn,
@@ -153,7 +151,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 120 )
         ],
         gender: :male,
-        weight: 52.2,
+        # weight: 52.2,
         attacks: [
           GigaDrainMove.learn,
           FrenzyPlantMove.learn,
@@ -173,7 +171,7 @@ class Pokedex < Pokemon
           Stats.new(name: :sp_def, base_value: 100 ),
           Stats.new(name: :spd, base_value: 100 )
         ],
-        weight: 4,
+        # weight: 4,
         attacks: [
           SacredFireMove.learn,
           FutureSightMove.learn,
@@ -193,7 +191,7 @@ class Pokedex < Pokemon
           Stats.new(name: :sp_def, base_value: 48 ),
           Stats.new(name: :spd, base_value: 48 )
         ],
-        weight: 4,
+        # weight: 4,
         attacks: [
           TransformMove.learn
         ]
@@ -211,7 +209,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 142 )
         ],
         gender: :male,
-        weight: 50,
+        # weight: 50,
         attacks: [
           PhantomForceMove.learn,
           DragonDartsMove.learn,
@@ -232,7 +230,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 85 )
         ],
         gender: :male,
-        weight: 78.2,
+        # weight: 78.2,
         attacks: [
           CloseCombatMove.learn,
           ClangingScalesMove.learn,
@@ -253,7 +251,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 87 )
         ],
         gender: :female,
-        weight: 210,
+        # weight: 210,
         attacks: [
           IcicleCrashMove.learn,
           GlaiveRushMove.learn,
@@ -274,7 +272,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 110 )
         ],
         gender: :male,
-        weight: 39.8,
+        # weight: 39.8,
         attacks: [
           SappySeedMove.learn,
           SpikyShieldMove.learn,
@@ -295,7 +293,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 94)
         ],
         gender: :male,
-        weight: 112.8,
+        # weight: 112.8,
         attacks: [
           PlayRoughMove.learn,
           MetronomeMove.learn,
@@ -316,7 +314,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 110)
         ],
         gender: :male,
-        weight: 40.5,
+        # weight: 40.5,
         attacks: [
           ShadowBallMove.learn,
           SludgeBombMove.learn,
@@ -337,7 +335,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 85)
         ],
         gender: :male,
-        weight: 62,
+        # weight: 62,
         attacks: [
           ShadowClawMove.learn,
           BitterBladeMove.learn,
@@ -357,7 +355,7 @@ class Pokedex < Pokemon
           Stats.new(name: :sp_def, base_value: 54),
           Stats.new(name: :spd, base_value: 50)
         ],
-        weight: 1.1,
+        # weight: 1.1,
         attacks: [  
           FoulPlayMove.learn,
           PainSplitMove.learn,
@@ -378,7 +376,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 84)
         ],
         gender: :male,
-        weight: 30,
+        # weight: 30,
         attacks: [
           PsyshockMove.learn,
           ShadowBallMove.learn,
@@ -399,7 +397,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 110)
         ],
         gender: :male,
-        weight: 73,
+        # weight: 73,
         attacks: [
           SuckerPunchMove.learn,
           BitterMaliceMove.learn,
@@ -420,7 +418,7 @@ class Pokedex < Pokemon
           Stats.new(name: :spd, base_value: 143)
         ],
         gender: :male,
-        weight: 47,
+        # weight: 47,
         attacks: [
           UTurnMove.learn,
           FlamethrowerMove.learn,
@@ -442,7 +440,7 @@ class Pokedex < Pokemon
     #       Stats.new(name: :spd, base_value: 34)
     #     ],
     #     gender: :male,
-    #     weight: 640,
+        # weight: 640,
     #     attacks: [
     #       UTurnMove.learn,
     #       FlamethrowerMove.learn,

@@ -9,7 +9,7 @@ class AttackAction < Action
   def perform
     BattleLog.instance.log(MessagesPool.leap)
     condition = user_pokemon.health_condition
-    if condition == :frozen && ( condition.free_chance? || behaviour.can_defrost?(behaviour.attack_name) )
+    if condition == :frozen && ( condition.free_chance? || behaviour.can_defrost? )
       BattleLog.instance.log(MessagesPool.thawed_out_msg(user_pokemon.name))
       user_pokemon.health_condition = nil
     end

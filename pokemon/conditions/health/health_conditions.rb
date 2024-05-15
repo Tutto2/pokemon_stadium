@@ -1,8 +1,4 @@
-require_relative "../../pokemon/stats"
-require_relative "../../pokemon/pokemon"
-require_relative "../../types/type_factory"
-require_relative "../../messages_pool"
-require_relative "../../battle_log"
+require_relative "../../pokemon"
 
 class HealthConditions
   attr_accessor :name, :immune_type, :turn

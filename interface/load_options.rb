@@ -47,17 +47,19 @@ class LoadOptions
   end
 
   def self.view_teams
-    data = DataManager.view_teams_simple
+    response = DataManager.new
+    data = response.teams_data
 
     unless data.empty?
+      response.view_teams_simple
       MessagesPool.view_team_index 
-      index = gets.chomp.to_i
-      return load_interface if index == 0
+      selection = gets.chomp.to_i
 
-      DataManager.view_team_detailed(index)
-    else
-      MessagesPool.view_team_error 
+      if (1..data.count).include?(selection)
+        response.view_team_detailed(selection)
+      end
     end
+    puts
     load_interface
   end
 

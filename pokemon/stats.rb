@@ -1,18 +1,29 @@
+require 'active_support/inflector'
 require_relative "../messenger/messages_pool"
 require_relative "../messenger/battle_log"
 
 class Stats
   POSSIBLE_STATS = [:hp, :atk, :def, :sp_atk, :sp_def, :spd, :evs, :acc]
+  BUFF_ATK_NATURES = %w[lonely brave adamant naughty]
+  NERF_ATK_NATURES = %w[bold timid modest calm]
+  BUFF_DEF_NATURES = %w[bold relaxed impish lax]
+  NERF_DEF_NATURES = %w[lonely hasty mild gentle]
+  BUFF_SP_ATK_NATURES = %w[modest mild quiet rash]
+  NERF_SP_ATK_NATURES = %w[adamant impish jolly careful]
+  BUFF_SP_DEF_NATURES = %w[calm gentle sassy careful]
+  NERF_SP_DEF_NATURES = %w[naughty lax naive rash]
+  BUFF_SPD_NATURES = %w[timid hasty jolly naive]
+  NERF_SPD_NATURES = %w[brave relaxed quiet sassy]
 
-  attr_accessor :stage
+  attr_accessor :stage, :iv, :ev, :nature
   attr_reader :name, :initial_value, :curr_value
 
-  def initialize(name:, base_value: , ev: 0, iv: 31, nature_value: 1.0)
+  def initialize(name:, base_value:, ev: 0, iv: 0, nature: 'hardy')
     @name = name
     @base_value = base_value
-    @ev = ev
     @iv = iv
-    @nature_value = name == :hp ? 1.0 : nature_value
+    @ev = ev
+    @nature = nature
     @initial_value = 0
     @curr_value = @initial_value
     @stage = stage || 0
@@ -25,9 +36,21 @@ class Stats
     else
       stat_complement = hp? ? (lvl + 5) : 0
       common_formula = ( ( ( ( 2 * @base_value + @iv + ( @ev / 4 )) * lvl ) / 100 ) + 5 )
-      calculation = (common_formula + stat_complement) * @nature_value
-      @initial_value = calculation
-      @curr_value = calculation
+      calculation = (common_formula + stat_complement) * nature_value
+      @initial_value = calculation.to_i
+      @curr_value = calculation.to_i
+    end
+  end
+
+  def nature_value
+    return 1 if hp?
+    
+    if "Stats::BUFF_#{name.upcase}_NATURES".constantize.include?(nature)
+      1.1
+    elsif "Stats::NERF_#{name.upcase}_NATURES".constantize.include?(nature)
+      0.9
+    else
+      1
     end
   end
 

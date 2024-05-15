@@ -11,7 +11,7 @@ class TransformedStatus < VolatileStatus
   def self.previous_attributes(pokemon)
     {
       types: pokemon.types.dup,
-      weight: pokemon.weight.dup,
+      # weight: pokemon.weight.dup,
       gender: pokemon.gender.dup,
       attacks: pokemon.attacks.dup,
       stats: pokemon.stats.dup
@@ -20,7 +20,7 @@ class TransformedStatus < VolatileStatus
 
   def migrate_attributes(pokemon, pokemon_target)
     pokemon.types = pokemon_target.types
-    pokemon.weight = pokemon_target.weight
+    # pokemon.weight = pokemon_target.weight
     pokemon.gender = pokemon_target.gender
     migrate_attacks(pokemon, pokemon_target)
     migrate_stats(pokemon, pokemon_target)

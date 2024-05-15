@@ -8,16 +8,17 @@ class BattleLog
   end
 
   def log(message, type = :subtitle)
-    @messages.enqueue({type => message})
+    @messages.enqueue([type, message])
   end
 
   def display_messages
     until @messages.empty?
-      msg = @messages.dequeue
-      if msg.keys.first == :subtitle
-        puts msg.values.first
+      type, msg = @messages.dequeue
+      case type 
+      when :subtitle then puts msg
+      when :fillable then print msg
       else
-        print msg.values.first
+        puts "#{type}:#{type.class}"
       end
     end
   end

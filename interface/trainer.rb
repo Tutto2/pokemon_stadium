@@ -1,7 +1,7 @@
 require 'json'
 require_relative 'data_manager'
 require_relative "../messenger/messages_pool"
-# require_relative "menu"
+require_relative "menu"
 
 class Trainer
   attr_accessor :name, :team, :action, :teammate, :data, :battleground
@@ -152,41 +152,36 @@ class Trainer
   private
 
   def pre_set_team_index(pokemons, players_num)
-    data = DataManager.view_teams_simple
+    response = DataManager.new
+    data = response.teams_data
 
     unless data.empty?
+      response.view_teams_simple
       MessagesPool.pre_set_team_index 
-      index = gets.chomp
+      index = gets.chomp.strip
 
-      return team_selection(pokemons, players_num) if index == 0
-      return pre_set_team_index(pokemons, players_num) unless valid_selection(index.to_i)
+      return team_selection(pokemons, players_num) if index.to_i == 0
 
-      if index.include?("?") && detailed_team_view(index.to_i) != 'select'
+      unless (1..data.count).include?(index.to_i)
+        MessagesPool.invalid_option
+        return pre_set_team_index(pokemons, players_num) 
+      end
+
+      if /\A\d+\?\z/.match?(index) && detailed_team_view(response, index.to_i) != 'select'
         pre_set_team_index(pokemons, players_num)
       else
-        puts "Im here"
-        @team = DataManager.team_converter(id)
+        @team = response.team_converter(index.to_i)
+        @team.each { |pok| pok.trainer = self }
       end
     else
       MessagesPool.view_team_error
     end
   end
 
-  def valid_selection(index)
-    team = DataManager.get_team(index)
-
-    if team.empty?
-      MessagesPool.invalid_option
-      false
-    else
-      true
-    end
-  end
-
-  def detailed_team_view(index)
-    DataManager.view_team_detailed(index)
+  def detailed_team_view(response, index)
+    response.view_team_detailed(index)
     MessagesPool.select_detailed_team
-    gets.chomp.downcase
+    gets.chomp.downcase.strip
   end
 
   def build_team(pokemons, players_num)

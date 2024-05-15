@@ -1,14 +1,4 @@
-# curr_dir = File.dirname(__FILE__)
-# file_paths = Dir.glob(File.join(curr_dir, '*.rb'))
-
 require_relative "../../move"
-# require_relative "../../messages_pool"
-# require_relative "../../battle_log"
-# require_relative "../../pokemon/stats"
-# require_relative "../../pokemon/pokemon"
-# file_paths.each do |file_path|
-#   require_relative file_path
-# end
 
 module DamageFormula
   attr_accessor :pokemon_target, :effectiveness
@@ -132,7 +122,7 @@ module DamageFormula
 
   def defrost_evaluation
     if pokemon_target.health_condition == :frozen
-      if attack.type == Types::FIRE || attack.can_defrost?(attack.attack_name)
+      if attack.type == Types::FIRE || attack.can_defrost?
         BattleLog.instance.log(MessagesPool.thawed_out_msg(pokemon_target.name))
         pokemon_target.health_condition = nil
       end

@@ -1,6 +1,5 @@
-# require_relative 'moves/move'
-# require_relative 'pokemon/pokemon'
-# require_relative 'trainer'
+require_relative '../moves/move'
+require_relative '../pokemon/pokemon'
 require_relative 'battle_log'
 
 class MessagesPool
@@ -69,13 +68,13 @@ class MessagesPool
 
   def self.view_team_index
     BattleLog.instance.log("\n")
-    BattleLog.instance.log("Type the ID of a team to see more details (type any other key to go back): ", :fillable)
+    BattleLog.instance.log("Type the index of a team to see more details (type anything else to go back): ", :fillable)
     BattleLog.instance.display_messages
   end
 
-  def self.team_id_error_msg(id)
+  def self.team_index_error_msg(teams_count)
     BattleLog.instance.log("\n")
-    BattleLog.instance.log("Team with the ID: #{id} not found")
+    BattleLog.instance.log("Team not found, please select a number ")
     BattleLog.instance.display_messages
   end
 
@@ -92,6 +91,7 @@ class MessagesPool
   end
 
   def self.battle_settings_options
+    BattleLog.instance.log("\n")
     BattleLog.instance.log("1- Single Battle")
     BattleLog.instance.log("2- Double Battle")
     BattleLog.instance.log("3- Battle Royale")
@@ -145,8 +145,8 @@ class MessagesPool
 
   def self.pre_set_team_index
     BattleLog.instance.log("\n")
-    BattleLog.instance.log("Select a team by typing its ID number. To view more details, add a question mark (?) after the ID")
-    BattleLog.instance.log("For exmple, type '3' to choose a team or '3?' for more details. ('0' to go back): ", :fillable)
+    BattleLog.instance.log("Select a team by typing its index number. To view more details, add a question mark (?) at the end")
+    BattleLog.instance.log("For exmple, '3' to choose a team or '3?' for additional information. ('0' to go back): ", :fillable)
     BattleLog.instance.display_messages
   end
 
@@ -173,7 +173,6 @@ class MessagesPool
     else
       BattleLog.instance.log("#{name} select your pokemon: ", :fillable)
     end
-    BattleLog.instance.log("\n")
     BattleLog.instance.display_messages
   end
 
@@ -238,15 +237,19 @@ class MessagesPool
   end
 
   def self.pokemon_state(pok)
-    BattleLog.instance.log("#{pok.name} - #{pok.hp_value} / #{pok.hp_total} hp (#{pok.types.map(&:to_s).join("/")}) #{pok.health_condition&.name}")
+    if pok.nickname == pok.name
+      BattleLog.instance.log("#{pok.name} - #{pok.hp_value} / #{pok.hp_total} hp (#{pok.types.map(&:to_s).join("/")}) #{pok.health_condition&.name}")
+    else
+      BattleLog.instance.log("#{pok.nickname} (#{pok.name}) - #{pok.hp_value} / #{pok.hp_total} hp (#{pok.types.map(&:to_s).join("/")}) #{pok.health_condition&.name}")
+    end
     pok.volatile_status.each { |k, v| BattleLog.instance.log("#{k}")}
 
-    # pok.stats.each do |stat|
-    #   next if stat == :hp || stat == :spd
-    #   BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
-    # end
-    # BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
-    # BattleLog.instance.log("position: #{pok.field_position}")
+    pok.stats.each do |stat|
+      next if stat == :hp || stat == :spd
+      BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
+    end
+    BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
+    BattleLog.instance.log("position: #{pok.field_position}")
     BattleLog.instance.log("\n")
     BattleLog.instance.display_messages
   end
@@ -401,6 +404,10 @@ class MessagesPool
 
   def self.no_hp_effect_msg(target)
     "It has no effect on #{target}'s HP"
+  end
+
+  def self.splash_msg
+    "But nothing happened!"
   end
 
   def self.recover_msg(target, value)

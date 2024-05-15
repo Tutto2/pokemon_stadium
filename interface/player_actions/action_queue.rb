@@ -1,5 +1,5 @@
 require_relative "action"
-require_relative "../moves/move"
+require_relative "../../moves/move"
 
 class ActionQueue < Action
   attr_reader :priority_table

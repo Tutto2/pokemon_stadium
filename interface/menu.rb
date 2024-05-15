@@ -1,8 +1,7 @@
 require_relative "player_actions/attack_action"
 require_relative "player_actions/switch_action"
-# require_relative "../trainer"
-# require_relative "../messages_pool"
-# require_relative "../moves/move"
+require_relative "../messenger/messages_pool"
+require_relative "../moves/move"
 
 class Menu
   def self.select_action(trainer, user_pokemon)

@@ -1,10 +1,10 @@
 require_relative "game_options"
 require_relative "trainer"
-# require_relative "interface/menu"
+require_relative "menu"
+require_relative "player_actions/action_queue"
 require_relative "../messenger/messages_pool"
 require_relative "../messenger/battle_log"
 require_relative "../field/field"
-# require_relative "action_queue"
 require_relative "../pokemon/pokedex/pokedex"
 require "pry"
 
@@ -94,6 +94,7 @@ class Battleground
   end
 
   def view_pokemons(pokemons)
+    MessagesPool.menu_leap
     pokemons.each.with_index(1) do |pok, index|
       BattleLog.instance.log(MessagesPool.poke_index(pok, index)) if !pok.fainted?
     end
