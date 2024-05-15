@@ -1,6 +1,5 @@
 require_relative "pokemon"
-require_relative "../moves/move"
-require "pry"
+# require_relative "../moves/move"
 
 module MetadataHandling
   def increase_crit_stage(stages)
@@ -9,10 +8,12 @@ module MetadataHandling
   end
 
   def init_several_turn_attack
+    return if !metadata[:turn].nil?
     @metadata[:turn] = 1
   end
 
   def count_attack_turns
+    return if metadata[:turn].nil?
     @metadata[:turn] += 1
   end
 
@@ -32,7 +33,7 @@ module MetadataHandling
     @metadata[:waiting] = 0
   end
 
-  def harm_recieved(dmg)
+  def harm_recieved(dmg, pokemon)
     @metadata[:harm] = dmg
   end
 
@@ -73,8 +74,9 @@ module MetadataHandling
     @metadata[:protection_consecutive_uses] += 1
   end
 
-  def made_contact
+  def made_contact(pokemon)
     @metadata[:touched] = 1
+    @metadata[:attacker] = pokemon
   end
 
   def was_touched?
@@ -108,7 +110,7 @@ module MetadataHandling
   end
 
   def was_successful?
-    @metadata[:perform] == "success"
+    metadata[:perform] == "success"
   end
 
   def reinit_metadata(move)

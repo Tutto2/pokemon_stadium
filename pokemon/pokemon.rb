@@ -1,38 +1,71 @@
-require_relative "../messages_pool"
-require_relative "../battle_log"
-require_relative "../actions/action"
+require_relative "../messenger/messages_pool"
+require_relative "../messenger/battle_log"
 require_relative "../types/type_factory"
 require_relative "stats"
 require_relative "metadata_handling"
-require_relative "../conditions/health_conditions/health_conditions"
+require_relative "target_management"
 require "pry"
 
 class Pokemon
   include MetadataHandling
+  include TargetManagement
 
-  attr_reader :name, :lvl
-  attr_accessor :stats, :types, :attacks, :gender, :weight, :condition, :trainer, :metadata, :health_condition, :volatile_status
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, gender: nil, trainer: nil, health_condition: nil, volatile_status: {}, teratype: nil)
+  attr_reader :name, :nature, :nickname, :ivs, :evs, :lvl
+  attr_accessor :stats, :types, :attacks, :gender, :condition, :trainer, :field_position, :metadata, :health_condition, :volatile_status
+  def initialize(name:, nickname: nil, gender: nil, nature: nil, types:, stats:, ivs: nil, evs: nil, attacks:, lvl: 50, trainer: nil, field_position: nil, health_condition: nil, volatile_status: {}, teratype: nil)
     @name = name
+    @nickname = nickname || name
+    @gender = gender
+    @nature = nature || define_nature
+    # @weight = weight
     @types = types
     @stats = stats
-    @weight = weight
+    @ivs = ivs || set_default_ivs
+    @evs = evs || set_default_evs
     @attacks = attacks
     @lvl = lvl
-    @gender = gender
     @trainer = trainer
+    @field_position = field_position
     @metadata = {crit_stage: 0, harm: 0, actions: 0}
+    @health_condition = health_condition
+    @volatile_status = volatile_status
+    @teratype = teratype || types.sample
+
+    calc_stats
+  end
+
+  def define_nature
+    neutral_natures = %w[
+      hardy
+      docile
+      bashful
+      quirky
+      serious
+    ]
+
+    neutral_natures.sample
+  end
+
+  def set_default_ivs
+    [31]*6
+  end
+
+  def set_default_evs
+    [0]*6
+  end
+
+  def calc_stats
+    @stats.each.with_index { |stat, index| stat.iv = ivs[index] }
+    @stats.each.with_index { |stat, index| stat.ev = ivs[index] }
+    @stats.map { |stat| stat.nature = nature }
+
     @stats.push(
       Stats.new(name: :evs, base_value: 1),
       Stats.new(name: :acc, base_value: 1)
     )
-    @stats.each {|stat| stat.calc_value(lvl) }
-    @health_condition = health_condition
-    @volatile_status = volatile_status
-    @teratype = teratype || types.sample
-  end
 
-  # metronomo quedo en loop despues de usar ice ball
+    @stats.each {|stat| stat.calc_value(lvl) }
+  end
 
   def status
     display_substitute_message
@@ -52,13 +85,14 @@ class Pokemon
 
   def view_attacks
     attacks.each.with_index(1) do |atk, index|
-      puts "#{index}- #{atk.attack_name} / #{atk.pp.to_i} PP"
+      BattleLog.instance.log(MessagesPool.atk_index(atk, index))
     end
+    BattleLog.instance.display_messages
   end
 
   def attack!(action)
     attack = action.behaviour
-    target = assing_target(action.target)
+    targets = assing_target(attack, action.target)
     
     evaluate_mute_turn
     return BattleLog.instance.log(MessagesPool.sound_based_blocked_msg(name)) if sound_based_attack_blocked?(attack)
@@ -66,20 +100,7 @@ class Pokemon
     condition_disappear?
     return if is_unable_to_move?
 
-    trainer.battlefield.attack_list << attack.dup
-    attack.perform_attack(self, target)
-  end
-
-  def assing_target(target_index)
-    if target_index != 0
-      if trainer.opponents.size == 1
-        trainer.opponents[0].current_pokemons[target_index - 1]
-      else
-        trainer.opponents[target_index - 1].current_pokemons[0]
-      end
-    else
-      trainer.opponents[0].current_pokemons[0]
-    end
+    attack.perform_attack(self, targets)
   end
 
   def condition_disappear?
@@ -150,7 +171,7 @@ class Pokemon
     dmg = confusion_damage
     BattleLog.instance.log(MessagesPool.confusion_dmg_msg(name, dmg))
     self.hp.decrease(dmg)
-    self.harm_recieved(dmg)
+    self.harm_recieved(dmg, self)
   end
 
   def confusion_damage
@@ -186,7 +207,16 @@ class Pokemon
   end
 
   def allied?(other)
-    trainer == other.trainer
+    field_position.even? && other.field_position.even? || field_position.odd? && other.field_position.odd?
+  end
+
+  def got_out_of_battle
+    stats.each do |stat|
+      stat.reset_stat
+    end
+    reinit_all_metadata
+    reinit_volatile_condition
+    field_position = nil
   end
 
   def reinit_volatile_condition
@@ -194,7 +224,7 @@ class Pokemon
       att = volatile_status[:transformed].data
       previous_stats = att[:stats]
       @types = att[:types]
-      @weight = att[:weight]
+      # @weight = att[:weight]
       @gender = att[:gender]
       @attacks = att[:attacks]
       reinit_stats(previous_stats)
@@ -218,7 +248,7 @@ class Pokemon
   end
 
   def to_s
-    @name
+    name == nickname ? name : "#{nickname} (#{name})"
   end
 
   def ==(other)
