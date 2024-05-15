@@ -1,5 +1,5 @@
 require_relative "pokemon"
-require_relative "../moves/move"
+# require_relative "../moves/move"
 
 module MetadataHandling
   def increase_crit_stage(stages)

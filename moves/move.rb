@@ -1,15 +1,15 @@
 curr_dir = File.dirname(__FILE__)
-concerns_path = File.join(curr_dir, '.', 'concerns')
-file_paths = Dir.glob(File.join(concerns_path, '*.rb'))
+move_concerns_path = File.join(curr_dir, '/all_moves', 'concerns')
+concerns_paths = Dir.glob(File.join(move_concerns_path, '*.rb'))
 
-health_conditions_path = File.join(curr_dir, '../conditions', 'health_conditions')
+health_conditions_path = File.join(curr_dir, '../pokemon/conditions', 'health')
 conditions_paths = Dir.glob(File.join(health_conditions_path, '*.rb'))
 
-volatile_status_path = File.join(curr_dir, '../conditions', 'volatile_status')
+volatile_status_path = File.join(curr_dir, '../pokemon/conditions', 'volatile')
 status_paths = Dir.glob(File.join(volatile_status_path, '*.rb'))
 
-file_paths.each do |file_path|
-  require_relative file_path
+concerns_paths.each do |concern_path|
+  require_relative concern_path
 end
 conditions_paths.each do |condition_paths|
   require_relative condition_paths
@@ -17,12 +17,10 @@ end
 status_paths.each do |status_path|
   require_relative status_path
 end
-require_relative "../messages_pool"
-require_relative "../battle_log"
+require_relative "../messenger/messages_pool"
+require_relative "../messenger/battle_log"
 require_relative "../pokemon/pokemon"
 require_relative "../types/type_factory"
-require_relative "../actions/menu"
-require_relative "../trainer"
 
 class Move
   include DamageFormula

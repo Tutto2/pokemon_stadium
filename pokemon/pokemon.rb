@@ -1,38 +1,70 @@
-require_relative "../messages_pool"
-require_relative "../battle_log"
-require_relative "../actions/action"
+require_relative "../messenger/messages_pool"
+require_relative "../messenger/battle_log"
 require_relative "../types/type_factory"
 require_relative "stats"
 require_relative "metadata_handling"
-require_relative "targeting_handling"
-require_relative "../conditions/health_conditions/health_conditions"
+require_relative "target_management"
 require "pry"
 
 class Pokemon
   include MetadataHandling
-  include TargetingHandling
+  include TargetManagement
 
-  attr_reader :name, :lvl
-  attr_accessor :stats, :types, :attacks, :gender, :weight, :condition, :trainer, :field_position, :metadata, :health_condition, :volatile_status
-  def initialize(name:, types:, stats:, weight:, attacks:, lvl: 50, gender: nil, trainer: nil, field_position: nil, health_condition: nil, volatile_status: {}, teratype: nil)
+  attr_reader :name, :nature, :nickname, :ivs, :evs, :lvl
+  attr_accessor :stats, :types, :attacks, :gender, :condition, :trainer, :field_position, :metadata, :health_condition, :volatile_status
+  def initialize(name:, nickname: nil, gender: nil, nature: nil, types:, stats:, ivs: nil, evs: nil, attacks:, lvl: 50, trainer: nil, field_position: nil, health_condition: nil, volatile_status: {}, teratype: nil)
     @name = name
+    @nickname = nickname || name
+    @gender = gender
+    @nature = nature || define_nature
+    # @weight = weight
     @types = types
     @stats = stats
-    @weight = weight
+    @ivs = ivs || set_default_ivs
+    @evs = evs || set_default_evs
     @attacks = attacks
     @lvl = lvl
-    @gender = gender
     @trainer = trainer
     @field_position = field_position
     @metadata = {crit_stage: 0, harm: 0, actions: 0}
+    @health_condition = health_condition
+    @volatile_status = volatile_status
+    @teratype = teratype || types.sample
+
+    calc_stats
+  end
+
+  def define_nature
+    neutral_natures = %w[
+      hardy
+      docile
+      bashful
+      quirky
+      serious
+    ]
+
+    neutral_natures.sample
+  end
+
+  def set_default_ivs
+    [31]*6
+  end
+
+  def set_default_evs
+    [0]*6
+  end
+
+  def calc_stats
+    @stats.each.with_index { |stat, index| stat.iv = ivs[index] }
+    @stats.each.with_index { |stat, index| stat.ev = ivs[index] }
+    @stats.map { |stat| stat.nature = nature }
+
     @stats.push(
       Stats.new(name: :evs, base_value: 1),
       Stats.new(name: :acc, base_value: 1)
     )
+
     @stats.each {|stat| stat.calc_value(lvl) }
-    @health_condition = health_condition
-    @volatile_status = volatile_status
-    @teratype = teratype || types.sample
   end
 
   def status
@@ -192,7 +224,7 @@ class Pokemon
       att = volatile_status[:transformed].data
       previous_stats = att[:stats]
       @types = att[:types]
-      @weight = att[:weight]
+      # @weight = att[:weight]
       @gender = att[:gender]
       @attacks = att[:attacks]
       reinit_stats(previous_stats)
@@ -216,7 +248,7 @@ class Pokemon
   end
 
   def to_s
-    @name
+    name == nickname ? name : "#{nickname} (#{name})"
   end
 
   def ==(other)
