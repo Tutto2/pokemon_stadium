@@ -1,3 +1,4 @@
+require_relative '../data_manager'
 require 'json'
 
 class PokemonLoader
@@ -19,7 +20,7 @@ class PokemonLoader
           pokemons << pokemon
           pokemon = {}
         end
-        pokemon[:name] = line.capitalize
+        pokemon[:name] = line.chomp.capitalize
       elsif /^Types: (?<type1>\w+)( \/ (?<type2>\w+))?$/ =~ line
         pokemon[:types] = [type1, type2].compact.map(&:upcase)
       elsif /^(?<stat>\w+): (?<num>\d+)$/ =~ line
@@ -31,6 +32,12 @@ class PokemonLoader
   def write
     File.open('interface/input_management/all_pokemons.rb', 'w') do |file|
       file.puts JSON.pretty_generate(pokemons)
+    end
+  end
+
+  def upload
+    pokemons.each do |pokemon|
+      DataManager.new.upload_pokemons({pokemon_template: pokemon})
     end
   end
 end

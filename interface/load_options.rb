@@ -25,38 +25,33 @@ class LoadOptions
   end
 
   def self.load_team
-    file = nil
-    file_name = ''
     MessagesPool.load_team_msg
     file_name = gets.chomp
 
-    begin
-      file = TeamDeserializer.new("interface/input_management/#{file_name}.pkteam")
-      file.process
-    rescue Errno::ENOENT
-      MessagesPool.loading_error(file_name)
-      return load_interface
-    rescue ArgumentError
-      MessagesPool.reading_error 
-      return load_interface
-    end
+    file = TeamDeserializer.new("interface/input_management/#{file_name}.pkteam")
+    file.process
+    file.upload
 
-    file.write
     MessagesPool.successful_load_msg
+  rescue Errno::ENOENT
+    MessagesPool.loading_error(file_name)
+  rescue ArgumentError
+    MessagesPool.reading_error 
+  ensure
     load_interface
   end
 
   def self.view_teams
     response = DataManager.new
-    data = response.teams_data
+    data = response.get_teams_data
 
-    unless data.empty?
+    unless data.nil?
       response.view_teams_simple
       MessagesPool.view_team_index 
-      selection = gets.chomp.to_i
+      index = gets.chomp.to_i
 
-      if (1..data.count).include?(selection)
-        response.view_team_detailed(selection)
+      if (1..data.count).include?(index)
+        response.view_team_detailed(index)
       end
     end
     puts
@@ -64,24 +59,18 @@ class LoadOptions
   end
 
   def self.load_pokemons
-    file = nil
-    file_name = ''
     MessagesPool.load_pokemons_msg
     file_name = gets.chomp
 
-    begin
-      file = PokemonLoader.new("interface/input_management/#{file_name}.dat")
-      file.process
-    rescue Errno::ENOENT
-      MessagesPool.loading_error(file_name)
-      return load_interface
-    rescue ArgumentError
-      MessagesPool.reading_error
-      return load_interface
-    end
-
-    file.write
+    file = PokemonLoader.new("interface/input_management/#{file_name}.dat")
+    file.process
+    file.upload
     MessagesPool.successful_load_msg
+  rescue Errno::ENOENT
+    MessagesPool.loading_error(file_name)
+  rescue ArgumentError
+    MessagesPool.reading_error
+  ensure
     load_interface
   end
 end

@@ -1,3 +1,4 @@
+require_relative '../data_manager'
 require 'json'
 
 class TeamDeserializer
@@ -9,7 +10,6 @@ class TeamDeserializer
   end
 
   def process
-    puts file_url
     lines = File.readlines(file_url)
     pokemons = []
     pokemon_index = -1
@@ -39,7 +39,7 @@ class TeamDeserializer
         team[:pokemons][pokemon_index][:ivs] = array_managment(ivs, 31)
       elsif /\A(?<nature>\w+) Nature\z/ =~ line
         team[:pokemons][pokemon_index][:nature] = nature.downcase
-      elsif /\A- (?<move>[\w ]+)/ =~ line
+      elsif /\A- (?<move>[\w -]+)/ =~ line
         team[:pokemons][pokemon_index][:moves] << move
       end
     end
@@ -49,6 +49,10 @@ class TeamDeserializer
     File.open("interface/input_management/#{team[:team]}.rb", 'w') do |file|
       file.puts JSON.pretty_generate(team)
     end
+  end
+
+  def upload
+    DataManager.new.create_team(team)
   end
 
   private

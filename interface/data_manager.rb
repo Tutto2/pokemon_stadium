@@ -11,22 +11,20 @@ file_paths.each do |file_path|
 end
 
 class DataManager
-  attr_reader :all_teams
+  attr_accessor :all_teams, :selected_team
 
-  def initialize
+  def initialize; end
+
+  def get_teams_data
     begin
-      @all_teams = HTTParty.get("http://localhost:3000/teams?view=detailed")
+      @all_teams = HTTParty.get("http://localhost:3000/teams?view=detailed").parsed_response
     rescue Errno::ECONNREFUSED
       puts "Couldn't enable connection to the server"
     end
   end
 
-  def teams_data
-    all_teams.parsed_response unless all_teams.nil?
-  end
-
   def view_teams_simple
-    all_teams.parsed_response.each.with_index(1) do |team, index|
+    all_teams.each.with_index(1) do |team, index|
       puts
       puts "#{index}- #{team["name"]}:"
 
@@ -49,20 +47,25 @@ class DataManager
     end
   end
 
-  def view_team_detailed(index)
-    team_id = all_teams.parsed_response[index - 1]["id"]
-
+  def get_single_team_data(index)
+    team_id = all_teams[index - 1]["id"]
     begin
-      response = HTTParty.get("http://localhost:3000/teams/#{team_id}?view=detailed")
+      HTTParty.get("http://localhost:3000/teams/#{team_id}?view=detailed")
     rescue Errno::ECONNREFUSED
       puts "Couldn't enable connection to the server"
-      return
+    rescue Errno::ENOENT
+      puts "Team not found"
     end
+  end
 
-    team = response.parsed_response
+  def view_team_detailed(index)
+    team  = get_single_team_data(index).parsed_response
+
     puts
-    puts "#{team["name"]}:"
-    team["pokemons"].each { |pok| print_pokemon_info(pok) }
+    unless team.nil?
+      puts "#{team["name"]}:"
+      team["pokemons"].each { |pok| print_pokemon_info(pok) }
+    end
   end
 
   def print_pokemon_info(pok)
@@ -81,25 +84,17 @@ class DataManager
   end
 
   def team_converter(index)
-    team_id = all_teams.parsed_response[index - 1]["id"]
-
-    data = HTTParty.get("http://localhost:3000/teams/#{team_id}?view=detailed").body
-    team = JSON.parse(data, symbolize_names: true)
+    team  = get_single_team_data(index).body
+    parsed_team = JSON.parse(team, symbolize_names: true)
     converted_team = []
 
-    team[:pokemons].each do |pok|
+    parsed_team[:pokemons].each do |pok|
       moves_array = []
       pok[:moves].map do |move|
         name = move.scan(/[\w-]+/).join("_")
         camelized_name = "#{name}_move".camelize
         moves_array << camelized_name.constantize.learn if defined? move.constantize
       end
-
-
-      
-      # extraxted_moves = pok[:moves].map { |move| move.gsub(' ', '_') }
-      # converted_moves = extraxted_moves.map { |move_name| "#{move_name}_move".camelize }
-      # moves_array = converted_moves.map { |move| move.constantize.learn if defined? move.constantize }.compact
 
       converted_team << Pokemon.new(
         name: pok[:name],
@@ -115,5 +110,14 @@ class DataManager
     end
     
     converted_team
+  end
+
+  def upload_pokemons(pokemons)
+    HTTParty.post("http://localhost:3000/pokemon_templates", body: JSON.generate(pokemons), headers: { 'Content-Type' => 'application/json' }) 
+  end
+
+  def create_team(file)
+    # Si ya existe no debe pasar nada (gestionar desde API) puedes ser lento (uno a uno) o facil
+    HTTParty.post("http://localhost:3000/teams", body: JSON.generate(file), headers: { 'Content-Type' => 'application/json' })
   end
 end
