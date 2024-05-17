@@ -36,23 +36,25 @@ class LoadOptions
   rescue Errno::ENOENT
     MessagesPool.loading_error(file_name)
   rescue ArgumentError
-    MessagesPool.reading_error 
+    MessagesPool.reading_error
   ensure
     load_interface
   end
 
   def self.view_teams
-    response = DataManager.new
-    data = response.get_teams_data
+    data_manager = DataManager.new
 
-    unless data.nil?
-      response.view_teams_simple
-      MessagesPool.view_team_index 
+    if data_manager.get_teams_data
+      data = data_manager.view_teams_simple
+      MessagesPool.view_team_index
       index = gets.chomp.to_i
 
       if (1..data.count).include?(index)
         response.view_team_detailed(index)
       end
+    else
+      puts
+      puts "No Teams to show"
     end
     puts
     load_interface
@@ -74,4 +76,3 @@ class LoadOptions
     load_interface
   end
 end
-

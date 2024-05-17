@@ -14,7 +14,7 @@ class PokemonLoader
 
     File.readlines(file_url).each do |line|
       next if line.chomp.strip! == "Stats:"
-      
+
       if /^(\w+)(-\w+)*$/ =~ line
         if !pokemon[:name].nil?
           pokemons << pokemon
@@ -36,8 +36,16 @@ class PokemonLoader
   end
 
   def upload
-    pokemons.each do |pokemon|
-      DataManager.new.upload_pokemons({pokemon_template: pokemon})
+    data_manager = DataManager.new
+
+    uploaded_pokemon = data_manager.get_pokemon_templates
+    return if uploaded_pokemon.nil?
+
+    uploaded_pokemon.map! { |pok| pok["name"] }
+    new_pokemons = pokemons.select { |pokemon| !uploaded_pokemon.include?(pokemon[:name]) }
+
+    new_pokemons.each do |pokemon|
+      data_manager.upload_pokemons({pokemon_template: pokemon})
     end
   end
 end

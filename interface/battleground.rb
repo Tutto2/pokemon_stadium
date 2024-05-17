@@ -1,4 +1,3 @@
-require_relative "game_options"
 require_relative "trainer"
 require_relative "menu"
 require_relative "player_actions/action_queue"
@@ -11,7 +10,7 @@ require "pry"
 class Battleground
   attr_accessor :action_list, :attack_list
   attr_reader :players, :battle_type, :all_pokes, :turn, :battle_type, :field
-  
+
   @@array = [
     Pokedex.catch("Squirtle"),
     Pokedex.catch("Pikachu"),
@@ -34,7 +33,7 @@ class Battleground
     Pokedex.catch("Zoroark-hisui"),
     Pokedex.catch("Dracanfly")
   ]
-  
+
   def initialize(players:, battle_type:, all_pokes: @@array, action_list: {}, attack_list: {})
     @players = players
     @battle_type = battle_type
@@ -70,7 +69,7 @@ class Battleground
       queue = ActionQueue.new
       enqeue_actions(queue)
       queue.perform_actions
-      
+
       end_turn_actions
     end
 
@@ -78,17 +77,17 @@ class Battleground
   end
 
   private
-  
+
   def select_initial_pok
     players.each.with_index(1) do |player, index|
       view_pokemons(player.team)
       index_selection = select_initial_index(player)
       pok_selection = []
-      
+
       index_selection.size.times do
         pok_selection << player.team[index_selection.shift - 1]
       end
-      
+
       assing_position(pok_selection, index)
     end
   end
@@ -158,19 +157,19 @@ class Battleground
 
   def team_fainted?(player)
     player.team.all?(&:fainted?)
-  end    
+  end
 
   def init_turn_actions
     MessagesPool.turn(turn)
     players.each { |player| clear_actions(player) }
-    
+
     until !field.any_pokemon_fainted?
       change_fainted_pokemon
     end
 
-    BattleLog.instance.display_messages 
-  end    
-  
+    BattleLog.instance.display_messages
+  end
+
   def clear_actions(player)
     player.action = []
   end
@@ -204,7 +203,7 @@ class Battleground
         next if i.even?
         pok.status
       end
-      
+
       MessagesPool.second_team_msg
       field.positions.each do |i, pok|
         next if i.odd?
@@ -242,7 +241,7 @@ class Battleground
     BattleLog.instance.display_messages
     @turn += 1
   end
-  
+
   def reinit_protections_and_harm
     field.positions.each do |_, pok|
       pok.protection_delete if pok.is_protected?
@@ -254,7 +253,7 @@ class Battleground
   def condition_effects
     field.positions.each do |_, pok|
       next if pok.fainted? || pok.health_condition.nil?
-  
+
       condition = pok.health_condition
       condition&.dmg_effect(pok)
       condition&.turn_count if !condition&.turn.nil?

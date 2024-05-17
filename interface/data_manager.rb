@@ -16,11 +16,13 @@ class DataManager
   def initialize; end
 
   def get_teams_data
-    begin
-      @all_teams = HTTParty.get("http://localhost:3000/teams?view=detailed").parsed_response
-    rescue Errno::ECONNREFUSED
-      puts "Couldn't enable connection to the server"
+    response = HTTParty.get("http://localhost:3000/teams?view=detailed")
+    if response.success?
+      @all_teams = response.parsed_response
+      all_teams.any?
     end
+  rescue Errno::ECONNREFUSED
+    puts "Couldn't enable connection to the server"
   end
 
   def view_teams_simple
@@ -29,13 +31,13 @@ class DataManager
       puts "#{index}- #{team["name"]}:"
 
       team["pokemons"].each do |pok|
-        names = pok["nickname"] == pok["name"] ? " -- #{pok["name"]}, " : " -- #{pok["nickname"]} (#{pok["name"]}), " 
+        names = pok["nickname"] == pok["name"] ? " -- #{pok["name"]}, " : " -- #{pok["nickname"]} (#{pok["name"]}), "
         types = pok["types"][1] ? "types: #{pok["types"][0]} #{pok["types"][1]}. " : "type: #{pok["types"][0]}. "
         moves = "Moves: "
 
         pok["moves"].each.with_index do |move, index|
           if index == 0
-            moves += move 
+            moves += move
           else
             moves += ", " + move
           end
@@ -47,15 +49,19 @@ class DataManager
     end
   end
 
+  def get_pokemon_templates
+    HTTParty.get("http://localhost:3000/pokemon_templates").parsed_response
+  rescue Errno::ECONNREFUSED
+    puts "Couldn't enable connection to the server"
+  end
+
   def get_single_team_data(index)
     team_id = all_teams[index - 1]["id"]
-    begin
-      HTTParty.get("http://localhost:3000/teams/#{team_id}?view=detailed")
-    rescue Errno::ECONNREFUSED
-      puts "Couldn't enable connection to the server"
-    rescue Errno::ENOENT
-      puts "Team not found"
-    end
+    HTTParty.get("http://localhost:3000/teams/#{team_id}?view=detailed")
+  rescue Errno::ECONNREFUSED
+    puts "Couldn't enable connection to the server"
+  rescue Errno::ENOENT
+    puts "Team not found"
   end
 
   def view_team_detailed(index)
@@ -73,7 +79,7 @@ class DataManager
 
       puts "- #{pok["name"]}"
       puts "  Nickname: #{pok["nickname"]}"
-      puts types 
+      puts types
       puts "  Nature: #{pok["nature"]}"
       puts "  Gender: #{pok["gender"]}"
       puts "  Stats: #{pok["stats"].map { |stat, value| "#{stat}: #{value}" }.join(', ') }"
@@ -108,12 +114,12 @@ class DataManager
         stats: pok[:stats].map { |stat, value| Stats.new(name: stat, base_value: value.to_i) }
       )
     end
-    
+
     converted_team
   end
 
-  def upload_pokemons(pokemons)
-    HTTParty.post("http://localhost:3000/pokemon_templates", body: JSON.generate(pokemons), headers: { 'Content-Type' => 'application/json' }) 
+  def upload_pokemons(pokemon)
+    HTTParty.post("http://localhost:3000/pokemon_templates", body: JSON.generate(pokemon), headers: { 'Content-Type' => 'application/json' })
   end
 
   def create_team(file)
