@@ -6,7 +6,7 @@ class TeamDeserializer
 
   def initialize(file_url)
     @file_url = file_url
-    @team = {team: "", pokemons: []}
+    @team = {name: "", pokemons: []}
   end
 
   def process
@@ -17,7 +17,7 @@ class TeamDeserializer
     lines.each do |line|
       line.strip!
       if /\ATeam: (?<team_name>[\w ]+)\z/ =~ line
-        team[:team] = team_name
+        team[:name] = team_name
       elsif /\A(?<name1>\w+)(?: \((?<name2>\w+)\))?\z/ =~ line
         name = name2 || name1
         nickname = name2 ? name1 : nil

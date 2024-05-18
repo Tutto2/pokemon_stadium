@@ -152,11 +152,10 @@ class Trainer
   private
 
   def pre_set_team_index(pokemons, players_num)
-    response = DataManager.new
-    data = response.get_teams_data
+    data_manager = DataManager.new
 
-    unless data.nil?
-      response.view_teams_simple
+    if data_manager.get_teams_data
+      data_manager.view_teams_simple
       MessagesPool.pre_set_team_index 
       index = gets.chomp.strip
 

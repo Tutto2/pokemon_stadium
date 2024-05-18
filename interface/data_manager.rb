@@ -25,6 +25,15 @@ class DataManager
     puts "Couldn't enable connection to the server"
   end
 
+  def get_single_team_data(index)
+    team_id = all_teams[index - 1]["id"]
+    HTTParty.get("http://localhost:3000/teams/#{team_id}?view=detailed")
+  rescue Errno::ECONNREFUSED
+    puts "Couldn't enable connection to the server"
+  rescue Errno::ENOENT
+    puts "Team not found"
+  end
+
   def view_teams_simple
     all_teams.each.with_index(1) do |team, index|
       puts
@@ -49,21 +58,6 @@ class DataManager
     end
   end
 
-  def get_pokemon_templates
-    HTTParty.get("http://localhost:3000/pokemon_templates").parsed_response
-  rescue Errno::ECONNREFUSED
-    puts "Couldn't enable connection to the server"
-  end
-
-  def get_single_team_data(index)
-    team_id = all_teams[index - 1]["id"]
-    HTTParty.get("http://localhost:3000/teams/#{team_id}?view=detailed")
-  rescue Errno::ECONNREFUSED
-    puts "Couldn't enable connection to the server"
-  rescue Errno::ENOENT
-    puts "Team not found"
-  end
-
   def view_team_detailed(index)
     team  = get_single_team_data(index).parsed_response
 
@@ -75,18 +69,24 @@ class DataManager
   end
 
   def print_pokemon_info(pok)
-      types = pok["types"][1] ? "  Types: #{pok["types"][0]} #{pok["types"][1]}" : "  Type: #{pok["types"][0]}"
+    types = pok["types"][1] ? "  Types: #{pok["types"][0]} #{pok["types"][1]}" : "  Type: #{pok["types"][0]}"
 
-      puts "- #{pok["name"]}"
-      puts "  Nickname: #{pok["nickname"]}"
-      puts types
-      puts "  Nature: #{pok["nature"]}"
-      puts "  Gender: #{pok["gender"]}"
-      puts "  Stats: #{pok["stats"].map { |stat, value| "#{stat}: #{value}" }.join(', ') }"
-      puts "  IVs: #{pok["ivs"].join(', ')}"
-      puts "  EVs: #{pok["evs"].join(', ')}"
-      puts "  Moves: #{pok["moves"].join(', ')}"
-      puts
+    puts "- #{pok["name"]}"
+    puts "  Nickname: #{pok["nickname"]}"
+    puts types
+    puts "  Nature: #{pok["nature"]}"
+    puts "  Gender: #{pok["gender"]}"
+    puts "  Stats: #{pok["stats"].map { |stat, value| "#{stat}: #{value}" }.join(', ') }"
+    puts "  IVs: #{pok["ivs"].join(', ')}"
+    puts "  EVs: #{pok["evs"].join(', ')}"
+    puts "  Moves: #{pok["moves"].join(', ')}"
+    puts
+end
+
+  def get_pokemon_templates
+    HTTParty.get("http://localhost:3000/pokemon_templates").parsed_response
+  rescue Errno::ECONNREFUSED
+    puts "Couldn't enable connection to the server"
   end
 
   def team_converter(index)
@@ -122,8 +122,7 @@ class DataManager
     HTTParty.post("http://localhost:3000/pokemon_templates", body: JSON.generate(pokemon), headers: { 'Content-Type' => 'application/json' })
   end
 
-  def create_team(file)
-    # Si ya existe no debe pasar nada (gestionar desde API) puedes ser lento (uno a uno) o facil
-    HTTParty.post("http://localhost:3000/teams", body: JSON.generate(file), headers: { 'Content-Type' => 'application/json' })
+  def create_team(team)
+    HTTParty.post("http://localhost:3000/teams", body: JSON.generate(team), headers: { 'Content-Type' => 'application/json' })
   end
 end
