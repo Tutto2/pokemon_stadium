@@ -37,6 +37,7 @@ module SpecialFeatures
       perish_song
       metal_sound
       hyper_voice
+      alluring_voice
     ]
     sound_attacks.include?(attack_name)
   end

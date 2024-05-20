@@ -6,6 +6,7 @@ module StatChanges
 
     return protected_itself(pokemon_target) if target == pokemon_target && protected?(pokemon_target)
     stat.each do |(stat, stages)|
+      target.stat_increase_during_turn(stat) if stages > 0
       target.public_send(stat).stage_modifier(target, stages)
     end
   end

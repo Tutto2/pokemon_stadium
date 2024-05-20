@@ -133,6 +133,10 @@ class Stats
     [:evs, :acc].include?(name)
   end
 
+  def ==(other)
+    name == other
+  end
+
   POSSIBLE_STATS.each do |stat|
     define_method("#{stat}?") do
       name == stat

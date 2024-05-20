@@ -1,5 +1,4 @@
 require_relative "pokemon"
-# require_relative "../moves/move"
 
 module MetadataHandling
   def increase_crit_stage(stages)
@@ -19,6 +18,14 @@ module MetadataHandling
 
   def is_attacking?
     !metadata[:turn].nil?
+  end
+
+  def stat_increase_during_turn(stat)
+    @metadata[:stat_increase] = stat
+  end
+
+  def was_buffed?
+    !metadata[:stat_increase].nil?
   end
 
   def defense_curl_power_up

@@ -161,15 +161,15 @@ class Trainer
 
       return team_selection(pokemons, players_num) if index.to_i == 0
 
-      unless (1..data.count).include?(index.to_i)
+      unless (1..data_manager.all_teams.count).include?(index.to_i)
         MessagesPool.invalid_option
         return pre_set_team_index(pokemons, players_num) 
       end
 
-      if /\A\d+\?\z/.match?(index) && detailed_team_view(response, index.to_i) != 'select'
+      if /\A\d+\?\z/.match?(index) && detailed_team_view(data_manager, index.to_i) != 'select'
         pre_set_team_index(pokemons, players_num)
       else
-        @team = response.team_converter(index.to_i)
+        @team = data_manager.team_converter(index.to_i)
         @team.each { |pok| pok.trainer = self }
       end
     else
@@ -177,8 +177,8 @@ class Trainer
     end
   end
 
-  def detailed_team_view(response, index)
-    response.view_team_detailed(index)
+  def detailed_team_view(data_manager, index)
+    data_manager.view_team_detailed(index)
     MessagesPool.select_detailed_team
     gets.chomp.downcase.strip
   end

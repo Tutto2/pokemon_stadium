@@ -3,7 +3,7 @@ require_relative "../move"
 class WillOWispMove < Move
   def self.learn
     new(
-      attack_name: 'Will O Wisp',
+      attack_name: 'Will-O-Wisp',
       type: Types::FIRE,
       pp: 15,
       category: :status,

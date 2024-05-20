@@ -11,7 +11,7 @@ file_paths.each do |file_path|
 end
 
 class DataManager
-  attr_accessor :all_teams, :selected_team
+  attr_accessor :all_teams
 
   def initialize; end
 
@@ -29,8 +29,10 @@ class DataManager
     team_id = all_teams[index - 1]["id"]
     HTTParty.get("http://localhost:3000/teams/#{team_id}?view=detailed")
   rescue Errno::ECONNREFUSED
+    puts
     puts "Couldn't enable connection to the server"
   rescue Errno::ENOENT
+    puts
     puts "Team not found"
   end
 
@@ -40,9 +42,9 @@ class DataManager
       puts "#{index}- #{team["name"]}:"
 
       team["pokemons"].each do |pok|
-        names = pok["nickname"] == pok["name"] ? " -- #{pok["name"]}, " : " -- #{pok["nickname"]} (#{pok["name"]}), "
-        types = pok["types"][1] ? "types: #{pok["types"][0]} #{pok["types"][1]}. " : "type: #{pok["types"][0]}. "
-        moves = "Moves: "
+        names = pok["nickname"] == pok["name"] || pok["nickname"].nil? ? " -- #{pok["name"]}, " : " -- #{pok["nickname"]} (#{pok["name"]}), "
+        types = pok["types"][1] ? "#{pok["types"][0].upcase} #{pok["types"][1].upcase}" : "#{pok["types"][0].upcase}"
+        moves = "    > Moves: "
 
         pok["moves"].each.with_index do |move, index|
           if index == 0
@@ -53,7 +55,8 @@ class DataManager
         end
         moves += "."
 
-        puts names + types + moves
+        puts names + types
+        puts moves
       end
     end
   end
@@ -72,10 +75,10 @@ class DataManager
     types = pok["types"][1] ? "  Types: #{pok["types"][0]} #{pok["types"][1]}" : "  Type: #{pok["types"][0]}"
 
     puts "- #{pok["name"]}"
-    puts "  Nickname: #{pok["nickname"]}"
+    puts "  Nickname: #{pok["nickname"]}" if pok["nickname"]
     puts types
-    puts "  Nature: #{pok["nature"]}"
-    puts "  Gender: #{pok["gender"]}"
+    puts "  Nature: #{pok["nature"]}" if pok["nature"]
+    puts "  Gender: #{pok["gender"]}" if pok["gender"]
     puts "  Stats: #{pok["stats"].map { |stat, value| "#{stat}: #{value}" }.join(', ') }"
     puts "  IVs: #{pok["ivs"].join(', ')}"
     puts "  EVs: #{pok["evs"].join(', ')}"
@@ -97,7 +100,7 @@ end
     parsed_team[:pokemons].each do |pok|
       moves_array = []
       pok[:moves].map do |move|
-        name = move.scan(/[\w-]+/).join("_")
+        name = move.scan(/[\w]+/).join("_")
         camelized_name = "#{name}_move".camelize
         moves_array << camelized_name.constantize.learn if defined? move.constantize
       end
@@ -105,7 +108,7 @@ end
       converted_team << Pokemon.new(
         name: pok[:name],
         nickname: pok[:nickname],
-        types: pok[:types],
+        types: pok[:types].map! { |type| "Types::#{type.upcase}".constantize },
         gender: pok[:gender],
         nature: pok[:nature],
         attacks: moves_array.compact,

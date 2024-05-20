@@ -52,9 +52,6 @@ class LoadOptions
       if (1..data.count).include?(index)
         response.view_team_detailed(index)
       end
-    else
-      puts
-      puts "No Teams to show"
     end
     puts
     load_interface

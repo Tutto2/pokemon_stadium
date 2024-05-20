@@ -245,11 +245,12 @@ class MessagesPool
     pok.volatile_status.each { |k, v| BattleLog.instance.log("#{k}")}
 
     pok.stats.each do |stat|
-      next if stat == :hp || stat == :spd
-      BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
+      next if stat == :hp
+      # BattleLog.instance.log("#{stat.name} #{stat.curr_value} / #{stat.initial_value} / #{stat.stage}")
+      BattleLog.instance.log("#{stat.name} #{stat.stage}") if stat.stage != 0
     end
-    BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
-    BattleLog.instance.log("position: #{pok.field_position}")
+    # BattleLog.instance.log("spd #{pok.actual_speed} / #{pok.spd.initial_value} / #{pok.spd.stage}")
+    # BattleLog.instance.log("position: #{pok.field_position}")
     BattleLog.instance.log("\n")
     BattleLog.instance.display_messages
   end
