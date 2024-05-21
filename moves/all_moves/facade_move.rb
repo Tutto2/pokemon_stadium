@@ -14,13 +14,8 @@ class FacadeMove < Move
 
   def power
     condition = pokemon.health_condition
+    return 70 if condition.nil?
 
-    if condition.nil?
-      70
-    elsif [:poisoned, :paralyzed, :burned].include?(condition.name)
-      70 * 2
-    else
-      70
-    end
+    [:poisoned, :paralyzed, :burned].include?(condition.name) ? 140 : 70
   end
 end

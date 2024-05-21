@@ -43,7 +43,7 @@ class DataManager
 
       team["pokemons"].each do |pok|
         names = pok["nickname"] == pok["name"] || pok["nickname"].nil? ? " -- #{pok["name"]}, " : " -- #{pok["nickname"]} (#{pok["name"]}), "
-        types = pok["types"][1] ? "#{pok["types"][0].upcase} #{pok["types"][1].upcase}" : "#{pok["types"][0].upcase}"
+        types = pok["types"][1] ? "#{pok["types"][0].upcase} / #{pok["types"][1].upcase}" : "#{pok["types"][0].upcase}"
         moves = "    > Moves: "
 
         pok["moves"].each.with_index do |move, index|
@@ -97,12 +97,17 @@ end
     parsed_team = JSON.parse(team, symbolize_names: true)
     converted_team = []
 
+    
     parsed_team[:pokemons].each do |pok|
       moves_array = []
       pok[:moves].map do |move|
         name = move.scan(/[\w]+/).join("_")
         camelized_name = "#{name}_move".camelize
-        moves_array << camelized_name.constantize.learn if defined? move.constantize
+        if Object.const_defined?(camelized_name)
+          moves_array << camelized_name.constantize.learn 
+        else
+          puts "#{camelized_name} NOT DEFINED"
+        end
       end
 
       converted_team << Pokemon.new(

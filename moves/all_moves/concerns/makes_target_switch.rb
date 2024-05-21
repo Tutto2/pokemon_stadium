@@ -4,7 +4,7 @@ require_relative "../../../messenger/battle_log"
 
 module MakesTargetSwitch
   def status_effect(pokemon_target)
-    target_switch(pokemon_target)
+    pokemon_target.trapped? ? BattleLog.instance.log(MessagesPool.attack_failed_msg) : target_switch(pokemon_target) 
   end
 
   def target_switch(pokemon_target)

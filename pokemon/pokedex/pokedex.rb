@@ -15,7 +15,7 @@ class Pokedex < Pokemon
     when "Pikachu"
       Pokemon.new(
         name: "Pikachu",
-        types: ["Types::ELECTRIC".constantize],
+        types: [Types::ELECTRIC, Types::FLYING],
         stats: [
           Stats.new(name: :hp, base_value: 35 ),
           Stats.new(name: :atk, base_value: 55 ),
@@ -29,7 +29,7 @@ class Pokedex < Pokemon
         attacks: [
           VoltTackleMove.learn,
           DischargeMove.learn,
-          ThunderWaveMove.learn,
+          RoostMove.learn,
           MetronomeMove.learn
         ]
       )
@@ -50,7 +50,7 @@ class Pokedex < Pokemon
         attacks: [
           OutrageMove.learn,
           HydroPumpMove.learn,
-          BlizzardMove.learn,
+          FeatherDanceMove.learn,
           ProtectMove.learn
         ]
       )
@@ -70,9 +70,9 @@ class Pokedex < Pokemon
         # weight: 5.5,
         attacks: [
           HyperVoiceMove.learn,
-          DoubleEdgeMove.learn,
+          AssuranceMove.learn,
           CopycatMove.learn,
-          SweetKissMove.learn
+          DrainingKissMove.learn
         ]
       )
     when "Snorlax"
@@ -90,8 +90,8 @@ class Pokedex < Pokemon
         gender: :male,
         # weight: 460,
         attacks: [
-          FacadeMove.learn,
-          PsychUpMove.learn,
+          RevengeMove.learn,
+          IngrainMove.learn,
           CounterMove.learn,
           SuckerPunchMove.learn
         ]
@@ -298,7 +298,7 @@ class Pokedex < Pokemon
           PlayRoughMove.learn,
           MetronomeMove.learn,
           GigatonHammerMove.learn,
-          SwordDanceMove.learn
+          SwordsDanceMove.learn
         ]
       )
     when "Gengar"

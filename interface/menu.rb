@@ -28,8 +28,8 @@ class Menu
     num = gets.chomp.to_i
     pok = user_pokemon
 
-    if num == 2 && !pok.volatile_status[:bound].nil? && !pok.types.include?(Types::GHOST)
-      MessagesPool.unable_to_escape_alert(pok.name)
+    if num == 2 && pok.trapped? && !pok.types.include?(Types::GHOST)
+      MessagesPool.unable_to_escape_alert(pok)
       return action_index(trainer, user_pokemon) 
     end
     return num if num == 1 || num == 2
@@ -42,7 +42,8 @@ class Menu
     return struggle_move(trainer, user_pokemon) if user_pokemon.has_no_remaining_pp?
 
     attk_num = select_attack_index(user_pokemon, previous_action)
-    if (1..4).include?(attk_num)
+
+    if attk_num < user_pokemon.attacks.size + 1
       next_attack = user_pokemon.attacks[attk_num - 1]
 
       if next_attack.attack_name == :baton_pass
@@ -137,7 +138,7 @@ class Menu
     targets = targets.reject { |i, pok| pok == teammate[0] } if !teammate.empty?
     targets = targets.values
     targets = targets + teammate
-    targets = targets.flatten
+    targets = targets.flatten.compact
 
     show_posible_targets(targets)
     MessagesPool.targets_index

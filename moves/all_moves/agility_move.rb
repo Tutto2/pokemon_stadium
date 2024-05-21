@@ -8,7 +8,7 @@ class AgilityMove < Move
       attack_name: 'Agility',
       type: Types::NORMAL,
       pp: 30,
-      category: :status,
+      category: :status
       )
   end
 

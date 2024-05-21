@@ -263,8 +263,12 @@ class MessagesPool
     BattleLog.instance.display_messages
   end
 
-  def self.unable_to_escape_alert(pok_name)
-    BattleLog.instance.log("#{pok_name} can't escape of his bound")
+  def self.unable_to_escape_alert(pok)
+    if pok.volatile_status[:bound].nil?
+      BattleLog.instance.log("#{pok.name} can't escape due to its roots")  
+    else
+      BattleLog.instance.log("#{pok.name} can't escape of its bound")
+    end
     BattleLog.instance.log("\n")
     BattleLog.instance.display_messages
   end
@@ -419,6 +423,10 @@ class MessagesPool
     "But it failed."
   end
 
+  def self.meteor_beam_msg(pok_name)
+    "#{pok_name} is overflowing with space power!"
+  end
+
   def self.attack_missed_msg(pok)
     "#{pok.name} has missed"
   end
@@ -455,6 +463,14 @@ class MessagesPool
     "#{pok_name} braced itself!"
   end
 
+  def self.root_apply(pok_name)
+    "#{pok_name} planted it's roots"
+  end
+
+  def self.rooted_heal_msg(pok_name)
+    "#{pok_name} absorbed nutrients with his roots"
+  end
+
   def self.recharge_msg(pok_name, attack_name)
     "#{pok_name} is recharging after using #{attack_name}"
   end
@@ -481,6 +497,10 @@ class MessagesPool
 
   def self.phantom_force_msg(pok_name)
     "#{pok_name} vanished"
+  end
+
+  def self.fly_msg(pok_name)
+    "#{pok_name} flew  up high"
   end
 
   def self.psych_up_msg(pok_name, target)

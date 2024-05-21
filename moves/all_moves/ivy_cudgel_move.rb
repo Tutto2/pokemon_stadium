@@ -16,16 +16,8 @@ class IvyCudgelMove < Move
   end
 
   def type
-    if pokemon.name == "Ogerpon"
-      if pokemon.types.include?(Types::WATER)
-        type = Types::WATER
-      elsif pokemon.types.include?(Types::FIRE)
-        type = Types::FIRE
-      elsif pokemon.types.include?(Types::ROCK)
-        type = Types::ROCK
-      end
-    else
-      type = Types::GRASS
-    end
+    return Types::GRASS unless pokemon.name.match?(/ogerpon/i)
+
+    pokemon.types.last
   end
 end

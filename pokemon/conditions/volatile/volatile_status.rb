@@ -25,4 +25,8 @@ class VolatileStatus
   def dmg_effect(pok)
     nil
   end
+
+  def heal_effect(pok)
+    nil
+  end
 end

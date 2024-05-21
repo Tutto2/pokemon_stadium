@@ -268,7 +268,9 @@ class Battleground
       pok.volatile_status.each do |name, status|
         next if pok.fainted?
         status&.dmg_effect(pok)
+        status&.heal_effect(pok)
         status.turn_count
+        status.reinit_types if name == :grounded
         status.perish_song_effect(pok) if name == :perish_song && status.turn == 4
         BattleLog.instance.log(MessagesPool.pok_fainted_msg(pok.name)) if pok.fainted? && !status.dmg_effect(pok).nil?
       end

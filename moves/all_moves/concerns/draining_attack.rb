@@ -7,7 +7,7 @@ module DrainingAttack
 
   private
   def drain_factor
-    0.5
+    attack_name == 'Draining Kiss' ? 0.75 : 0.5
   end
 
   def drain

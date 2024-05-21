@@ -17,6 +17,7 @@ end
 status_paths.each do |status_path|
   require_relative status_path
 end
+require_relative "move_finder"
 require_relative "../messenger/messages_pool"
 require_relative "../messenger/battle_log"
 require_relative "../pokemon/pokemon"
@@ -326,9 +327,10 @@ class Move
     when :substitute then BattleLog.instance.log(MessagesPool.substitute_apply(pokemon.name))
     when :bound then BattleLog.instance.log(MessagesPool.bound_apply(pokemon.name))
     when :transformed then BattleLog.instance.log(MessagesPool.transform_apply(pokemon.name, targets[0].name))
+    when :rooted then BattleLog.instance.log(MessagesPool.root_apply(pokemon.name))
     end
   end
-  
+
   def return_dmg?
     false
   end

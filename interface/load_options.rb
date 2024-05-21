@@ -45,12 +45,12 @@ class LoadOptions
     data_manager = DataManager.new
 
     if data_manager.get_teams_data
-      data = data_manager.view_teams_simple
+      data_manager.view_teams_simple
       MessagesPool.view_team_index
       index = gets.chomp.to_i
 
-      if (1..data.count).include?(index)
-        response.view_team_detailed(index)
+      if (1..data_manager.all_teams.count).include?(index)
+        data_manager.view_team_detailed(index)
       end
     end
     puts

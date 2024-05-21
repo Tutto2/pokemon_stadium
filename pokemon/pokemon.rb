@@ -167,6 +167,10 @@ class Pokemon
     volatile_status[:confused].unable_to_attack? ? perform_confusion_dmg : false
   end
 
+  def trapped?
+    !volatile_status[:bound].nil? || !volatile_status[:rooted].nil?
+  end
+
   def perform_confusion_dmg
     dmg = confusion_damage
     BattleLog.instance.log(MessagesPool.confusion_dmg_msg(name, dmg))
