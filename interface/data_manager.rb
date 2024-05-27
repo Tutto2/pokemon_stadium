@@ -97,7 +97,6 @@ end
     parsed_team = JSON.parse(team, symbolize_names: true)
     converted_team = []
 
-    
     parsed_team[:pokemons].each do |pok|
       moves_array = []
       pok[:moves].map do |move|

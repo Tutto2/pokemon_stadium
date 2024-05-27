@@ -13,7 +13,7 @@ class MetronomeMove < Move
 
   private
   def status_effect(pokemon_target)
-    all_moves = MoveFinder.load_moves
+    all_moves = MoveFinder.load_moves.compact
     callable_moves = all_moves.reject { |move| move.cant_be_use_by_metronome? }
     random_move = callable_moves.sample
     @metadata = random_move

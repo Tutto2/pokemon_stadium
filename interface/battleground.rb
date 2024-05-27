@@ -291,11 +291,6 @@ class Battleground
   end
 end
 
-# Nueva interfaz:
-# Pantalla inicial CARGAR DATOS o JUGAR
-# Pantalla de CARGA DATOS = [ Cargar equipos, pokemons o ataques, back ]
-# Pantalla de JUGAR = [ Luego de elegir numero de jugadores y nombres, elegir equipo en vista detallada o simple ]
 # Listar todos los ataques disponibles
 # Integrar con la API
-
 # Class que funciona como controlador para hacer llamados a pokemon API

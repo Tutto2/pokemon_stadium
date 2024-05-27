@@ -40,6 +40,7 @@ class Menu
 
   def self.attack_select(trainer, previous_action, user_pokemon)
     return struggle_move(trainer, user_pokemon) if user_pokemon.has_no_remaining_pp?
+    return previous_action if !user_pokemon.volatile_status[:encored].nil?
 
     attk_num = select_attack_index(user_pokemon, previous_action)
 

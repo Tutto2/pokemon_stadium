@@ -174,6 +174,7 @@ class Trainer
       end
     else
       MessagesPool.view_team_error
+      team_selection(pokemons, players_num)
     end
   end
 

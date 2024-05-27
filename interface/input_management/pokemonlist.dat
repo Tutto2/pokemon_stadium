@@ -9223,6 +9223,15 @@ def: 160
 sp_atk: 88
 sp_def: 88
 spd: 88
+phantonforge
+Types: ghost / Steel
+Stats:
+hp: 85
+atk: 125
+def: 130
+sp_atk: 100
+sp_def: 105
+spd: 55
 scaledart
 Types: bug
 Stats:

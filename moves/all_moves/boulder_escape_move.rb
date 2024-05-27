@@ -1,19 +1,17 @@
 require_relative "../move"
 
-class RockSlideMove < Move
+class BoulderEscapeMove < Move
   include BasicPhysicalAtk
   include HasSecondaryEffect
-  include CanFlinch
+  include SwitchAfterAttack
 
   def self.learn
     new(
-      attack_name: 'Rock Slide',
+      attack_name: 'Boulder Escape',
       type: Types::ROCK,
-      pp: 15,
+      pp: 10,
       category: :physical,
-      power: 75,
-      precision: 90,
-      target: 'all_opps'
+      power: 60
       )
   end
 end

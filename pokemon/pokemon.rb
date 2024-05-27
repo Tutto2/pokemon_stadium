@@ -91,7 +91,8 @@ class Pokemon
   end
 
   def attack!(action)
-    attack = action.behaviour
+    previous_attack = trainer.battleground.attack_list["#{name}"]
+    attack = volatile_status[:encored].nil? ? action.behaviour : previous_attack
     targets = assing_target(attack, action.target)
     
     evaluate_mute_turn
@@ -234,6 +235,10 @@ class Pokemon
       reinit_stats(previous_stats)
     end
 
+    unless volatile_status[:on_fire].nil?
+      @types.delete(Types::FIRE)
+    end
+    
     @volatile_status = {}
   end
 

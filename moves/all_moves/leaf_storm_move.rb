@@ -1,6 +1,5 @@
 require_relative "../move"
 
-
 class LeafStormMove < Move
   include BasicSpecialAtk
   include HasSecondaryEffect

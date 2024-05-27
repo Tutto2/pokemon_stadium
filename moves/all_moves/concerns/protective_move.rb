@@ -11,7 +11,7 @@ module ProtectiveMove
 
   def status_effect(pokemon_target)
     if rand < chance_of_succeed
-      pokemon.is_protected(attack_name)
+      pokemon.is_protected(parameterized_name.to_sym)
       @successful = true
     else 
       BattleLog.instance.log(MessagesPool.attack_failed_msg)

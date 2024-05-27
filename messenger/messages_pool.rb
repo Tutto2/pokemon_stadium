@@ -554,9 +554,17 @@ class MessagesPool
   def self.hp_restored_msg(pok_name, value)
     "#{pok_name} restored #{value} HP"
   end
+
+  def self.hp_full_msg(pok_name)
+    "#{pok_name} HP is full"
+  end
   
   def self.recoil_msg(pok_name, recoil_dmg)
     "#{pok_name} has recieved #{recoil_dmg} of recoil damage"
+  end
+
+  def self.erupted_msg(pok_name)
+    "#{pok_name} is consumed by magma and fire, preparing to erupt!"1
   end
 
   def self.focus_punch_msg(pok_name) 
@@ -601,6 +609,10 @@ class MessagesPool
 
   def self.infatuation_apply(target)
     "#{target} fell in love!"
+  end
+
+  def self.encore_apply(pok_name)
+    "#{pok_name} recieved an encore"
   end
   
   def self.seed_apply(target)

@@ -32,6 +32,7 @@ class Move
 
   def initialize(attack_name: nil, type: nil, secondary_type: nil, category: nil, precision: 100, power: 0, priority: 0, pp: nil, metadata: nil, target: nil)
     @attack_name = attack_name
+    @parameterized_name = parameterized_name
     @type = type
     @secondary_type = secondary_type
     @category = category
@@ -49,9 +50,15 @@ class Move
     @target = category == :status ? 'self' : 'one_opp'
   end
 
+  def parameterized_name
+    return if attack_name.nil?
+    attack_name.gsub(/[\s-]+/, "_").downcase
+  end
+
   def perform_attack(user, targets)
     @pokemon = user
     @targets = targets
+    return additional_action(pokemon) if additional_action(pokemon) && !has_trigger?
 
     return BattleLog.instance.log(MessagesPool.no_pp_during_attack(pokemon.name, attack_name)) if no_remaining_pp?
     if has_trigger? && (pokemon.metadata[:waiting].nil? || !trigger(pokemon))
@@ -70,11 +77,10 @@ class Move
   end
 
   def no_remaining_pp?
-    pp <= 0
+    pp <= 0 unless pp.nil?
   end
 
   def set_trigger
-    additional_action(pokemon)
     @pokemon.init_whole_turn_action
   end  
 
@@ -119,7 +125,7 @@ class Move
   end
   
   def atk_performed
-    @pp -= 1 if pokemon.metadata[:turn].nil?
+    @pp -= 1 if pokemon.metadata[:turn].nil? && !pp.nil?
   end
 
   def evaluate_special_perform
@@ -251,7 +257,7 @@ class Move
   end
 
   def protected?(pokemon_target)
-    return true if attack_name == :pain_split && pokemon_target&.is_protected?
+    return true if attack_name == 'Pain Split' && pokemon_target&.is_protected?
     return false if !pokemon_target&.is_protected? || goes_through_protection? || pokemon_target == pokemon
     true
   end
@@ -259,6 +265,7 @@ class Move
   def protected_itself(pokemon_target)
     BattleLog.instance.log(MessagesPool.was_protected_msg(pokemon_target.name))
     protection_harm(pokemon_target)
+    protection_effect(pokemon_target)
   end
 
   def protection_harm(pokemon_target)
@@ -267,6 +274,12 @@ class Move
     damage = (pokemon.hp_total / 8).to_i
     pokemon.hp.decrease(damage)
     BattleLog.instance.log(MessagesPool.spiky_shield_msg(pokemon.name, damage))
+  end
+
+  def protection_effect(pokemon_target)
+    return unless pokemon_target.metadata[:protected] == :scorching_defense && category == :physical
+    
+    health_condition_apply(pokemon, BurnCondition.get_burn) if rand > 0.5
   end
 
   def status_effect(pokemon_target); end
@@ -328,6 +341,8 @@ class Move
     when :bound then BattleLog.instance.log(MessagesPool.bound_apply(pokemon.name))
     when :transformed then BattleLog.instance.log(MessagesPool.transform_apply(pokemon.name, targets[0].name))
     when :rooted then BattleLog.instance.log(MessagesPool.root_apply(pokemon.name))
+    when :encored then BattleLog.instance.log(MessagesPool.encore_apply(pokemon_target.name))
+    when :on_fire then BattleLog.instance.log(MessagesPool.erupted_msg(pokemon.name))
     end
   end
 

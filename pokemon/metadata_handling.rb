@@ -37,7 +37,7 @@ module MetadataHandling
   end  
 
   def init_whole_turn_action
-    @metadata[:waiting] = 0
+    @metadata[:waiting] = true
   end
 
   def harm_recieved(dmg, pokemon)

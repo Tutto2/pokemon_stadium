@@ -25,15 +25,15 @@ class LoadOptions
   end
 
   def self.load_team
+    # Se rompe cuando no encuentra un poke. Solucionar
     MessagesPool.load_team_msg
     file_name = gets.chomp
-
-    file = TeamDeserializer.new("interface/input_management/#{file_name}.pkteam")
+    raise(StandardError, "File doesn't exist") unless File.exist?("interface/input_management/#{file_name}.pkteam")
+    file = TeamDeserializer.new(File.join('interface', 'input_management', "#{file_name}.pkteam"))
     file.process
     file.upload
-
     MessagesPool.successful_load_msg
-  rescue Errno::ENOENT
+  rescue Errno::ENOENT, StandardError
     MessagesPool.loading_error(file_name)
   rescue ArgumentError
     MessagesPool.reading_error

@@ -1,11 +1,6 @@
 require_relative "../../move"
 
 module SpecialFeatures
-  def parameterized_name
-    name = attack_name.gsub(/[\s-]+/, "_")
-    name.downcase
-  end
-
   def has_trigger?
     false
   end
@@ -28,6 +23,8 @@ module SpecialFeatures
       steam_eruption 
       burn_up 
       pyro_ball
+      pyroclastic_burst
+      scorching_defense
       scorching_sands 
       matcha_gotcha
     ]
@@ -36,15 +33,33 @@ module SpecialFeatures
 
   def sound_based?
     sound_attacks = %w[
+      alluring_voice
       boomburst
+      bug_buzz
       clanging_scales
       clangorus_soul
-      perish_song
-      metal_sound
+      disarming_voice
       hyper_voice
-      alluring_voice
+      metal_sound
+      perish_song
+      roar
+      snore
+      uproar
     ]
     sound_attacks.include?(parameterized_name)
+  end
+
+  def goes_through_substitute?
+    ignore_substitute_attacks = %w[
+      attract
+      curse
+      encore
+      psych_up
+      swagger
+      transform
+      whirlwind
+    ]
+    ignore_substitute_attacks.include?(parameterized_name)
   end
 
   def goes_through_protection?
@@ -68,8 +83,10 @@ module SpecialFeatures
       endure
       focus_punch
       metronome
+      pyroclastic_burst
       protect
       roar
+      scorching_defense
       shell_trap
       struggle
       spiky_shield
@@ -95,7 +112,9 @@ module SpecialFeatures
       metronome
       mirror_coat
       obstruct
+      pyroclastic_burst
       protect
+      scorching_defense
       shell_trap
       sleep_talk
       snore
@@ -104,5 +123,16 @@ module SpecialFeatures
       transform
     ]
     metronome_uncallable_moves.include?(parameterized_name)
+  end
+
+  def cant_be_use_by_encore?
+    encore_uncallable_moves = %w[
+      transform
+      mirror_move
+      struggle
+      copycat
+      metronome
+    ]
+    encore_uncallable_moves.include?(parameterized_name)
   end
 end

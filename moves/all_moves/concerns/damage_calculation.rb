@@ -23,7 +23,7 @@ module DamageFormula
 
     return protected_itself(pokemon_target) if protected?(pokemon_target)
     return BattleLog.instance.log(MessagesPool.no_dmg_msg(pokemon_target.name)) if dmg <= 0 && category != :status
-    return substitute_take_dmg(dmg) if !pokemon_target&.volatile_status[:substitute].nil? && !sound_based?
+    return substitute_take_dmg(dmg) if !pokemon_target&.volatile_status[:substitute].nil? && !sound_based? && !goes_through_substitute?
 
     if !pokemon_target.metadata[:will_survive].nil? && pokemon_target.hp.curr_value <= 0
       pokemon_target.hp.endured_the_hit
@@ -82,7 +82,7 @@ module DamageFormula
   end
 
   def burn_condition
-    pokemon.health_condition == :burned && category == :physical && attack_name != :facade ? 1/2 : 1
+    pokemon.health_condition == :burned && category == :physical && attack_name != :facade ? 0.5 : 1.0
   end
 
   def atk; end
@@ -105,11 +105,11 @@ module DamageFormula
   def drain_calculation(dmg)
     return unless drain
 
-    drain = calc_drain(dmg)
+    value = calc_drain(dmg)
     initial_hp = pokemon.hp_value
-    pokemon.hp.increase(drain)
+    pokemon.hp.increase(value)
 
-    BattleLog.instance.log(MessagesPool.hp_restored_msg(pokemon.name, drain)) if pokemon.hp_value != initial_hp
+    pokemon.hp_value != initial_hp ? BattleLog.instance.log(MessagesPool.hp_restored_msg(pokemon.name, value)) : BattleLog.instance.log(MessagesPool.hp_full_msg(pokemon.name))
   end
 
   def recoil_calculation(dmg)

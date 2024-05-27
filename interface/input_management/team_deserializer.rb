@@ -16,9 +16,18 @@ class TeamDeserializer
 
     lines.each do |line|
       line.strip!
-      if /\ATeam: (?<team_name>[\w -]+)\z/ =~ line
+      
+      if /\ATeam: (?<team_name>[\w -\']+)\z/ =~ line
         team[:name] = team_name
-      elsif /\A(?<name1>[\w\-]+)(?: \((?<name2>[\w\-]+)\))?\z/ =~ line
+      elsif /\ATera Type: (?<teratype>[\w ]+)\z/ =~ line
+        team[:pokemons][pokemon_index][:teratype] = teratype.upcase
+      elsif /\AEVs: (?<evs>\d+ \w+( \/ \d+ \w+){,5})\z/ =~ line
+        team[:pokemons][pokemon_index][:evs] = array_managment(evs)
+      elsif /\AIVs: (?<ivs>\d+ \w+( \/ \d+ \w+){,5})\z/ =~ line
+        team[:pokemons][pokemon_index][:ivs] = array_managment(ivs, 31)
+      elsif /\A(?<nature>\w+ Nature)\z/ =~ line
+        team[:pokemons][pokemon_index][:nature] = nature.downcase
+      elsif /\A(?<name1>\w[\w -\']*)(?: \((?<name2>[\w -\']+)\))?(?: \((?<gender>[MF])\))?(?: @ (?<item>[\w -]+))?\z/ =~ line
         name = name2 || name1
         nickname = name2 ? name1 : nil
         team[:pokemons] << {
@@ -28,21 +37,11 @@ class TeamDeserializer
           ivs: [31]*6, 
           evs: [0]*6,
           nature: nil,
-          gender: nil,
+          gender: gender,
           moves: []
         }
         pokemon_index += 1
-      elsif /\ATera Type: (?<teratype>[\w ]+)\z/ =~ line
-        team[:pokemons][pokemon_index][:teratype] = teratype.upcase
-      elsif /\AGender: (?<gender>[\w]+)\z/ =~ line
-        team[:pokemons][pokemon_index][:gender] = gender.downcase
-      elsif /\AEVs: (?<evs>\d+ \w+( \/ \d+ \w+){,5})\z/ =~ line
-        team[:pokemons][pokemon_index][:evs] = array_managment(evs)
-      elsif /\AIVs: (?<ivs>\d+ \w+( \/ \d+ \w+){,5})\z/ =~ line
-        team[:pokemons][pokemon_index][:ivs] = array_managment(ivs, 31)
-      elsif /\A(?<nature>\w+) Nature\z/ =~ line
-        team[:pokemons][pokemon_index][:nature] = nature.downcase
-      elsif /\A- (?<move>[\w -]+)/ =~ line
+      elsif /\A- (?<move>[\w -\']+)/ =~ line
         team[:pokemons][pokemon_index][:moves] << move
       end
     end

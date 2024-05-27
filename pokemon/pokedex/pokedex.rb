@@ -28,8 +28,8 @@ class Pokedex < Pokemon
         # weight: 6,
         attacks: [
           VoltTackleMove.learn,
-          DischargeMove.learn,
-          RoostMove.learn,
+          GigaDrainMove.learn,
+          EncoreMove.learn,
           MetronomeMove.learn
         ]
       )
@@ -49,7 +49,7 @@ class Pokedex < Pokemon
         # weight: 9,
         attacks: [
           OutrageMove.learn,
-          HydroPumpMove.learn,
+          FocusPunchMove.learn,
           FeatherDanceMove.learn,
           ProtectMove.learn
         ]
