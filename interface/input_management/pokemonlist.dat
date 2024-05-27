@@ -6118,7 +6118,7 @@ def: 150
 sp_atk: 45
 sp_def: 49
 spd: 35
-aegislash-shield
+aegislash
 Types: steel / ghost
 Stats:
 hp: 60
@@ -6991,7 +6991,7 @@ def: 63
 sp_atk: 40
 sp_def: 73
 spd: 96
-mimikyu-disguised
+mimikyu
 Types: ghost / fairy
 Stats:
 hp: 55
@@ -9223,7 +9223,7 @@ def: 160
 sp_atk: 88
 sp_def: 88
 spd: 88
-phantonforge
+phantoforge
 Types: ghost / Steel
 Stats:
 hp: 85
