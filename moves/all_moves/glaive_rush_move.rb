@@ -15,7 +15,7 @@ class GlaiveRushMove < Move
   end
 
   private
-  def post_effect(pokemon)
+  def post_effect(pokemon, targets)
     pokemon.metadata[:post_effect] = "vulnerable"
     BattleLog.instance.log(MessagesPool.vulnerable_msg(pokemon.name))
   end

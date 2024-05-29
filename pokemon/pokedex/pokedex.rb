@@ -15,7 +15,7 @@ class Pokedex < Pokemon
     when "Pikachu"
       Pokemon.new(
         name: "Pikachu",
-        types: [Types::ELECTRIC, Types::FLYING],
+        types: [Types::ELECTRIC, Types::FIRE],
         stats: [
           Stats.new(name: :hp, base_value: 35 ),
           Stats.new(name: :atk, base_value: 55 ),
@@ -27,10 +27,10 @@ class Pokedex < Pokemon
         gender: :female,
         # weight: 6,
         attacks: [
-          VoltTackleMove.learn,
-          GigaDrainMove.learn,
-          EncoreMove.learn,
-          MetronomeMove.learn
+          DoubleTeamMove.learn,
+          BurnUpMove.learn,
+          CurseMove.learn,
+          FeintMove.learn
         ]
       )
     when "Squirtle"
@@ -48,10 +48,10 @@ class Pokedex < Pokemon
         gender: :male,
         # weight: 9,
         attacks: [
-          OutrageMove.learn,
-          FocusPunchMove.learn,
-          FeatherDanceMove.learn,
-          ProtectMove.learn
+          DazzlingGleamMove.learn,
+          SacredSwordMove.learn,
+          AncientPowerMove.learn,
+          KingsShieldMove.learn
         ]
       )
     when "Jigglypuff"
@@ -69,8 +69,8 @@ class Pokedex < Pokemon
         gender: :female,
         # weight: 5.5,
         attacks: [
-          HyperVoiceMove.learn,
-          AssuranceMove.learn,
+          LeechLifeMove.learn,
+          SpectralStrikeMove.learn,
           CopycatMove.learn,
           DrainingKissMove.learn
         ]

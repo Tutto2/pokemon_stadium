@@ -23,6 +23,7 @@ class Types
     flying
     dragon
     ice
+    typeless
   ].each do |type|
     self.const_set(type.upcase, type.to_sym)
   end

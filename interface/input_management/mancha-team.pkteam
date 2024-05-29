@@ -4,11 +4,11 @@ Dragi (Dragapult)
 Ability: Clear Body  
 Tera Type: Dragon  
 EVs: 6 Atk / 252 SpA / 252 Spe
-IVs: 30 Atk / 28 Def / 29 SpA / 28 SpD
+IVs: 30 Atk / 28 Def
 Naive Nature  
 - Dragon Darts  
 - Flamethrower  
-- Hydro Pump  
+- Draco Meteor
 - Dragon Dance  
 
 Gholdengo  
@@ -19,7 +19,7 @@ Modest Nature
 - Shadow Ball  
 - Make It Rain  
 - Psychic  
-- Thunderbolt  
+- Recover
 
 Pesadilla (Baxcalibur)
 Ability: Thermal Exchange  
@@ -27,7 +27,7 @@ Tera Type: Dragon
 EVs: 4 HP / 252 Atk / 252 Spe  
 Adamant Nature  
 - Dragon Dance  
-- Icicle Spear  
+- Ice Shard
 - Glaive Rush  
 - Earthquake  
 
@@ -36,7 +36,7 @@ Ability: Synchronize
 Tera Type: Bug  
 EVs: 160 Atk / 96 SpA / 252 Spe  
 Naive Nature  
-- Dragon Pulse  
+- Scale Pulse  
 - Thunderbolt  
 - Flamethrower  
 - U-turn  

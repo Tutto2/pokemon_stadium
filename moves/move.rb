@@ -73,6 +73,7 @@ class Move
     return attack_failed! if targets.all?(&:fainted?) && targets.size > 1
     
     atk_performed
+    priority_effect if self.is_a?(HasPriorityEffect)
     evaluate_special_perform
   end
 
@@ -137,7 +138,7 @@ class Move
       handle_additional_action(targets[0])
     else 
       execute
-      post_effect(pokemon) if has_post_effect?
+      post_effect(pokemon, targets) if has_post_effect?
     end
   end
 
@@ -206,7 +207,9 @@ class Move
     return false if !pokemon_target.metadata[:invulnerable].nil?
 
     chance = rand(0..100)
-    if (@category == :status && precision < chance) || (@category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance)
+    if @category != :status && ignores_evassion?
+      ( precision * pokemon.acc_value ) > chance
+    elsif (@category == :status && precision < chance) || (@category != :status && (precision * pokemon.acc_value * pokemon_target.evs_value ) < chance)
       false
     else
       true
@@ -264,22 +267,28 @@ class Move
 
   def protected_itself(pokemon_target)
     BattleLog.instance.log(MessagesPool.was_protected_msg(pokemon_target.name))
-    protection_harm(pokemon_target)
     protection_effect(pokemon_target)
   end
 
   def protection_harm(pokemon_target)
     return unless pokemon_target.metadata[:protected] == :spiky_shield && category == :physical
   
-    damage = (pokemon.hp_total / 8).to_i
-    pokemon.hp.decrease(damage)
-    BattleLog.instance.log(MessagesPool.spiky_shield_msg(pokemon.name, damage))
   end
 
   def protection_effect(pokemon_target)
-    return unless pokemon_target.metadata[:protected] == :scorching_defense && category == :physical
-    
-    health_condition_apply(pokemon, BurnCondition.get_burn) if rand > 0.5
+    return if pokemon_target.metadata[:protected].nil? || category != :physical
+    protection_move = pokemon_target.metadata[:protected]
+
+    case protection_move
+    when :spiky_shield
+      damage = (pokemon.hp_total / 8).to_i
+      pokemon.hp.decrease(damage)
+      BattleLog.instance.log(MessagesPool.spiky_shield_msg(pokemon.name, damage))
+    when :scorching_defense
+      health_condition_apply(pokemon, BurnCondition.get_burn) if rand > 0.5
+    when :"king's_shield"
+      pokemon.public_send(:atk).stage_modifier(pokemon, -1)
+    end
   end
 
   def status_effect(pokemon_target); end
@@ -347,6 +356,14 @@ class Move
   end
 
   def return_dmg?
+    false
+  end
+
+  def ignores_evassion?
+    false
+  end
+
+  def ignores_stat_changes?
     false
   end
 

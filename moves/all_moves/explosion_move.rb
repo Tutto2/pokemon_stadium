@@ -16,7 +16,7 @@ class ExplosionMove < Move
   end
 
   private
-  def post_effect(pokemon)
+  def post_effect(pokemon, targets)
     pokemon.hp.decrease(pokemon.hp_total).to_i
     BattleLog.instance.log(MessagesPool.pok_fainted_msg(pokemon.name))
   end

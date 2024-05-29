@@ -219,6 +219,8 @@ class Pokemon
     stats.each do |stat|
       stat.reset_stat
     end
+    @types << Types::FIRE if metadata[:fire_lost]
+    @types.delete(Types::TYPELESS) if types.size > 1
     reinit_all_metadata
     reinit_volatile_condition
     field_position = nil
@@ -251,7 +253,7 @@ class Pokemon
       @stats[index] = stats_transfer.shift unless stat.hp?
     end
   end
- 
+  
   def terastallized
     false
   end

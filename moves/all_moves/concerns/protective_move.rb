@@ -19,7 +19,7 @@ module ProtectiveMove
     end
   end
 
-  def post_effect(pokemon)
+  def post_effect(pokemon, targets)
     successful ? pokemon.add_protection_consecutive_uses : pokemon.metadata.delete(:protection_consecutive_uses) 
     BattleLog.instance.log("consecutive uses: #{pokemon.metadata[:protection_consecutive_uses]}")
   end

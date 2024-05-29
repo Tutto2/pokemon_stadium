@@ -55,9 +55,10 @@ module DamageFormula
   def damage_formula(crit)
     variation = rand(85..100)
     level = pokemon.lvl
-    attk = crit && atk.stage < 0 ? atk.initial_value : atk.curr_value
-    defn = crit && dfn.stage > 0 ? dfn.initial_value : dfn.curr_value
+    attk = crit > 1 && atk.stage < 0 ? atk.initial_value : atk.curr_value
+    defn = ( crit > 1 && dfn.stage > 0 ) || ignores_stat_changes? ? dfn.initial_value : dfn.curr_value
     crit_value = crit
+    binding.pry
     vulnerability = calc_vulnerability
     burn = burn_condition
     

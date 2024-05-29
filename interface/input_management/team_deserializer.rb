@@ -17,7 +17,7 @@ class TeamDeserializer
     lines.each do |line|
       line.strip!
       
-      if /\ATeam: (?<team_name>[\w -\']+)\z/ =~ line
+      if /\ATeam: (?<team_name>[\w \-\']+)\z/ =~ line
         team[:name] = team_name
       elsif /\ATera Type: (?<teratype>[\w ]+)\z/ =~ line
         team[:pokemons][pokemon_index][:teratype] = teratype.upcase
@@ -27,7 +27,7 @@ class TeamDeserializer
         team[:pokemons][pokemon_index][:ivs] = array_managment(ivs, 31)
       elsif /\A(?<nature>\w+ Nature)\z/ =~ line
         team[:pokemons][pokemon_index][:nature] = nature.downcase
-      elsif /\A(?<name1>\w[\w -\']*)(?: \((?<name2>[\w -\']+)\))?(?: \((?<gender>[MF])\))?(?: @ (?<item>[\w -\']+))?\z/ =~ line && !name1.include?("Nature")
+      elsif /\A(?<name1>\w[\w \-\']*)(?: \((?<name2>[\w \-\']+)\))?(?: \((?<gender>[MF])\))?(?: @ (?<item>[\w \-\']+))?\z/ =~ line && !name1.include?("Nature")
         name = name2 || name1
         nickname = name2 ? name1 : nil
         team[:pokemons] << {

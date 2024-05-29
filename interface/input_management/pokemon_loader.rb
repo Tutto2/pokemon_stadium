@@ -15,7 +15,7 @@ class PokemonLoader
     File.readlines(file_url).each do |line|
       next if line.chomp.strip! == "Stats:"
 
-      if /^(\w+)(-\w+)*$/ =~ line
+      if /^(\w+)(\-\w+)*$/ =~ line
         if !pokemon[:name].nil?
           pokemons << pokemon
           pokemon = {}

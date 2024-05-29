@@ -86,6 +86,10 @@ module MetadataHandling
     @metadata[:attacker] = pokemon
   end
 
+  def lose_fire_type
+    @metadata[:fire_lost] = Types::FIRE
+  end
+
   def was_touched?
     !metadata[:touched].nil?
   end
@@ -121,7 +125,7 @@ module MetadataHandling
   end
 
   def reinit_metadata(move)
-    exceptions = [:crit_stage, :defense_curl, :turn, :protected, :invulnerable, :harm, :actions, :will_survive]
+    exceptions = [:crit_stage, :defense_curl, :turn, :protected, :invulnerable, :harm, :actions, :will_survive, :fire_lost]
     exceptions << :protection_consecutive_uses if move.respond_to?(:chance_of_succeed)
     @metadata.keep_if { |key, _| exceptions.include?(key) }
     @metadata[:harm] = 0

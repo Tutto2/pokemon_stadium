@@ -6,7 +6,7 @@ class MessagesPool
   def self.interface_index
     BattleLog.instance.log("\n")
     BattleLog.instance.log("1- Start a battle")
-    BattleLog.instance.log("2- Load data")
+    BattleLog.instance.log("2- Manage data")
   end
   
   def self.invalid_game_settings(players_num, battle_type)
@@ -564,7 +564,7 @@ class MessagesPool
   end
 
   def self.erupted_msg(pok_name)
-    "#{pok_name} is consumed by magma and fire, preparing to erupt!"1
+    "#{pok_name} is consumed by magma and fire, preparing to erupt!"
   end
 
   def self.focus_punch_msg(pok_name) 
@@ -637,6 +637,10 @@ class MessagesPool
 
   def self.perish_song_effect_msg(pok_name)
     "#{pok_name} has lost all its HP due to Perish Song"
+  end
+
+  def self.burn_up_msg(pok_name)
+    "#{pok_name} has lost its fire type!"
   end
 
   def self.poison_dmg_msg(pok_name, dmg)

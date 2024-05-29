@@ -1,14 +1,14 @@
 require_relative "../move"
 
-class SpikyShieldMove < Move
+class KingsShieldMove < Move
   include PostEffect
   include ProtectiveMove
   attr_reader :successful
 
   def self.learn
     new(
-      attack_name: 'Spiky Shield',
-      type: Types::GRASS,
+      attack_name: "King's Shield",
+      type: Types::STEEL,
       pp: 10,
       category: :status,
       priority: 4

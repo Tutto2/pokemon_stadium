@@ -17,7 +17,7 @@ class MakeItRainMove < Move
   end
 
   private
-  def post_effect(pokemon)
+  def post_effect(pokemon, targets)
     stat_changes
   end
 

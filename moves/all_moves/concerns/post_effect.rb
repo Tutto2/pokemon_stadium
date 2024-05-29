@@ -6,5 +6,5 @@ module PostEffect
   end
 
   private
-  def post_effect(pokemon); end
+  def post_effect(pokemon, targets); end
 end
