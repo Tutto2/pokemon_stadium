@@ -100,7 +100,8 @@ end
     parsed_team[:pokemons].each do |pok|
       moves_array = []
       pok[:moves].map do |move|
-        name = move.scan(/[\w]+/).join("_")
+        name = move.scan(/[\w\']+/).join("_")
+        name.gsub!("'", "")
         camelized_name = "#{name}_move".camelize
         if Object.const_defined?(camelized_name)
           moves_array << camelized_name.constantize.learn 
@@ -127,9 +128,18 @@ end
 
   def upload_pokemons(pokemon)
     HTTParty.post("http://localhost:3000/pokemon_templates", body: JSON.generate(pokemon), headers: { 'Content-Type' => 'application/json' })
+  rescue Errno::ECONNREFUSED
+    puts
+    puts "Couldn't enable connection to the server"
+  rescue Errno::ENOENT
+    puts
+    puts "Template not found"
   end
 
   def create_team(team)
     HTTParty.post("http://localhost:3000/teams", body: JSON.generate(team), headers: { 'Content-Type' => 'application/json' })
+  rescue Errno::ECONNREFUSED
+    puts
+    puts "Couldn't enable connection to the server"
   end
 end

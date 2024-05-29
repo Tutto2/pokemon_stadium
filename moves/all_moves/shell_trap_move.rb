@@ -15,7 +15,7 @@ class ShellTrapMove < Move
       )
   end
 
-  def additional_move
+  def additional_move(pokemon)
     ShellTrapCharge.learn
   end
 

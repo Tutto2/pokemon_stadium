@@ -21,9 +21,8 @@ class AttackAction < Action
   end
 
   def extra_action
-    additional_move = behaviour.additional_move
-    if additional_move
-      self.dup.override_behaviour!(additional_move)
+    if behaviour.additional_move(user_pokemon)
+      self.dup.override_behaviour!(behaviour.additional_move(user_pokemon))
     end
   end
 

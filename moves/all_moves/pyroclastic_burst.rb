@@ -13,8 +13,8 @@ class PyroclasticBurstMove < Move
       )
   end
 
-  def additional_move
-    PyroclasticCharge.learn
+  def additional_move(pokemon)
+    PyroclasticCharge.learn unless pokemon.types.include?(Types::FIRE)
   end
 end
 
@@ -26,8 +26,6 @@ class PyroclasticCharge < Move
   end
 
   def additional_action(pokemon)
-    return if pokemon.types.include?(Types::FIRE)
-
     volatile_status_apply(pokemon, OnFireStatus.get_on_fire(pokemon))
     pokemon.volatile_status[:on_fire].change_pok_type(pokemon)
     stat_changes

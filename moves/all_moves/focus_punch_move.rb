@@ -15,7 +15,7 @@ class FocusPunchMove < Move
       )
   end
 
-  def additional_move
+  def additional_move(pokemon)
     FocusPunchCharge.learn
   end
 

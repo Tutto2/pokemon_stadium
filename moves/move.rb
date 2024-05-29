@@ -58,7 +58,7 @@ class Move
   def perform_attack(user, targets)
     @pokemon = user
     @targets = targets
-    return additional_action(pokemon) if additional_action(pokemon) && !has_trigger?
+    return if additional_action(pokemon) && !has_trigger?
 
     return BattleLog.instance.log(MessagesPool.no_pp_during_attack(pokemon.name, attack_name)) if no_remaining_pp?
     if has_trigger? && (pokemon.metadata[:waiting].nil? || !trigger(pokemon))
@@ -313,7 +313,7 @@ class Move
     BattleLog.instance.log(MessagesPool.final_hp_msg(pokemon_target.name, pokemon_target.hp_value)) if category != :status && !pokemon_target.fainted?
   end
 
-  def additional_move; end
+  def additional_move(pokemon); end
 
   def health_condition_apply(target, condition)
     target.types.each do |target_type|

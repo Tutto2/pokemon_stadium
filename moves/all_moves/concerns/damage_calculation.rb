@@ -58,7 +58,6 @@ module DamageFormula
     attk = crit > 1 && atk.stage < 0 ? atk.initial_value : atk.curr_value
     defn = ( crit > 1 && dfn.stage > 0 ) || ignores_stat_changes? ? dfn.initial_value : dfn.curr_value
     crit_value = crit
-    binding.pry
     vulnerability = calc_vulnerability
     burn = burn_condition
     

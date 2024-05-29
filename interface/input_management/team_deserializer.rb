@@ -48,7 +48,7 @@ class TeamDeserializer
   end
 
   def write
-    File.open("interface/input_management/#{team[:team]}.rb", 'w') do |file|
+    File.open("interface/input_management/#{team[:name]}.rb", 'w') do |file|
       file.puts JSON.pretty_generate(team)
     end
   end
