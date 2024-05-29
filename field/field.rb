@@ -20,6 +20,7 @@ class Field
   end
 
   def apply_weather(new_weather)
+    BattleLog.instance.log(MessagesPool.weather_apply_msg(new_weather.name))
     @weather = new_weather
   end
 end

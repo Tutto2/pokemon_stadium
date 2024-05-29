@@ -28,6 +28,10 @@ class Types
     self.const_set(type.upcase, type.to_sym)
   end
 
+  def self.all_types
+    constants.map { |const| const_get(const) }
+  end
+
   def self.calc_multiplier(attacking_types, defending_types)
     chart = {
       NORMAL => {

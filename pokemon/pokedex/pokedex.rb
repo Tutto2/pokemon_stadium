@@ -27,10 +27,10 @@ class Pokedex < Pokemon
         gender: :female,
         # weight: 6,
         attacks: [
-          DoubleTeamMove.learn,
-          BurnUpMove.learn,
-          CurseMove.learn,
-          FeintMove.learn
+          HurricaneMove.learn,
+          ThunderMove.learn,
+          SunnyDayMove.learn,
+          GrowthMove.learn
         ]
       )
     when "Squirtle"
@@ -48,10 +48,10 @@ class Pokedex < Pokemon
         gender: :male,
         # weight: 9,
         attacks: [
-          DazzlingGleamMove.learn,
+          HydroPumpMove.learn,
           SacredSwordMove.learn,
-          AncientPowerMove.learn,
-          KingsShieldMove.learn
+          BlizzardMove.learn,
+          SynthesisMove.learn
         ]
       )
     when "Jigglypuff"

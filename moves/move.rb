@@ -316,6 +316,7 @@ class Move
   def additional_move(pokemon); end
 
   def health_condition_apply(target, condition)
+    return BattleLog.instance.log(MessagesPool.condition_apply_fail_msg(target.name, condition.name)) if condition.name == :frozen && pokemon.trainer.battleground.field.weather&.name == 'Harsh sunlight'
     target.types.each do |target_type|
       condition.immune_type.each do |immune_type|
         return BattleLog.instance.log(MessagesPool.condition_apply_fail_msg(target.name, condition.name)) if target_type == immune_type

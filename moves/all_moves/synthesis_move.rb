@@ -2,7 +2,6 @@ require_relative "../move"
 
 class SynthesisMove < Move
   include HpChange
-  # Chance amount of healing depending on weather
 
   def self.learn
     new(
@@ -20,6 +19,14 @@ class SynthesisMove < Move
   end
 
   def value
-    0.5 * pokemon.hp_total
+    weather = pokemon.trainer.battleground.field.weather
+    
+    if weather.nil? || weather&.name == 'Strong winds'
+      0.5 * pokemon.hp_total
+    elsif weather&.name == 'Harsh sunlight'
+      (2 * pokemon.hp_total) / 3
+    else
+      0.25 * pokemon.hp_total
+    end
   end
 end

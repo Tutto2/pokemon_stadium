@@ -17,7 +17,12 @@ class SolarBladeMove < Move
   private
 
   def first_turn_action
-    BattleLog.instance.log(MessagesPool.charging_atk_msg)
+    if pokemon.trainer.battleground.field.weather&.name == 'Harsh sunlight'
+      execute
+      end_turn_action
+    else  
+      BattleLog.instance.log(MessagesPool.charging_atk_msg)
+    end
   end
 
   def second_turn_action

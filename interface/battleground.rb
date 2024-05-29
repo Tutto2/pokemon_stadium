@@ -71,7 +71,6 @@ class Battleground
       queue.perform_actions
 
       end_turn_actions
-      field&.weather.count_weather_turn
     end
 
     declare_winner
@@ -162,12 +161,13 @@ class Battleground
 
   def init_turn_actions
     MessagesPool.turn(turn)
+    MessagesPool.weather(field.weather) unless field.weather.nil?
     players.each { |player| clear_actions(player) }
 
     until !field.any_pokemon_fainted?
       change_fainted_pokemon
     end
-
+    
     BattleLog.instance.display_messages
   end
 
@@ -239,6 +239,16 @@ class Battleground
     condition_effects
     status_effects
 
+    if !field.weather.nil?
+      weather = field.weather
+      weather.count_weather_turn
+      
+      if weather.turn > weather.duration 
+        weather = nil 
+        BattleLog.instance.log(MessagesPool.weather_turn_normal)
+      end
+    end
+    
     BattleLog.instance.display_messages
     @turn += 1
   end

@@ -2,7 +2,6 @@ require_relative "../move"
 
 class GrowthMove < Move
   include StatChanges
-  #Enhance by Sunlight
 
   def self.learn
     new(
@@ -19,9 +18,11 @@ class GrowthMove < Move
   end
 
   def stat
+    stages = pokemon.trainer.battleground.field.weather&.name == 'Harsh sunlight' ? 2 : 1
+    
     [
-      [:sp_atk, 1],
-      [:atk, 1]
+      [:sp_atk, stages],
+      [:atk, stages]
     ]
   end
 end

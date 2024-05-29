@@ -194,6 +194,12 @@ class MessagesPool
     BattleLog.instance.display_messages
   end
 
+  def self.weather(weather)
+    BattleLog.instance.log("Weather: #{weather.name} (#{weather.turn} / #{weather.duration})")
+    BattleLog.instance.log("\n")
+    BattleLog.instance.display_messages
+  end
+
   def self.first_team_msg
     BattleLog.instance.log("First team pokemons:")
   end
@@ -527,8 +533,8 @@ class MessagesPool
     "It reduced the PP of #{target}'s #{previous_action} by 4"
   end
 
-  def self.attack_power_msg(power)
-    "power: #{power}"
+  def self.attack_power_msg(power, precision)
+    "power: #{power}, precision: #{precision}"
   end
 
   def self.substitute_dmg_recieved_msg(pok_name, dmg)
@@ -673,6 +679,16 @@ class MessagesPool
 
   def self.final_hp_msg(pok_name, hp)
     "#{pok_name} now has #{hp} hp"
+  end
+
+  def self.weather_apply_msg(weather)
+    case weather
+    when 'Harsh sunlight' then "The sunligth turned harsh!"
+    end
+  end
+
+  def self.weather_turn_normal
+    "Weather turn normal again"
   end
 
   def self.leap

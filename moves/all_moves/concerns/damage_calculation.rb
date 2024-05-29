@@ -7,19 +7,61 @@ module DamageFormula
     @pokemon_target = pokemon_target
     @effectiveness = effect(pokemon_target)
     
-    perform_dmg(damage_formula(crit_chance))
-  end 
+    initial_damage = damage_formula(crit_chance)
+    dmg = damage_modifiers(initial_damage)
+    perform_dmg(dmg)
+  end
 
-  def perform_dmg(dmg)
-    @pokemon_target = targets[0] if pokemon_target.nil?
-      
-    target_initial_hp = pokemon_target.hp.curr_value
+  def damage_formula(crit)
+    variation = rand(85..100)
+    level = pokemon.lvl
+    attk = crit > 1 && atk.stage < 0 ? atk.initial_value : atk.curr_value
+    defn = ( crit > 1 && dfn.stage > 0 ) || ignores_stat_changes? ? dfn.initial_value : dfn.curr_value
+    crit_value = crit
+    vulnerability = calc_vulnerability
+    burn = burn_condition
+    
+    BattleLog.instance.log(MessagesPool.attack_power_msg(power, precision))
+    (0.01*bonus*effectiveness*variation*vulnerability*burn*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*power*attk/defn)/50.0 )).to_i
+  end
+
+  def crit_chance
+    pok_stage = pokemon.metadata[:crit_stage].to_i
+    move_stage = crit_ratio
+    chance_by_stage = { 0 => 0.0417, 1 => 0.125, 2 => 0.5 }
+
+    chance = chance_by_stage[pok_stage + move_stage] || 1
+    return 1 if rand > chance
+
+    BattleLog.instance.log(MessagesPool.critical_hit_msg)
+    1.5
+  end
+
+  def damage_modifiers(initial_dmg)
+    dmg = initial_dmg
+    
     case targets.size
     when 2
       dmg = dmg * 0.75
     when 3
       dmg = dmg * 0.5
     end
+
+    unless pokemon.trainer.battleground.field.weather.nil?
+      weather = pokemon.trainer.battleground.field.weather
+      if !(weather.enhanced_types & [type, secondary_type].compact).empty?
+        dmg = dmg * 1.5
+      elsif !(weather.decreased_types & [type, secondary_type].compact).empty?
+        dmg = dmg * 0.5
+      end
+    end
+    
+    dmg.to_i
+  end
+
+  def perform_dmg(dmg)
+    @pokemon_target = targets[0] if pokemon_target.nil?
+    target_initial_hp = pokemon_target.hp.curr_value
 
     return protected_itself(pokemon_target) if protected?(pokemon_target)
     return BattleLog.instance.log(MessagesPool.no_dmg_msg(pokemon_target.name)) if dmg <= 0 && category != :status
@@ -52,30 +94,6 @@ module DamageFormula
     end
   end
 
-  def damage_formula(crit)
-    variation = rand(85..100)
-    level = pokemon.lvl
-    attk = crit > 1 && atk.stage < 0 ? atk.initial_value : atk.curr_value
-    defn = ( crit > 1 && dfn.stage > 0 ) || ignores_stat_changes? ? dfn.initial_value : dfn.curr_value
-    crit_value = crit
-    vulnerability = calc_vulnerability
-    burn = burn_condition
-    
-    BattleLog.instance.log(MessagesPool.attack_power_msg(power))
-    (0.01*bonus*effectiveness*variation*vulnerability*burn*crit_value* ( 2.0+ ((2.0+(2.0*level)/5.0)*power*attk/defn)/50.0 )).to_i
-  end
-
-  def crit_chance
-    pok_stage = pokemon.metadata[:crit_stage].to_i
-    move_stage = crit_ratio
-    chance_by_stage = { 0 => 0.0417, 1 => 0.125, 2 => 0.5 }
-
-    chance = chance_by_stage[pok_stage + move_stage] || 1
-    return 1 if rand > chance
-
-    BattleLog.instance.log(MessagesPool.critical_hit_msg)
-    1.5
-  end
 
   def calc_vulnerability
     pokemon_target.metadata[:post_effect] == "vulnerable" ? 2 : 1
