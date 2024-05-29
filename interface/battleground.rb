@@ -71,6 +71,7 @@ class Battleground
       queue.perform_actions
 
       end_turn_actions
+      field&.weather.count_weather_turn
     end
 
     declare_winner
